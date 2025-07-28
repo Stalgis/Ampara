@@ -4,7 +4,7 @@ import { View, Text, SafeAreaView, Pressable } from "react-native";
 const Chat = () => {
   const [selectedSection, setSelectedSection] = useState("message");
   return (
-    <SafeAreaView className="bg-white h-full mx-4">
+    <SafeAreaView className="bg-white h-full">
       <View
         id="select-view"
         className="flex flex-row justify-center justify-evenly bg-gray-100 mx-6 rounded my-4 p-2"
