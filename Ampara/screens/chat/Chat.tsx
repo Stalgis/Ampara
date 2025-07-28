@@ -1,11 +1,44 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useState } from "react";
+import { View, Text, SafeAreaView, Pressable } from "react-native";
 
 const Chat = () => {
+  const [selectedSection, setSelectedSection] = useState("message");
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ fontSize: 24 }}>Chat Screen</Text>
-    </View>
+    <SafeAreaView className="bg-white h-full mx-4">
+      <View
+        id="select-view"
+        className="flex flex-row justify-center justify-evenly bg-gray-100 mx-6 rounded my-4 p-2"
+      >
+        <Pressable onPress={() => setSelectedSection("message")}>
+          <Text
+            className={`${selectedSection == "message" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
+          >
+            Message
+          </Text>
+        </Pressable>
+        <Pressable onPress={() => setSelectedSection("chatbot")}>
+          <Text
+            className={`${selectedSection == "chatbot" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
+          >
+            ChatBot
+          </Text>
+        </Pressable>
+        <Pressable onPress={() => setSelectedSection("advice")}>
+          <Text
+            className={`${selectedSection == "advice" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
+          >
+            Advice
+          </Text>
+        </Pressable>
+        <Pressable onPress={() => setSelectedSection("calls")}>
+          <Text
+            className={`${selectedSection == "calls" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
+          >
+            Calls
+          </Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 };
 
