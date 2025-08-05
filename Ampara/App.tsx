@@ -15,7 +15,7 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1">
       <NavigationContainer>
         <Tab.Navigator
           initialRouteName="Dashboard"
@@ -49,8 +49,8 @@ export default function App() {
                 />
               );
             },
-            tabBarActiveTintColor: "#1e40af",
-            tabBarInactiveTintColor: "gray",
+            tabBarActiveTintColor: "#F59E0B",
+            tabBarInactiveTintColor: "#6B7280",
           })}
         >
           <Tab.Screen name="Dashboard" component={Dashboard} />
