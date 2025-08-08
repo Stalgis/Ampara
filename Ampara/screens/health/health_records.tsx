@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Pressable, Modal, FlatList } from "react-native";
+import AddHealthRecordModal from "./Modals/AddHealthRecordModal";
 
 interface HealthRecord {
   id: string;
@@ -11,11 +12,12 @@ interface HealthRecord {
 
 const HealthRecords = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<HealthRecord | null>(
     null
   );
 
-  const records: HealthRecord[] = [
+  const [records, setRecords] = useState<HealthRecord[]>([
     {
       id: "1",
       visitType: "Cardiology Check-up",
@@ -30,7 +32,7 @@ const HealthRecords = () => {
       date: "2023-09-15",
       details: "Follow-up on skin rash. Prescribed new cream.",
     },
-  ];
+  ]);
 
   const openModal = (record: HealthRecord) => {
     setSelectedRecord(record);
@@ -40,6 +42,22 @@ const HealthRecords = () => {
   const closeModal = () => {
     setSelectedRecord(null);
     setModalVisible(false);
+  };
+
+  const handleAddRecord = (record: {
+    title: string;
+    doctor: string;
+    date: string;
+    summary: string;
+  }) => {
+    const newRecord: HealthRecord = {
+      id: (records.length + 1).toString(),
+      visitType: record.title,
+      doctor: record.doctor,
+      date: record.date,
+      details: record.summary,
+    };
+    setRecords([...records, newRecord]);
   };
 
   return (
@@ -66,7 +84,10 @@ const HealthRecords = () => {
             </Pressable>
           </View>
         ))}
-        <Pressable className="bg-calm py-3 rounded mt-4" onPress={() => {}}>
+        <Pressable
+          className="bg-calm py-3 rounded mt-4"
+          onPress={() => setAddModalVisible(true)}
+        >
           <Text className="text-white font-medium mx-auto text-lg">
             Upload New Record
           </Text>
@@ -89,6 +110,11 @@ const HealthRecords = () => {
           </View>
         </View>
       </Modal>
+      <AddHealthRecordModal
+        visible={addModalVisible}
+        onClose={() => setAddModalVisible(false)}
+        onAddRecord={handleAddRecord}
+      />
     </View>
   );
 };
