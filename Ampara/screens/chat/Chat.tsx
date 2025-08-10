@@ -10,16 +10,15 @@ const Chat = () => {
   const [showFilterOptions, setShowFilterOptions] = useState(false);
 
   const calls = [
-    { date: "08/08/2025, 9:00AM" },
-    { date: "07/15/2025, 11:30AM" },
-    { date: "06/20/2025, 3:00PM" },
+    { date: "08/08/2025, 9:00 AM" },
+    { date: "07/15/2025, 11:30 AM" },
+    { date: "06/20/2025, 3:00 PM" },
   ];
 
   const filteredCalls = calls.filter((call) => {
-    const callDate = new Date(call.date.split(",")[0]);
-    const today = new Date();
-    const diffTime = Math.abs(today.getTime() - callDate.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const callDate = new Date(call.date);
+    const diffTime = Math.abs(new Date().getTime() - callDate.getTime());
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
     if (callFilter === "Last 7 days") {
       return diffDays <= 7;
@@ -91,7 +90,7 @@ const Chat = () => {
         </View>
         <View id="call-history" className="mt-4">
           <View className="flex-row justify-between items-center">
-            <Text className="text-text font-bold font-lg">Calls history</Text>
+            <Text className="text-text font-bold text-lg">Calls history</Text>
             <Pressable
               onPress={() => setShowFilterOptions(!showFilterOptions)}
               className="flex-row items-center"
@@ -141,7 +140,7 @@ const Chat = () => {
                 </View>
               </View>
               <Pressable onPress={() => setModalVisible(true)}>
-                <Text className="text-md text-text">{call.date}</Text>
+                <Text className="text-md text-text">Details</Text>
               </Pressable>
             </View>
           ))}
