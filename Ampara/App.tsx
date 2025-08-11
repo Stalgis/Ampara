@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
 import Dashboard from "./screens/dashboard/Dashboard";
@@ -15,6 +16,14 @@ import { LogIn, SignUp, ForgotPassword } from "./screens/log_in";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+export const AuthContext = createContext<{
+  isAuthenticated: boolean;
+  setIsAuthenticated: (value: boolean) => void;
+}>({
+  isAuthenticated: false,
+  setIsAuthenticated: () => {},
+});
 
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -71,12 +80,33 @@ const MainTabs = () => (
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadAuth = async () => {
+      try {
+        const token = await AsyncStorage.getItem("access_token");
+        if (token) {
+          setIsAuthenticated(true);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAuth();
+  }, []);
+
+  if (loading) {
+    return null;
+  }
 
   return (
-    <View className="flex-1">
-      <NavigationContainer>
-        {isAuthenticated ? <MainTabs /> : <AuthStack />}
-      </NavigationContainer>
-    </View>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+      <View className="flex-1">
+        <NavigationContainer>
+          {isAuthenticated ? <MainTabs /> : <AuthStack />}
+        </NavigationContainer>
+      </View>
+    </AuthContext.Provider>
   );
 }
