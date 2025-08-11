@@ -10,10 +10,12 @@ describe('UsersService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
+
         {
           provide: getModelToken(User.name),
           useValue: {},
         },
+
       ],
     }).compile();
 
