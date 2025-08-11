@@ -1,15 +1,34 @@
 
-import { View, Text, TouchableOpacity, TextInput, Image, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 const SignUp = () => {
     const navigation = useNavigation()
-    const [showPassword, setShowPassword] = useState(false)
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [elderId, setElderId] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    const handleSignUp = () => {
+    const handleSignUp = async () => {
+        if (!name.trim() || !email.trim() || !password.trim() || !elderId.trim() || !confirmPassword.trim()) {
+            Alert.alert('Missing Fields', 'Please fill out all fields.')
+            return
+        }
+        const emailRegex = /\S+@\S+\.\S+/
+        if (!emailRegex.test(email)) {
+            Alert.alert('Invalid Email', 'Please enter a valid email address.')
+            return
+        }
+        if (password !== confirmPassword) {
+            Alert.alert('Password Mismatch', 'Passwords do not match.')
+            return
+        }
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
         if (!passwordRegex.test(password)) {
             Alert.alert(
@@ -18,7 +37,23 @@ const SignUp = () => {
             )
             return
         }
-        // Handle sign up logic here
+        try {
+            const response = await fetch('http://localhost:5000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password, elderId }),
+            })
+            const data = await response.json()
+            if (response.ok) {
+                Alert.alert('Registration Successful', data.message || 'Account created successfully.', [
+                    { text: 'OK', onPress: () => navigation.navigate('LogIn') },
+                ])
+            } else {
+                Alert.alert('Registration Failed', data.message || 'Please try again.')
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Unable to register. Please try again later.')
+        }
     }
 
     return (
@@ -29,12 +64,16 @@ const SignUp = () => {
                     <View className="mb-6">
                         <TextInput
                             placeholder="Full Name"
+                            value={name}
+                            onChangeText={setName}
                             className="border-b border-gray-300 py-2 px-1"
                         />
                     </View>
                     <View className="mb-6">
                         <TextInput
                             placeholder="Email"
+                            value={email}
+                            onChangeText={setEmail}
                             className="border-b border-gray-300 py-2 px-1"
                         />
                     </View>
@@ -47,10 +86,43 @@ const SignUp = () => {
                                 onChangeText={setPassword}
                                 className="flex-1 py-2 px-1"
                             />
-                            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                                <Image
-                                    source={!showPassword ? require('../../assets/adaptive-icon.png') : require('../../assets/icon.png')}
-                                    className="w-6 h-6"
+                            <TouchableOpacity
+                                onPress={() => setShowPassword((s) => !s)}
+                                accessibilityRole="button"
+                                accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+                                hitSlop={8}
+                                style={{ position: 'absolute', right: 8 }}
+                            >
+                                <Ionicons
+                                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                                    size={24}
+                                    color="black"
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View className="mb-6">
+                        <View className="flex-row items-center border-b border-gray-300">
+                            <TextInput
+                                placeholder="Confirm Password"
+                                secureTextEntry={!showConfirmPassword}
+                                value={confirmPassword}
+                                onChangeText={setConfirmPassword}
+                                className="flex-1 py-2 px-1"
+                            />
+                            <TouchableOpacity
+                                onPress={() => setShowConfirmPassword((s) => !s)}
+                                accessibilityRole="button"
+                                accessibilityLabel={
+                                    showConfirmPassword ? 'Hide password' : 'Show password'
+                                }
+                                hitSlop={8}
+                                style={{ position: 'absolute', right: 8 }}
+                            >
+                                <Ionicons
+                                    name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
+                                    size={24}
+                                    color="black"
                                 />
                             </TouchableOpacity>
                         </View>
@@ -58,6 +130,8 @@ const SignUp = () => {
                     <View className="mb-6">
                         <TextInput
                             placeholder="Connect to Elder (Name or ID)"
+                            value={elderId}
+                            onChangeText={setElderId}
                             className="border-b border-gray-300 py-2 px-1"
                         />
                     </View>
