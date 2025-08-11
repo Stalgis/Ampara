@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, {
+  useState,
+  createContext,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
 import Dashboard from "./screens/dashboard/Dashboard";
@@ -12,6 +19,16 @@ import Health from "./screens/health/Health";
 import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
 import { LogIn, SignUp, ForgotPassword } from "./screens/log_in";
+
+type AuthContextType = {
+  isAuthenticated: boolean;
+  setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
+};
+
+export const AuthContext = createContext<AuthContextType>({
+  isAuthenticated: false,
+  setIsAuthenticated: () => {},
+});
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -72,11 +89,28 @@ const MainTabs = () => (
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  useEffect(() => {
+    const restoreToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        if (token) {
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        // ignore restoring errors
+      }
+    };
+
+    restoreToken();
+  }, []);
+
   return (
     <View className="flex-1">
-      <NavigationContainer>
-        {isAuthenticated ? <MainTabs /> : <AuthStack />}
-      </NavigationContainer>
+      <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+        <NavigationContainer>
+          {isAuthenticated ? <MainTabs /> : <AuthStack />}
+        </NavigationContainer>
+      </AuthContext.Provider>
     </View>
   );
 }

@@ -1,12 +1,25 @@
 import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../../App";
 
 const LogIn = () => {
   const navigation = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
+  const { setIsAuthenticated } = useContext(AuthContext);
+
+  const handleLogin = async () => {
+    try {
+      // TODO: Replace with real authentication and token retrieval
+      await AsyncStorage.setItem("authToken", "dummy-token");
+      setIsAuthenticated(true);
+    } catch (error) {
+      // handle login error
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -48,7 +61,10 @@ const LogIn = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity className="bg-blue-500 rounded-lg py-3">
+          <TouchableOpacity
+            onPress={handleLogin}
+            className="bg-blue-500 rounded-lg py-3"
+          >
             <Text className="text-white text-center font-bold">Log In</Text>
           </TouchableOpacity>
           <TouchableOpacity
