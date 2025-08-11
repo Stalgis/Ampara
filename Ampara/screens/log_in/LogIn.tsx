@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -7,6 +14,43 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 const LogIn = () => {
   const navigation = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleLogin = async () => {
+    setError("");
+    setSuccess("");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !password) {
+      setError("Email and password are required");
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch("/classProject/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || "Login failed");
+      }
+      setSuccess("Logged in successfully");
+      navigation.navigate("Dashboard" as never);
+    } catch (err: any) {
+      setError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -22,6 +66,10 @@ const LogIn = () => {
             <TextInput
               placeholder="Email"
               className="border-b border-gray-300 py-2 px-1"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
             />
           </View>
           <View className="mb-6">
@@ -30,6 +78,8 @@ const LogIn = () => {
                 placeholder="Password"
                 secureTextEntry={!showPassword}
                 className="flex-1 py-2 px-1"
+                value={password}
+                onChangeText={setPassword}
               />
               <TouchableOpacity
                 onPress={() => setShowPassword((s) => !s)}
@@ -48,8 +98,22 @@ const LogIn = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity className="bg-blue-500 rounded-lg py-3">
-            <Text className="text-white text-center font-bold">Log In</Text>
+          {error ? (
+            <Text className="text-red-500 text-center mb-4">{error}</Text>
+          ) : null}
+          {success ? (
+            <Text className="text-green-500 text-center mb-4">{success}</Text>
+          ) : null}
+          <TouchableOpacity
+            className="bg-blue-500 rounded-lg py-3"
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text className="text-white text-center font-bold">Log In</Text>
+            )}
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate("ForgotPassword")}
