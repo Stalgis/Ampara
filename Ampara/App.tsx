@@ -1,9 +1,11 @@
-import React from "react";
+
+import React, { useState, useEffect, createContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
 import Dashboard from "./screens/dashboard/Dashboard";
@@ -16,6 +18,14 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+export const AuthContext = createContext<{
+  isAuthenticated: boolean;
+  setIsAuthenticated: (value: boolean) => void;
+}>({
+  isAuthenticated: false,
+  setIsAuthenticated: () => {},
+});
 
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -75,8 +85,10 @@ const RootNavigator = () => {
   return isAuthenticated ? <MainTabs /> : <AuthStack />;
 };
 
+
 export default function App() {
   return (
+
     <View className="flex-1">
       <AuthProvider>
         <NavigationContainer>
