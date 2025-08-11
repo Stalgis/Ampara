@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -12,6 +12,7 @@ import Health from "./screens/health/Health";
 import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
 import { LogIn, SignUp, ForgotPassword } from "./screens/log_in";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -69,14 +70,19 @@ const MainTabs = () => (
   </Tab.Navigator>
 );
 
-export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const RootNavigator = () => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <MainTabs /> : <AuthStack />;
+};
 
+export default function App() {
   return (
     <View className="flex-1">
-      <NavigationContainer>
-        {isAuthenticated ? <MainTabs /> : <AuthStack />}
-      </NavigationContainer>
+      <AuthProvider>
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      </AuthProvider>
     </View>
   );
 }
