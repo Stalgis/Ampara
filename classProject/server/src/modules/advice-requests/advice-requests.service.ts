@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AdviceRequest, AdviceRequestDocument } from './advice-request.schema';
@@ -25,12 +25,8 @@ export class AdviceRequestsService {
     return this.adviceRequestModel.find().exec();
   }
 
-  async findOne(id: string): Promise<AdviceRequest> {
-    const adviceRequest = await this.adviceRequestModel.findById(id).exec();
-    if (!adviceRequest) {
-      throw new NotFoundException(`AdviceRequest with id ${id} not found`);
-    }
-    return adviceRequest;
+  async findOne(id: string): Promise<AdviceRequest | null> {
+    return this.adviceRequestModel.findById(id).exec();
   }
 
   async findByElderId(elderId: string): Promise<AdviceRequest[]> {
@@ -50,23 +46,13 @@ export class AdviceRequestsService {
   async update(
     id: string,
     updateAdviceRequestDto: UpdateAdviceRequestDto,
-  ): Promise<AdviceRequest> {
-    const updatedAdviceRequest = await this.adviceRequestModel
+  ): Promise<AdviceRequest | null> {
+    return this.adviceRequestModel
       .findByIdAndUpdate(id, updateAdviceRequestDto, { new: true })
       .exec();
-    if (!updatedAdviceRequest) {
-      throw new NotFoundException(`AdviceRequest with id ${id} not found`);
-    }
-    return updatedAdviceRequest;
   }
 
-  async remove(id: string): Promise<AdviceRequest> {
-    const deletedAdviceRequest = await this.adviceRequestModel
-      .findByIdAndDelete(id)
-      .exec();
-    if (!deletedAdviceRequest) {
-      throw new NotFoundException(`AdviceRequest with id ${id} not found`);
-    }
-    return deletedAdviceRequest;
+  async remove(id: string): Promise<AdviceRequest | null> {
+    return this.adviceRequestModel.findByIdAndDelete(id).exec();
   }
 }
