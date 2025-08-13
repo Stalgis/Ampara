@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, createContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -14,7 +13,6 @@ import Health from "./screens/health/Health";
 import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
 import { LogIn, SignUp, ForgotPassword } from "./screens/log_in";
-import { AuthProvider, useAuth } from "./context/AuthContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -80,21 +78,35 @@ const MainTabs = () => (
   </Tab.Navigator>
 );
 
-const RootNavigator = () => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <MainTabs /> : <AuthStack />;
-};
-
-
 export default function App() {
-  return (
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-    <View className="flex-1">
-      <AuthProvider>
+  useEffect(() => {
+    const loadAuth = async () => {
+      try {
+        const token = await AsyncStorage.getItem("access_token");
+        if (token) {
+          setIsAuthenticated(true);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAuth();
+  }, []);
+
+  if (loading) {
+    return null;
+  }
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+      <View className="flex-1">
         <NavigationContainer>
-          <RootNavigator />
+          {isAuthenticated ? <MainTabs /> : <AuthStack />}
         </NavigationContainer>
-      </AuthProvider>
-    </View>
+      </View>
+    </AuthContext.Provider>
   );
 }
