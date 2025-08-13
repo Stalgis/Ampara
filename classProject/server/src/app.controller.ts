@@ -1,47 +1,30 @@
 import { Controller, Get } from '@nestjs/common';
-import { connection } from 'mongoose';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
+import type { Db } from 'mongodb';
 
 @Controller()
 export class AppController {
-  @Get()
-  getRoot(): string {
-    return 'CompaniOn API is running!';
-  }
-
-  @Get('health')
-  getHealth(): { status: string; timestamp: string } {
-    return {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-    };
-  }
+  constructor(@InjectConnection() private readonly conn: Connection) {}
 
   @Get('health/db')
-  async getDatabaseHealth(): Promise<{
-    status: string;
-    timestamp: string;
-    message?: string;
-  }> {
-    if (connection.readyState !== 1) {
+  async getDatabaseHealth() {
+    if (this.conn.readyState !== 1) {
       return {
         status: 'error',
         timestamp: new Date().toISOString(),
         message: 'Database connection is not ready',
       };
     }
-
-    try {
-      await connection.db.admin().ping();
-      return {
-        status: 'ok',
-        timestamp: new Date().toISOString(),
-      };
-    } catch (error) {
+    const db = this.conn.db as Db | undefined;
+    if (!db) {
       return {
         status: 'error',
         timestamp: new Date().toISOString(),
-        message: 'Database ping failed',
+        message: 'Database handle missing',
       };
     }
+    await db.admin().ping();
+    return { status: 'ok', timestamp: new Date().toISOString() };
   }
 }
