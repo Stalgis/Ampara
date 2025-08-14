@@ -1,5 +1,9 @@
-import React, { useState, useEffect, createContext } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,6 +18,7 @@ import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
 import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
 import { AuthContext } from "./controllers/AuthContext";
+import { ThemeProvider, useTheme } from "./controllers/ThemeContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -72,6 +77,24 @@ const MainTabs = () => (
   </Tab.Navigator>
 );
 
+const AppNavigation = ({
+  isAuthenticated,
+}: {
+  isAuthenticated: boolean;
+}) => {
+  const { colorScheme } = useTheme();
+
+  return (
+    <View className="flex-1">
+      <NavigationContainer
+        theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      >
+        {isAuthenticated ? <MainTabs /> : <AuthStack />}
+      </NavigationContainer>
+    </View>
+  );
+};
+
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -96,11 +119,9 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-      <View className="flex-1">
-        <NavigationContainer>
-          {isAuthenticated ? <MainTabs /> : <AuthStack />}
-        </NavigationContainer>
-      </View>
+      <ThemeProvider>
+        <AppNavigation isAuthenticated={isAuthenticated} />
+      </ThemeProvider>
     </AuthContext.Provider>
   );
 }
