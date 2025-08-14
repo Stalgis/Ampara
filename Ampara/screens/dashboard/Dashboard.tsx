@@ -2,19 +2,51 @@ import React from "react";
 import { useState } from "react";
 import { View, Text, SafeAreaView, Pressable, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import EmptyState from "../../components/EmptyState";
 
 const Dashboard = () => {
   const [name, setName] = useState("Martha Johnson");
   const [isMedicationDone, setIsMedicationDone] = useState(false);
   const [isAppointmentDone, setIsAppointmentDone] = useState(false);
   const navigation = useNavigation<any>();
+
+  interface Activity {
+    id: string;
+    title: string;
+    time: string;
+    icon: React.ReactNode;
+    bg: string;
+  }
+
+  const [activities] = useState<Activity[]>([
+    {
+      id: "1",
+      title: "Group Meeting",
+      time: "2:00 PM - 3:00 PM",
+      icon: <FontAwesome name="users" size={20} color="#2563eb" />,
+      bg: "bg-blue-100",
+    },
+    {
+      id: "2",
+      title: "Morning Coffee",
+      time: "4:30 PM - 5:30 PM",
+      icon: <FontAwesome name="coffee" size={20} color="#ea580c" />,
+      bg: "bg-orange-100",
+    },
+    {
+      id: "3",
+      title: "Study Session",
+      time: "7:00 PM - 8:00 PM",
+      icon: <Feather name="book" size={20} color="#16a34a" />,
+      bg: "bg-green-100",
+    },
+  ]);
   return (
     <SafeAreaView className="h-full bg-background">
       <ScrollView>
@@ -192,59 +224,29 @@ const Dashboard = () => {
             </Pressable>
           </View>
           <View className="mt-4">
-            {/* Card 1 - Users */}
-            <View className="flex-row items-center justify-between border border-gray-200 rounded-lg p-3 mb-3 bg-[#ffffff]">
-              <View className="flex-row items-center flex-1">
-                <View className="bg-blue-100 p-2 rounded-lg mr-3">
-                  <FontAwesome name="users" size={20} color="#2563eb" />
+            {activities.length === 0 ? (
+              <EmptyState message="No upcoming activities" />
+            ) : (
+              activities.map((activity) => (
+                <View
+                  key={activity.id}
+                  className="flex-row items-center justify-between border border-gray-200 rounded-lg p-3 mb-3 bg-[#ffffff]"
+                >
+                  <View className="flex-row items-center flex-1">
+                    <View className={`${activity.bg} p-2 rounded-lg mr-3`}>
+                      {activity.icon}
+                    </View>
+                    <View className="flex-1">
+                      <Text className="font-bold text-base">{activity.title}</Text>
+                      <Text className="text-gray-400 text-sm">{activity.time}</Text>
+                    </View>
+                  </View>
+                  <Pressable className="bg-calm px-4 py-2 rounded">
+                    <Text className="text-white font-medium">Join</Text>
+                  </Pressable>
                 </View>
-                <View className="flex-1">
-                  <Text className="font-bold text-base">Group Meeting</Text>
-                  <Text className="text-gray-400 text-sm">
-                    2:00 PM - 3:00 PM
-                  </Text>
-                </View>
-              </View>
-              <Pressable className="bg-calm px-4 py-2 rounded">
-                <Text className="text-white font-medium">Join</Text>
-              </Pressable>
-            </View>
-
-            {/* Card 2 - Coffee */}
-            <View className="flex-row items-center justify-between border border-gray-200 rounded-lg p-3 mb-3 bg-[#ffffff]">
-              <View className="flex-row items-center flex-1">
-                <View className="bg-orange-100 p-2 rounded-lg mr-3">
-                  <FontAwesome name="coffee" size={20} color="#ea580c" />
-                </View>
-                <View className="flex-1">
-                  <Text className="font-bold text-base">Morning Coffee</Text>
-                  <Text className="text-gray-400 text-sm">
-                    4:30 PM - 5:30 PM
-                  </Text>
-                </View>
-              </View>
-              <Pressable className="bg-calm px-4 py-2 rounded">
-                <Text className="text-white font-medium">Join</Text>
-              </Pressable>
-            </View>
-
-            {/* Card 3 - Book */}
-            <View className="flex-row items-center justify-between border border-gray-200 rounded-lg p-3 bg-[#ffffff]">
-              <View className="flex-row items-center flex-1">
-                <View className="bg-green-100 p-2 rounded-lg mr-3">
-                  <Feather name="book" size={20} color="#16a34a" />
-                </View>
-                <View className="flex-1">
-                  <Text className="font-bold text-base">Study Session</Text>
-                  <Text className="text-gray-400 text-sm">
-                    7:00 PM - 8:00 PM
-                  </Text>
-                </View>
-              </View>
-              <Pressable className="bg-calm px-4 py-2 rounded">
-                <Text className="text-white font-medium">Join</Text>
-              </Pressable>
-            </View>
+              ))
+            )}
           </View>
         </View>
       </ScrollView>
