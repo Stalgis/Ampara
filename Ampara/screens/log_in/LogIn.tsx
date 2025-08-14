@@ -4,7 +4,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAuth } from "../../controllers/AuthContext";
-import { Heading, Body } from "../../src/components/ui";
+import Card from "../../src/components/ui/Card";
+import FormInput from "../../src/components/ui/FormInput";
+import PrimaryButton from "../../src/components/ui/PrimaryButton";
+
+// import AsyncStorage from "@react-native-async-storage/async-storage"; // Commented out as per new requirements
+
+// import { AuthContext } from "../../context/AuthContext"; // Corrected import path
+// import apiFetch from "../../services/api"; // Commented out as per new requirements
+
 
 const LogIn = () => {
   const navigation = useNavigation();
@@ -35,30 +43,21 @@ const LogIn = () => {
           <Body className="text-red-500 text-center mb-4">{error}</Body>
         )}
 
-        <View className="mb-6">
-          <Text className="text-subtitle text-base font-semibold mb-2 pl-3">
-            Email
-          </Text>
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            className="border border-border rounded-lg py-3 px-4 text-lg bg-background/70"
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-        </View>
+        <FormInput
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
-        <View className="mb-6">
-          <Text className="text-subtitle text-base font-semibold mb-2 pl-3">
-            Password
-          </Text>
-          <View className="flex-row items-center border border-border rounded-lg bg-background/70">
-            <TextInput
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              className="flex-1 py-3 px-4 text-lg"
-            />
+        <FormInput
+          label="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+          rightIcon={
+
             <TouchableOpacity
               onPress={() => setShowPassword((s) => !s)}
               accessibilityRole="button"
@@ -74,15 +73,15 @@ const LogIn = () => {
                 color="gray"
               />
             </TouchableOpacity>
-          </View>
-        </View>
+          }
+        />
 
-        <TouchableOpacity
-          className="bg-primary rounded-xl py-4 shadow-md mb-4"
+        <PrimaryButton
+          title="Log In"
           onPress={() => setIsAuthenticated(true)}
-        >
-          <Text className="text-white text-center">Log In</Text>
-        </TouchableOpacity>
+          className="mb-4 shadow-md"
+        />
+
 
         <TouchableOpacity
           onPress={() => navigation.navigate("ForgotPassword")}
@@ -97,7 +96,7 @@ const LogIn = () => {
             <Text className="text-accent font-semibold ml-1">Sign Up</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Card>
     </SafeAreaView>
   );
 };

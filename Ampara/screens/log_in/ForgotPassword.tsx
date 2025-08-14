@@ -2,13 +2,16 @@ import { View, TouchableOpacity, TextInput, Image, Text } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import Card from "../../src/components/ui/Card";
+import FormInput from "../../src/components/ui/FormInput";
+import PrimaryButton from "../../src/components/ui/PrimaryButton";
 
 const ForgotPassword = () => {
   const navigation = useNavigation();
 
   return (
     <SafeAreaView className="flex-1 bg-background justify-center items-center p-6">
-      <View className="w-full max-w-md bg-background/10 rounded-xl p-8 border border-border">
+      <Card className="w-full max-w-md p-8">
         <View className="items-center mb-8">
           <Image
             source={require("../../assets/Ampara_logo.png")}
@@ -17,28 +20,23 @@ const ForgotPassword = () => {
           />
           <Text className="text-3xl font-bold text-text">Forgot Password</Text>
         </View>
+        <FormInput
+          label="Email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-        <View className="mb-6">
-          <Text className="text-subtitle text-base font-semibold mb-2">
-            Email
-          </Text>
-          <TextInput
-            className="border border-border rounded-lg py-3 px-4 text-lg bg-background/70"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </View>
-
-        <TouchableOpacity className="bg-primary rounded-xl py-4 shadow-md mb-4">
-          <Text className="text-white text-center">Send Reset Link</Text>
-        </TouchableOpacity>
+        <PrimaryButton
+          title="Send Reset Link"
+          className="mb-4 shadow-md"
+        />
 
         <View className="flex-row justify-center mt-2">
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
             <Text className="text-accent">Back to Log In</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Card>
     </SafeAreaView>
   );
 };

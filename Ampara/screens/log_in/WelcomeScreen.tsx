@@ -1,8 +1,9 @@
-import { View, TouchableOpacity, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { Heading, Subheading } from "../../src/components/ui";
+import PrimaryButton from "../../src/components/ui/PrimaryButton";
+import SecondaryButton from "../../src/components/ui/SecondaryButton";
 
 const WelcomeScreen = () => {
   const navigation = useNavigation();
@@ -19,21 +20,17 @@ const WelcomeScreen = () => {
       </View>
 
       <View className="w-full max-w-sm">
-        <TouchableOpacity
-          className="bg-primary rounded-xl py-4 mb-4 shadow-md"
+        <PrimaryButton
+          title="Log In"
           onPress={() => navigation.navigate("LogIn")}
-        >
-          <Subheading className="text-white text-center">Log In</Subheading>
-        </TouchableOpacity>
+          className="mb-4 shadow-md"
+        />
 
-        <TouchableOpacity
-          className="bg-accent rounded-xl py-4 shadow-md"
+        <SecondaryButton
+          title="Create Account"
           onPress={() => navigation.navigate("SignUp")}
-        >
-          <Subheading className="text-white text-center">
-            Create Account
-          </Subheading>
-        </TouchableOpacity>
+          className="shadow-md"
+        />
       </View>
     </SafeAreaView>
   );

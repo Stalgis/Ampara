@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Modal, View, Text, TextInput, Pressable } from "react-native";
-import { Subheading } from "../../../src/components/ui";
-import colors from "tailwindcss/colors";
+import { Modal, View, Text, Pressable } from "react-native";
+import FormInput from "../../../src/components/ui/FormInput";
+import PrimaryButton from "../../../src/components/ui/PrimaryButton";
 
 interface AddMedicationModalProps {
   visible: boolean;
@@ -40,22 +40,25 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
         <View className="bg-background p-6 rounded-lg w-11/12">
           <Text className="font-bold text-xl mb-4">Add New Medication</Text>
 
-          <TextInput
-            className="border border-border rounded p-3 mb-4"
+          <FormInput
+            label="Medication Name"
+            containerClassName="mb-4"
             placeholder="e.g., Lisinopril"
             placeholderTextColor={colors.gray[400]}
             value={medicationName}
             onChangeText={setMedicationName}
           />
-          <TextInput
-            className="border border-border rounded p-3 mb-4"
+          <FormInput
+            label="Dosage"
+            containerClassName="mb-4"
             placeholder="e.g., 10mg"
             placeholderTextColor={colors.gray[400]}
             value={dosage}
             onChangeText={setDosage}
           />
-          <TextInput
-            className="border border-border rounded p-3 mb-4"
+          <FormInput
+            label="Frequency"
+            containerClassName="mb-4"
             placeholder="e.g., Once daily at 8:00 AM"
             placeholderTextColor={colors.gray[400]}
             value={frequency}
@@ -66,14 +69,12 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
             <Pressable className="mr-4" onPress={onClose}>
               <Subheading className="text-calm">Cancel</Subheading>
             </Pressable>
-            <Pressable
-              className="bg-calm py-2 px-4 rounded"
+            <PrimaryButton
+              title="Add Medication"
               onPress={handleAddMedication}
-            >
-              <Subheading className="text-white font-bold">
-                Add Medication
-              </Subheading>
-            </Pressable>
+              className="py-2 px-4"
+              textClassName="font-bold"
+            />
           </View>
         </View>
       </View>
