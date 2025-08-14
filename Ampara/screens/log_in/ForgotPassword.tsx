@@ -1,37 +1,50 @@
-
-import { View, Text, TouchableOpacity, TextInput } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useNavigation } from '@react-navigation/native'
+import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
 const ForgotPassword = () => {
-    const navigation = useNavigation()
+  const navigation = useNavigation();
 
-    return (
-        <SafeAreaView className="flex-1 bg-white">
-            <View className="flex-1 bg-white p-6">
-                <View className="flex-1 justify-center">
-                    <Text className="text-3xl font-bold text-center mb-10">Forgot Password</Text>
-                    <View className="mb-6">
-                        <TextInput
-                            placeholder="Email"
-                            className="border-b border-gray-300 py-2 px-1"
-                        />
-                    </View>
-                    <TouchableOpacity
-                        className="bg-blue-500 rounded-lg py-3"
-                    >
-                        <Text className="text-white text-center font-bold">Send Reset Link</Text>
-                    </TouchableOpacity>
-                </View>
-                <View className="flex-row justify-center">
-                    <TouchableOpacity onPress={() => navigation.navigate('LogIn')}>
-                        <Text className="text-blue-500 font-bold">Back to Log In</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </SafeAreaView>
-    )
-}
+  return (
+    <SafeAreaView className="flex-1 bg-background justify-center items-center p-6">
+      <View className="w-full max-w-md bg-white/10 rounded-xl p-8 border border-border">
+        <View className="items-center mb-8">
+          <Image
+            source={require("../../assets/Ampara_logo.png")}
+            className="w-32 h-32 mb-2"
+            resizeMode="contain"
+          />
+          <Text className="text-3xl font-bold text-gray-800">
+            Forgot Password
+          </Text>
+        </View>
 
-export default ForgotPassword
+        <View className="mb-6">
+          <Text className="text-gray-700 text-base font-semibold mb-2">
+            Email
+          </Text>
+          <TextInput
+            className="border border-gray-300 rounded-lg py-3 px-4 text-lg bg-white/70"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </View>
+
+        <TouchableOpacity className="bg-primary rounded-xl py-4 shadow-md mb-4">
+          <Text className="text-white text-center text-lg font-semibold">
+            Send Reset Link
+          </Text>
+        </TouchableOpacity>
+
+        <View className="flex-row justify-center mt-2">
+          <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
+            <Text className="text-accent font-semibold">Back to Log In</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default ForgotPassword;

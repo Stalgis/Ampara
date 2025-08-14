@@ -12,21 +12,15 @@ import Chat from "./screens/chat/Chat";
 import Health from "./screens/health/Health";
 import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
-import { LogIn, SignUp, ForgotPassword } from "./screens/log_in";
+import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
+import { AuthContext } from "./controllers/AuthContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-export const AuthContext = createContext<{
-  isAuthenticated: boolean;
-  setIsAuthenticated: (value: boolean) => void;
-}>({
-  isAuthenticated: false,
-  setIsAuthenticated: () => {},
-});
-
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Welcome" component={WelcomeScreen} />
     <Stack.Screen name="LogIn" component={LogIn} />
     <Stack.Screen name="SignUp" component={SignUp} />
     <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
