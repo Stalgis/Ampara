@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, Modal, FlatList } from "react-native";
+import { View, Pressable, Modal, FlatList, Text } from "react-native";
 import AddHealthRecordModal from "./Modals/AddHealthRecordModal";
+import { Heading, Body } from "../../src/components/ui";
 
 interface HealthRecord {
   id: string;
@@ -62,22 +63,20 @@ const HealthRecords = () => {
 
   return (
     <View className="p-4">
-      <Text className="font-bold text-xl font-text text-text">
-        Health Records
-      </Text>
+      <Heading className="text-xl text-text">Health Records</Heading>
       <View id="container-records-cards" className="mt-4 flex gap-4">
         {records.map((record) => (
           <View
             key={record.id}
-            className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-white"
+            className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background"
           >
             <View>
               <Text className="font-bold text-xl text-text">
                 {record.visitType}
               </Text>
-              <Text className="text-subtitle text-sm">
+              <Body className="text-subtitle text-sm">
                 {record.doctor} - {record.date}
-              </Text>
+              </Body>
             </View>
             <Pressable onPress={() => openModal(record)}>
               <Text className="text-calm font-bold">View</Text>
@@ -96,14 +95,14 @@ const HealthRecords = () => {
 
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-center items-center bg-black/30">
-          <View className="bg-white p-6 rounded-lg w-11/12">
+          <View className="bg-background p-6 rounded-lg w-11/12">
             <Text className="font-bold text-xl mb-4">
               {selectedRecord?.visitType}
             </Text>
-            <Text className="text-subtitle text-sm mb-4">
+            <Body className="text-subtitle text-sm mb-4">
               {selectedRecord?.doctor} - {selectedRecord?.date}
-            </Text>
-            <Text>{selectedRecord?.details}</Text>
+            </Body>
+            <Body>{selectedRecord?.details}</Body>
             <Pressable className="mt-4" onPress={closeModal}>
               <Text className="text-calm text-right">Close</Text>
             </Pressable>

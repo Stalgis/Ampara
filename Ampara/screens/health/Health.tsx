@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, SafeAreaView } from "react-native";
+import { View, Pressable, SafeAreaView, Text } from "react-native";
 import Vitals from "./health_vitals";
 import Medications from "./health_medications";
 import HealthRecords from "./health_records";
@@ -28,7 +28,7 @@ const Health = () => {
           <Pressable onPress={() => setSelectedSection("vitals")}>
             <Text
               className={`${
-                selectedSection == "vitals" ? "bg-white font-bold" : ""
+                selectedSection == "vitals" ? "bg-background font-bold" : ""
               } px-6 py-2 rounded`}
             >
               Vitals
@@ -37,7 +37,9 @@ const Health = () => {
           <Pressable onPress={() => setSelectedSection("medications")}>
             <Text
               className={`${
-                selectedSection == "medications" ? "bg-white font-bold" : ""
+                selectedSection == "medications"
+                  ? "bg-background font-bold"
+                  : ""
               } px-4 py-2 rounded`}
             >
               Medications
@@ -46,14 +48,14 @@ const Health = () => {
           <Pressable onPress={() => setSelectedSection("records")}>
             <Text
               className={`${
-                selectedSection == "records" ? "bg-white font-bold" : ""
+                selectedSection == "records" ? "bg-background font-bold" : ""
               } px-4 py-2 rounded`}
             >
               Records
             </Text>
           </Pressable>
         </View>
-        <View className="border border-border rounded w-full bg-[#ffffff]">
+        <View className="border border-border rounded w-full bg-background">
           {renderSection()}
         </View>
       </View>

@@ -16,9 +16,7 @@ const WelcomeScreen = () => {
           className="w-64 h-64"
           resizeMode="contain"
         />
-        <Text className="text-4xl font-bold text-gray-800 font-mono">
-          AMPARA
-        </Text>
+        <Heading>AMPARA</Heading>
       </View>
 
       <View className="w-full max-w-sm">

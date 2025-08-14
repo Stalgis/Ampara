@@ -37,14 +37,14 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View className="flex-1 justify-center items-center bg-black/30">
-        <View className="bg-white p-6 rounded-lg w-11/12">
+        <View className="bg-background p-6 rounded-lg w-11/12">
           <Text className="font-bold text-xl mb-4">Add New Medication</Text>
 
           <FormInput
             label="Medication Name"
             containerClassName="mb-4"
             placeholder="e.g., Lisinopril"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={colors.gray[400]}
             value={medicationName}
             onChangeText={setMedicationName}
           />
@@ -52,7 +52,7 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
             label="Dosage"
             containerClassName="mb-4"
             placeholder="e.g., 10mg"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={colors.gray[400]}
             value={dosage}
             onChangeText={setDosage}
           />
@@ -60,14 +60,14 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
             label="Frequency"
             containerClassName="mb-4"
             placeholder="e.g., Once daily at 8:00 AM"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={colors.gray[400]}
             value={frequency}
             onChangeText={setFrequency}
           />
 
           <View className="flex-row justify-end items-center">
             <Pressable className="mr-4" onPress={onClose}>
-              <Text className="text-calm">Cancel</Text>
+              <Subheading className="text-calm">Cancel</Subheading>
             </Pressable>
             <PrimaryButton
               title="Add Medication"

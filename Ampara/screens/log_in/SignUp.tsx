@@ -1,11 +1,19 @@
-import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
-import React, { useState } from "react";
+
+import {
+  View,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+  Image,
+  Text,
+} from "react-native";
+import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Body } from "../../src/components/ui";
 
-// import { AuthContext } from '../../context/AuthContext'
 import apiFetch from "../../services/api";
 import Card from "../../src/components/ui/Card";
 import FormInput from "../../src/components/ui/FormInput";
@@ -13,7 +21,6 @@ import PrimaryButton from "../../src/components/ui/PrimaryButton";
 
 const SignUp = () => {
   const navigation = useNavigation();
-  // const { setIsAuthenticated } = useContext(AuthContext)
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -48,7 +55,6 @@ const SignUp = () => {
       const { access_token, user } = await response.json();
       await AsyncStorage.setItem("access_token", access_token);
       await AsyncStorage.setItem("user", JSON.stringify(user));
-      // setIsAuthenticated(true)
     } catch (e) {
       setError("Registration failed");
     }
@@ -63,11 +69,11 @@ const SignUp = () => {
             className="w-32 h-32 mb-2"
             resizeMode="contain"
           />
-          <Text className="text-3xl font-bold text-gray-800">Sign Up</Text>
+          <Text className="text-3xl font-bold text-text">Sign Up</Text>
         </View>
 
         {error && (
-          <Text className="text-red-500 text-center mb-4">{error}</Text>
+          <Body className="text-red-500 text-center mb-4">{error}</Body>
         )}
 
         <FormInput
@@ -107,12 +113,12 @@ const SignUp = () => {
             </TouchableOpacity>
           }
         />
-
         <FormInput
           label="Connect to Elder (Name or ID)"
           value={elder}
           onChangeText={setElder}
         />
+
 
         <PrimaryButton
           title="Sign Up"
@@ -121,7 +127,7 @@ const SignUp = () => {
         />
 
         <View className="flex-row justify-center mt-6">
-          <Text className="text-gray-600">Already have an account?</Text>
+          <Text className="text-subtitle">Already have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
             <Text className="text-accent font-semibold ml-1">Log In</Text>
           </TouchableOpacity>

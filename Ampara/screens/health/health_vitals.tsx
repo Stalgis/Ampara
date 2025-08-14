@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Pressable, Modal } from "react-native";
+import { View, TextInput, Pressable, Modal, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import RecordVitalsModal from "./Modals/RecordVitalsModal";
+import { Heading, Subheading, Body } from "../../src/components/ui";
 
 const Vitals = () => {
   const [heartRateTime, setHeartRateTime] = useState("Today, 8:00 AM");
@@ -61,115 +62,121 @@ const Vitals = () => {
 
   return (
     <View className="p-4">
-      <Text className="font-bold text-xl font-text text-text">
-        Recent Vitals
-      </Text>
+      <Heading className="text-xl text-text">Recent Vitals</Heading>
       <View id="container-vitals-cards" className="mt-4 flex gap-4">
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
           <View className="flex-row items-center flex-1">
             <View className="bg-red-100 p-2 rounded-lg mr-3">
               <Ionicons name="heart-outline" size={24} color="red" />
             </View>
             <View className="flex-1">
-              <Text className="font-bold text-base text-text">Heart Rate</Text>
-              <Text className="text-subtitle text-sm">
+              <Subheading className="font-bold text-base text-text">
+                Heart Rate
+              </Subheading>
+              <Body className="text-subtitle text-sm">
                 Last updated: {heartRateTime}
-              </Text>
+              </Body>
             </View>
           </View>
           <View>
-            <Text className="font-bold text-lg text-text">{heartRate} bpm</Text>
+            <Subheading className="font-bold text-lg text-text">
+              {heartRate} bpm
+            </Subheading>
           </View>
         </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
           <View className="flex-row items-center flex-1">
             <View className="bg-blue-100 p-2 rounded-lg mr-3">
               <Ionicons name="analytics-outline" size={24} color="blue" />
             </View>
             <View className="flex-1">
-              <Text className="font-bold text-base text-text">
+              <Subheading className="font-bold text-base text-text">
                 Blood Pressure
-              </Text>
-              <Text className="text-subtitle text-sm">
+              </Subheading>
+              <Body className="text-subtitle text-sm">
                 Last updated: {bloodPressureTime}
-              </Text>
+              </Body>
             </View>
           </View>
           <View>
-            <Text className="font-bold text-lg text-text">
+            <Subheading className="font-bold text-lg text-text">
               {bloodPressure} mmHg
-            </Text>
+            </Subheading>
           </View>
         </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
           <View className="flex-row items-center flex-1">
             <View className="bg-green-100 p-2 rounded-lg mr-3">
               <Ionicons name="thermometer-outline" size={24} color="green" />
             </View>
             <View className="flex-1">
-              <Text className="font-bold text-base text-text">Temperature</Text>
-              <Text className="text-subtitle text-sm">
+              <Subheading className="font-bold text-base text-text">
+                Temperature
+              </Subheading>
+              <Body className="text-subtitle text-sm">
                 Last updated: {temperatureTime}
-              </Text>
+              </Body>
             </View>
           </View>
           <View>
-            <Text className="font-bold text-lg text-text">
+            <Subheading className="font-bold text-lg text-text">
               {temperature} °F
-            </Text>
+            </Subheading>
           </View>
         </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
           <View className="flex-row items-center flex-1">
             <View className="bg-purple-100 p-2 rounded-lg mr-3">
               <Ionicons name="water-outline" size={24} color="purple" />
             </View>
             <View className="flex-1">
-              <Text className="font-bold text-base text-text">
+              <Subheading className="font-bold text-base text-text">
                 Blood Glucose
-              </Text>
-              <Text className="text-subtitle text-sm">
+              </Subheading>
+              <Body className="text-subtitle text-sm">
                 Last updated: {bloodGlucoseTime}
-              </Text>
+              </Body>
             </View>
           </View>
           <View>
-            <Text className="font-bold text-lg text-text">
+            <Subheading className="font-bold text-lg text-text">
               {bloodGlucose} mg/dL
-            </Text>
+            </Subheading>
           </View>
         </View>
-        {/* <Pressable
+        <Pressable
           onPress={() => setModalVisible(true)}
           className="bg-calm px-4 py-3 rounded"
         >
-          <Text className="text-white font-medium mx-auto text-lg">
+          <Subheading className="text-white font-medium mx-auto text-lg">
             Record New Vitals
-          </Text>
+          </Subheading>
         </Pressable>
 
         <RecordVitalsModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           onSave={recordNewVitals}
-        /> */}
+        />
         <Pressable
           onPress={() => setModalVisible(true)}
           className="bg-calm px-4 py-3 rounded"
         >
-          <Text className="text-white font-medium mx-auto text-lg">
+          <Subheading className="text-white font-medium mx-auto text-lg">
             Record New Vitals
-          </Text>
+          </Subheading>
         </Pressable>
 
         <Modal visible={modalVisible} animationType="slide" transparent>
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-background p-6 rounded-xl w-11/12">
-              <Text className="text-xl font-bold text-text mb-4">
+              <Heading className="text-xl mb-4 text-text">
                 Update Vitals
-              </Text>
+              </Heading>
 
-              <Text className="text-text mb-1">Heart Rate (bpm)</Text>
+              <Subheading className="text-text mb-1">
+                Heart Rate (bpm)
+              </Subheading>
               <TextInput
                 value={newHeartRate}
                 onChangeText={setNewHeartRate}
@@ -178,7 +185,9 @@ const Vitals = () => {
                 className="border border-border rounded p-2 mb-3"
               />
 
-              <Text className="text-text mb-1">Blood Pressure (mmHg)</Text>
+              <Subheading className="text-text mb-1">
+                Blood Pressure (mmHg)
+              </Subheading>
               <TextInput
                 value={newBloodPressure}
                 onChangeText={setNewBloodPressure}
@@ -186,7 +195,9 @@ const Vitals = () => {
                 className="border border-border rounded p-2 mb-3"
               />
 
-              <Text className="text-text mb-1">Temperature (°F)</Text>
+              <Subheading className="text-text mb-1">
+                Temperature (°F)
+              </Subheading>
               <TextInput
                 value={newTemperature}
                 onChangeText={setNewTemperature}
@@ -195,7 +206,9 @@ const Vitals = () => {
                 className="border border-border rounded p-2 mb-3"
               />
 
-              <Text className="text-text mb-1">Blood Glucose (mg/dL)</Text>
+              <Subheading className="text-text mb-1">
+                Blood Glucose (mg/dL)
+              </Subheading>
               <TextInput
                 value={newBloodGlucose}
                 onChangeText={setNewBloodGlucose}
@@ -209,13 +222,13 @@ const Vitals = () => {
                   onPress={() => setModalVisible(false)}
                   className="bg-border px-4 py-2 rounded"
                 >
-                  <Text className="text-text">Cancel</Text>
+                  <Body className="text-text">Cancel</Body>
                 </Pressable>
                 <Pressable
                   onPress={recordNewVitals}
                   className="bg-primary px-4 py-2 rounded"
                 >
-                  <Text className="text-text font-bold">Save</Text>
+                  <Subheading className="text-text font-bold">Save</Subheading>
                 </Pressable>
               </View>
             </View>

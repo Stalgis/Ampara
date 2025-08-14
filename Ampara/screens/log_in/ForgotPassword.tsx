@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, TouchableOpacity, TextInput, Image, Text } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -18,11 +18,8 @@ const ForgotPassword = () => {
             className="w-32 h-32 mb-2"
             resizeMode="contain"
           />
-          <Text className="text-3xl font-bold text-gray-800">
-            Forgot Password
-          </Text>
+          <Text className="text-3xl font-bold text-text">Forgot Password</Text>
         </View>
-
         <FormInput
           label="Email"
           keyboardType="email-address"
@@ -36,7 +33,7 @@ const ForgotPassword = () => {
 
         <View className="flex-row justify-center mt-2">
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
-            <Text className="text-accent font-semibold">Back to Log In</Text>
+            <Text className="text-accent">Back to Log In</Text>
           </TouchableOpacity>
         </View>
       </Card>

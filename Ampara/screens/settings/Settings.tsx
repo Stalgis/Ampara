@@ -1,11 +1,15 @@
 import React from "react";
-import { View, Text } from "react-native";
+
+import { SafeAreaView, View, Text } from "react-native";
 
 const Settings = () => {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ fontSize: 24 }}>Settings Screen</Text>
-    </View>
+    <SafeAreaView className="bg-background h-full">
+      <View className="flex-1 mx-4 items-center justify-center">
+        <Text className="text-2xl text-text">Settings Screen</Text>
+      </View>
+    </SafeAreaView>
+
   );
 };
 
