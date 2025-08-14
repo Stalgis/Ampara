@@ -1,10 +1,17 @@
-import { View, TouchableOpacity, TextInput, Alert, Image } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+  Image,
+  Text,
+} from "react-native";
 import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Heading, Subheading, Body } from "../../src/components/ui";
+import { Body } from "../../src/components/ui";
 
 import apiFetch from "../../services/api";
 
@@ -68,7 +75,7 @@ const SignUp = () => {
         <View className="mb-6">
           <Text className="text-subtitle text-base font-semibold mb-2">
             Full Name
-          </Subheading>
+          </Text>
           <TextInput
             value={name}
             onChangeText={setName}
@@ -79,7 +86,7 @@ const SignUp = () => {
         <View className="mb-6">
           <Text className="text-subtitle text-base font-semibold mb-2">
             Email
-          </Subheading>
+          </Text>
           <TextInput
             value={email}
             onChangeText={setEmail}
@@ -121,7 +128,7 @@ const SignUp = () => {
         <View className="mb-6">
           <Text className="text-subtitle text-base font-semibold mb-2">
             Connect to Elder (Name or ID)
-          </Subheading>
+          </Text>
           <TextInput
             value={elder}
             onChangeText={setElder}
@@ -133,12 +140,12 @@ const SignUp = () => {
           onPress={handleSignUp}
           className="bg-primary rounded-xl py-4 shadow-md mb-4"
         >
-          <Subheading className="text-white text-center">Sign Up</Subheading>
+          <Text className="text-white text-center">Sign Up</Text>
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">
           <Text className="text-subtitle">Already have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("LogIn")}> 
+          <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
             <Text className="text-accent font-semibold ml-1">Log In</Text>
           </TouchableOpacity>
         </View>

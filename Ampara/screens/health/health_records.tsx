@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { View, Pressable, Modal, FlatList } from "react-native";
+import { View, Pressable, Modal, FlatList, Text } from "react-native";
 import AddHealthRecordModal from "./Modals/AddHealthRecordModal";
-import { Heading, Subheading, Body } from "../../src/components/ui";
+import { Heading, Body } from "../../src/components/ui";
 
 interface HealthRecord {
   id: string;
@@ -71,15 +71,15 @@ const HealthRecords = () => {
             className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background"
           >
             <View>
-              <Subheading className="font-bold text-xl text-text">
+              <Text className="font-bold text-xl text-text">
                 {record.visitType}
-              </Subheading>
+              </Text>
               <Body className="text-subtitle text-sm">
                 {record.doctor} - {record.date}
               </Body>
             </View>
             <Pressable onPress={() => openModal(record)}>
-              <Subheading className="text-calm font-bold">View</Subheading>
+              <Text className="text-calm font-bold">View</Text>
             </Pressable>
           </View>
         ))}
@@ -87,9 +87,9 @@ const HealthRecords = () => {
           className="bg-calm py-3 rounded mt-4"
           onPress={() => setAddModalVisible(true)}
         >
-          <Subheading className="text-white font-medium mx-auto text-lg">
+          <Text className="text-white font-medium mx-auto text-lg">
             Upload New Record
-          </Subheading>
+          </Text>
         </Pressable>
       </View>
 
@@ -98,13 +98,13 @@ const HealthRecords = () => {
           <View className="bg-background p-6 rounded-lg w-11/12">
             <Text className="font-bold text-xl mb-4">
               {selectedRecord?.visitType}
-            </Heading>
+            </Text>
             <Body className="text-subtitle text-sm mb-4">
               {selectedRecord?.doctor} - {selectedRecord?.date}
             </Body>
             <Body>{selectedRecord?.details}</Body>
             <Pressable className="mt-4" onPress={closeModal}>
-              <Subheading className="text-calm text-right">Close</Subheading>
+              <Text className="text-calm text-right">Close</Text>
             </Pressable>
           </View>
         </View>

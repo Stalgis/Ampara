@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, View, Text, TextInput, Pressable } from "react-native";
+import { Subheading } from "../../../src/components/ui";
 import colors from "tailwindcss/colors";
 
 interface AddMedicationModalProps {

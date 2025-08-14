@@ -36,13 +36,17 @@ const CalendarScreen = () => {
       <View className="flex flex-row items-center justify-between mt-6">
         <Text className="font-bold text-xl">Today's Schedule</Text>
         <View className="flex-row items-center ">
-          <Feather name="calendar" size={18} color={colors.gray[400]} className="mr-1" />
+          <Feather
+            name="calendar"
+            size={18}
+            color={colors.gray[400]}
+            className="mr-1"
+          />
           <Text className="text-subtitle">
             {new Date().toLocaleDateString()}
           </Text>
-
         </View>
-
+      </View>
 
       {/* Today's Schedule Cards */}
       <View className="mt-4">
@@ -71,7 +75,6 @@ const CalendarScreen = () => {
             <View className="flex-1">
               <Text className="font-bold text-base">Morning Coffee</Text>
               <Text className="text-subtitle text-sm">4:30 PM - 5:30 PM</Text>
-
             </View>
             <Pressable className="bg-[#46a697] px-4 py-2 rounded">
               <Text className="text-white font-medium">Join</Text>
@@ -92,7 +95,6 @@ const CalendarScreen = () => {
             <View className="flex-1">
               <Text className="font-bold text-base">Study Session</Text>
               <Text className="text-subtitle text-sm">7:00 PM - 8:00 PM</Text>
-
             </View>
             <Pressable className="bg-[#46a697] px-4 py-2 rounded">
               <Text className="text-white font-medium">Join</Text>
@@ -102,7 +104,6 @@ const CalendarScreen = () => {
           <Pressable className="bg-teal-500 px-4 py-2 rounded">
             <Text className="text-white font-medium">Join</Text>
           </Pressable>
-
         </View>
       </View>
     </SafeAreaView>

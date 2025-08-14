@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Pressable, Modal, FlatList } from "react-native";
+import { View, Pressable, Modal, FlatList, Text } from "react-native";
 import { Heading, Subheading, Body } from "../../../src/components/ui";
 
 interface Medication {

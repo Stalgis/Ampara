@@ -1,8 +1,7 @@
-import { View, TouchableOpacity, TextInput, Image } from "react-native";
+import { View, TouchableOpacity, TextInput, Image, Text } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { Heading, Subheading } from "../../src/components/ui";
 
 const ForgotPassword = () => {
   const navigation = useNavigation();
@@ -16,15 +15,13 @@ const ForgotPassword = () => {
             className="w-32 h-32 mb-2"
             resizeMode="contain"
           />
-          <Text className="text-3xl font-bold text-text">
-            Forgot Password
-          </Text>
+          <Text className="text-3xl font-bold text-text">Forgot Password</Text>
         </View>
 
         <View className="mb-6">
           <Text className="text-subtitle text-base font-semibold mb-2">
             Email
-          </Subheading>
+          </Text>
           <TextInput
             className="border border-border rounded-lg py-3 px-4 text-lg bg-background/70"
             keyboardType="email-address"
@@ -33,15 +30,13 @@ const ForgotPassword = () => {
         </View>
 
         <TouchableOpacity className="bg-primary rounded-xl py-4 shadow-md mb-4">
-          <Subheading className="text-white text-center">
-            Send Reset Link
-          </Subheading>
+          <Text className="text-white text-center">Send Reset Link</Text>
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-2">
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
-            <Subheading className="text-accent">Back to Log In</Subheading>
-        </TouchableOpacity>
+            <Text className="text-accent">Back to Log In</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

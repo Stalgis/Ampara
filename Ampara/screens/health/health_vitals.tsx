@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Pressable, Modal } from "react-native";
+import { View, TextInput, Pressable, Modal, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import RecordVitalsModal from "./Modals/RecordVitalsModal";
 import { Heading, Subheading, Body } from "../../src/components/ui";

@@ -1,10 +1,10 @@
-import { View, TouchableOpacity, TextInput, Image } from "react-native";
+import { View, TouchableOpacity, TextInput, Image, Text } from "react-native";
 import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAuth } from "../../controllers/AuthContext";
-import { Heading, Subheading, Body } from "../../src/components/ui";
+import { Heading, Body } from "../../src/components/ui";
 
 const LogIn = () => {
   const navigation = useNavigation();
@@ -38,7 +38,7 @@ const LogIn = () => {
         <View className="mb-6">
           <Text className="text-subtitle text-base font-semibold mb-2 pl-3">
             Email
-          </Subheading>
+          </Text>
           <TextInput
             value={email}
             onChangeText={setEmail}
@@ -81,19 +81,19 @@ const LogIn = () => {
           className="bg-primary rounded-xl py-4 shadow-md mb-4"
           onPress={() => setIsAuthenticated(true)}
         >
-          <Subheading className="text-white text-center">Log In</Subheading>
+          <Text className="text-white text-center">Log In</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => navigation.navigate("ForgotPassword")}
           className="mt-2"
         >
-          <Subheading className="text-center text-accent">Forgot Password?</Subheading>
+          <Text className="text-center text-accent">Forgot Password?</Text>
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">
           <Text className="text-subtitle">Don't have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("SignUp")}> 
+          <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text className="text-accent font-semibold ml-1">Sign Up</Text>
           </TouchableOpacity>
         </View>

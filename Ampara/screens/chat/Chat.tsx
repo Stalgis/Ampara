@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Pressable, Image, useColorScheme } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Pressable,
+  Image,
+  useColorScheme,
+} from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import CallDetailsModal from "./Modals/CallDetailsModal";
 import { designTokens } from "../../design-tokens";
-
 
 const Chat = () => {
   const [selectedSection, setSelectedSection] = useState("message");
@@ -35,7 +41,6 @@ const Chat = () => {
   });
   return (
     <SafeAreaView className="bg-background h-full">
-
       {/* Tab selection view removed for brevity */}
       <View className="mx-4">
         <View className="bg-badge border border-highlight rounded-xl mt-4 p-3 flex flex-row items-center">
@@ -48,31 +53,26 @@ const Chat = () => {
 
           {/* Texto + Botón */}
           <View className="flex-1">
-            <Subheading className="text-text text-base mb-1">
-              Ampara suggestions
-            </Subheading>
-            <Body className="text-subtitle text-sm mb-2">
+            <Text className="text-text text-base mb-1">Ampara suggestions</Text>
+            <Text className="text-subtitle text-sm mb-2">
               Today I can mention her friend Mery's birthday, would you like
               that?
             </Text>
             <Pressable className="bg-highlight rounded-lg px-3 py-1 self-start">
               <Text className="text-white text-sm font-medium">
-
                 Send Suggestion
-              </Subheading>
+              </Text>
             </Pressable>
           </View>
         </View>
         <View id="call-history" className="mt-4">
           <View className="flex-row justify-between items-center">
-            <Heading className="text-text text-lg">Calls history</Heading>
+            <Text className="text-text text-lg">Calls history</Text>
             <Pressable
               onPress={() => setShowFilterOptions(!showFilterOptions)}
               className="flex-row items-center"
             >
-              <Subheading className="text-primary font-bold mr-1">
-                {callFilter}
-              </Subheading>
+              <Text className="text-primary font-bold mr-1">{callFilter}</Text>
               <Feather
                 name={showFilterOptions ? "chevron-up" : "chevron-down"}
                 size={20}
@@ -89,7 +89,7 @@ const Chat = () => {
                 }}
                 className="p-3"
               >
-                <Body>Last 7 days</Body>
+                <Text>Last 7 days</Text>
               </Pressable>
               <Pressable
                 onPress={() => {
@@ -98,7 +98,7 @@ const Chat = () => {
                 }}
                 className="p-3"
               >
-                <Body>Last 30 days</Body>
+                <Text>Last 30 days</Text>
               </Pressable>
             </View>
           )}
@@ -112,14 +112,12 @@ const Chat = () => {
                   <Feather name="phone" size={24} color={tokens.text} />
                 </View>
                 <View className="flex-1">
-                  <Subheading className="font-bold text-base text-text">
-                    Call
-                  </Subheading>
-                  <Body className="text-subtitle text-sm">{call.date}</Body>
+                  <Text className="font-bold text-base text-text">Call</Text>
+                  <Text className="text-subtitle text-sm">{call.date}</Text>
                 </View>
               </View>
               <Pressable onPress={() => setModalVisible(true)}>
-                <Body className="text-md text-text">{call.date}</Body>
+                <Text className="text-md text-text">{call.date}</Text>
               </Pressable>
             </View>
           ))}

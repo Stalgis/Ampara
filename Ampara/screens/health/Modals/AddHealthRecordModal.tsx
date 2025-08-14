@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  Text,
 } from "react-native";
 import colors from "tailwindcss/colors";
 
@@ -65,11 +66,9 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
               <View className="bg-background p-6 rounded-lg w-11/12">
                 <Text className="font-bold text-xl mb-4">
                   Add New Health Record
-                </Heading>
+                </Text>
 
-                <Subheading className="font-medium text-text mb-1">
-                  Title
-                </Subheading>
+                <Text className="font-medium text-text mb-1">Title</Text>
                 <TextInput
                   className="border border-border rounded p-3 mb-4"
                   placeholder="e.g., Annual Check-up"
@@ -77,9 +76,7 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                   value={title}
                   onChangeText={setTitle}
                 />
-                <Subheading className="font-medium text-text mb-1">
-                  Doctor
-                </Subheading>
+                <Text className="font-medium text-text mb-1">Doctor</Text>
                 <TextInput
                   className="border border-border rounded p-3 mb-4"
                   placeholder="e.g., Dr. Smith"
@@ -87,7 +84,7 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                   value={doctor}
                   onChangeText={setDoctor}
                 />
-                <Subheading className="font-medium text-text mb-1">Date</Subheading>
+                <Text className="font-medium text-text mb-1">Date</Text>
                 <TextInput
                   className="border border-border rounded p-3 mb-4"
                   placeholder="e.g., 2023-10-27"
@@ -95,9 +92,7 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                   value={date}
                   onChangeText={setDate}
                 />
-                <Subheading className="font-medium text-text mb-1">
-                  Summary
-                </Subheading>
+                <Text className="font-medium text-text mb-1">Summary</Text>
                 <TextInput
                   className="border border-border rounded p-3 mb-4"
                   placeholder="e.g., Routine check-up, all clear."
@@ -108,15 +103,13 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                 />
                 <View className="flex-row justify-end items-center">
                   <Pressable className="mr-4" onPress={onClose}>
-                    <Subheading className="text-calm">Cancel</Subheading>
+                    <Text className="text-calm">Cancel</Text>
                   </Pressable>
                   <Pressable
                     className="bg-calm py-2 px-4 rounded"
                     onPress={handleAddRecord}
                   >
-                    <Subheading className="text-white font-bold">
-                      Add Record
-                    </Subheading>
+                    <Text className="text-white font-bold">Add Record</Text>
                   </Pressable>
                 </View>
               </View>
