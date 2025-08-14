@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Pressable, Image } from "react-native";
+import { View, Text, SafeAreaView, Pressable, Image, useColorScheme } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import CallDetailsModal from "./Modals/CallDetailsModal";
+import { designTokens } from "../../design-tokens";
 
 const Chat = () => {
   const [selectedSection, setSelectedSection] = useState("message");
   const [modalVisible, setModalVisible] = useState(false);
   const [callFilter, setCallFilter] = useState("Last 7 days");
   const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const scheme = useColorScheme() ?? "light";
+  const tokens = designTokens[scheme];
 
   const calls = [
     { date: "08/08/2025, 9:00AM" },
@@ -31,39 +34,6 @@ const Chat = () => {
   });
   return (
     <SafeAreaView className="bg-background h-full">
-      {/* <View
-        id="select-view"
-        className="flex flex-row justify-center justify-evenly bg-gray-100 mx-6 rounded my-4 p-2"
-      >
-        <Pressable onPress={() => setSelectedSection("message")}>
-          <Text
-            className={`${selectedSection == "message" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
-          >
-            Message
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => setSelectedSection("chatbot")}>
-          <Text
-            className={`${selectedSection == "chatbot" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
-          >
-            ChatBot
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => setSelectedSection("advice")}>
-          <Text
-            className={`${selectedSection == "advice" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
-          >
-            Advice
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => setSelectedSection("calls")}>
-          <Text
-            className={`${selectedSection == "calls" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
-          >
-            Calls
-          </Text>
-        </Pressable>
-      </View> */}
       <View className="mx-4">
         <View className="bg-badge border border-highlight rounded-xl mt-4 p-3 flex flex-row items-center">
           {/* Logo */}
@@ -82,7 +52,7 @@ const Chat = () => {
               Today I can mention her friend Mery's birthday, would you like
               that?
             </Text>
-            <Pressable className="bg-[#F59E0B] rounded-lg px-3 py-1 self-start">
+            <Pressable className="bg-highlight rounded-lg px-3 py-1 self-start">
               <Text className="text-white text-sm font-medium">
                 Send Suggestion
               </Text>
@@ -100,12 +70,12 @@ const Chat = () => {
               <Feather
                 name={showFilterOptions ? "chevron-up" : "chevron-down"}
                 size={20}
-                color="#F59E0B"
+                color={tokens.highlight}
               />
             </Pressable>
           </View>
           {showFilterOptions && (
-            <View className="absolute right-0 top-8 bg-white border border-border rounded-lg mt-2 z-10 w-36">
+            <View className="absolute right-0 top-8 bg-background border border-border rounded-lg mt-2 z-10 w-36">
               <Pressable
                 onPress={() => {
                   setCallFilter("Last 7 days");
@@ -129,11 +99,11 @@ const Chat = () => {
           {filteredCalls.map((call, index) => (
             <View
               key={index}
-              className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff] mt-2"
+              className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background mt-2"
             >
               <View className="flex-row items-center flex-1">
                 <View className="bg-primary p-2 rounded-lg mr-3">
-                  <Feather name="phone" size={24} color="#3F3F46" />
+                  <Feather name="phone" size={24} color={tokens.text} />
                 </View>
                 <View className="flex-1">
                   <Text className="font-bold text-base text-text">Call</Text>

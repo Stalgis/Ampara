@@ -12,12 +12,10 @@ import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// import { AuthContext } from '../../context/AuthContext'
 import apiFetch from "../../services/api";
 
 const SignUp = () => {
   const navigation = useNavigation();
-  // const { setIsAuthenticated } = useContext(AuthContext)
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -52,22 +50,21 @@ const SignUp = () => {
       const { access_token, user } = await response.json();
       await AsyncStorage.setItem("access_token", access_token);
       await AsyncStorage.setItem("user", JSON.stringify(user));
-      // setIsAuthenticated(true)
     } catch (e) {
       setError("Registration failed");
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white justify-center items-center p-6">
-      <View className="w-full max-w-md bg-white/10 rounded-xl p-8 border border-border bg-white">
+    <SafeAreaView className="flex-1 bg-background justify-center items-center p-6">
+      <View className="w-full max-w-md bg-background rounded-xl p-8 border border-border">
         <View className="items-center mb-8">
           <Image
             source={require("../../assets/Ampara_logo.png")}
             className="w-32 h-32 mb-2"
             resizeMode="contain"
           />
-          <Text className="text-3xl font-bold text-gray-800">Sign Up</Text>
+          <Text className="text-3xl font-bold text-text">Sign Up</Text>
         </View>
 
         {error && (
@@ -75,34 +72,34 @@ const SignUp = () => {
         )}
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
+          <Text className="text-subtitle text-base font-semibold mb-2">
             Full Name
           </Text>
           <TextInput
             value={name}
             onChangeText={setName}
-            className="border border-gray-300 rounded-lg py-3 px-4 text-lg bg-white/70"
+            className="border border-border rounded-lg py-3 px-4 text-lg bg-background/70"
           />
         </View>
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
+          <Text className="text-subtitle text-base font-semibold mb-2">
             Email
           </Text>
           <TextInput
             value={email}
             onChangeText={setEmail}
-            className="border border-gray-300 rounded-lg py-3 px-4 text-lg bg-white/70"
+            className="border border-border rounded-lg py-3 px-4 text-lg bg-background/70"
             autoCapitalize="none"
             keyboardType="email-address"
           />
         </View>
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
+          <Text className="text-subtitle text-base font-semibold mb-2">
             Password
           </Text>
-          <View className="flex-row items-center border border-gray-300 rounded-lg bg-white/70">
+          <View className="flex-row items-center border border-border rounded-lg bg-background/70">
             <TextInput
               value={password}
               onChangeText={setPassword}
@@ -128,13 +125,13 @@ const SignUp = () => {
         </View>
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
+          <Text className="text-subtitle text-base font-semibold mb-2">
             Connect to Elder (Name or ID)
           </Text>
           <TextInput
             value={elder}
             onChangeText={setElder}
-            className="border border-gray-300 rounded-lg py-3 px-4 text-lg bg-white/70"
+            className="border border-border rounded-lg py-3 px-4 text-lg bg-background/70"
           />
         </View>
 
@@ -148,8 +145,8 @@ const SignUp = () => {
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">
-          <Text className="text-gray-600">Already have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
+          <Text className="text-subtitle">Already have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("LogIn")}> 
             <Text className="text-accent font-semibold ml-1">Log In</Text>
           </TouchableOpacity>
         </View>

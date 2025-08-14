@@ -25,7 +25,7 @@ const RefillRequestModal: React.FC<RefillRequestModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View className="flex-1 justify-center items-center bg-black/30">
-        <View className="bg-white p-6 rounded-lg w-11/12 max-h-[80%]">
+        <View className="bg-background p-6 rounded-lg w-11/12 max-h-[80%]">
           <Text className="font-bold text-xl mb-4">Request a Refill</Text>
           <FlatList
             data={medications}

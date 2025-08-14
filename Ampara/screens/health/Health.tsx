@@ -25,35 +25,35 @@ const Health = () => {
           id="select-view"
           className="flex flex-row justify-center justify-evenly bg-gray-100 rounded my-4 p-2"
         >
-          <Pressable onPress={() => setSelectedSection("vitals")}>
+          <Pressable onPress={() => setSelectedSection("vitals")}> 
             <Text
               className={`${
-                selectedSection == "vitals" ? "bg-white font-bold" : ""
+                selectedSection == "vitals" ? "bg-background font-bold" : ""
               } px-6 py-2 rounded`}
             >
               Vitals
             </Text>
           </Pressable>
-          <Pressable onPress={() => setSelectedSection("medications")}>
+          <Pressable onPress={() => setSelectedSection("medications")}> 
             <Text
               className={`${
-                selectedSection == "medications" ? "bg-white font-bold" : ""
+                selectedSection == "medications" ? "bg-background font-bold" : ""
               } px-4 py-2 rounded`}
             >
               Medications
             </Text>
           </Pressable>
-          <Pressable onPress={() => setSelectedSection("records")}>
+          <Pressable onPress={() => setSelectedSection("records")}> 
             <Text
               className={`${
-                selectedSection == "records" ? "bg-white font-bold" : ""
+                selectedSection == "records" ? "bg-background font-bold" : ""
               } px-4 py-2 rounded`}
             >
               Records
             </Text>
           </Pressable>
         </View>
-        <View className="border border-border rounded w-full bg-[#ffffff]">
+        <View className="border border-border rounded w-full bg-background">
           {renderSection()}
         </View>
       </View>
