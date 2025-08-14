@@ -14,6 +14,7 @@ import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
 import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
 import { AuthContext } from "./controllers/AuthContext";
+import AppHeader from "./AppHeader";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -31,6 +32,9 @@ const MainTabs = () => (
   <Tab.Navigator
     initialRouteName="Dashboard"
     screenOptions={({ route }) => ({
+      header: () => (
+        <AppHeader title={route.name === "Dashboard" ? "Ampara" : undefined} />
+      ),
       tabBarIcon: ({ focused, color, size }) => {
         let iconName = "";
         switch (route.name) {
