@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Pressable, Text, SafeAreaView } from "react-native";
+import { View, Pressable, SafeAreaView, Text } from "react-native";
 import { Calendar } from "react-native-calendars";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -40,8 +40,9 @@ const CalendarScreen = () => {
           <Text className="text-subtitle">
             {new Date().toLocaleDateString()}
           </Text>
+
         </View>
-      </View>
+
 
       {/* Today's Schedule Cards */}
       <View className="mt-4">
@@ -70,8 +71,13 @@ const CalendarScreen = () => {
             <View className="flex-1">
               <Text className="font-bold text-base">Morning Coffee</Text>
               <Text className="text-subtitle text-sm">4:30 PM - 5:30 PM</Text>
+
             </View>
+            <Pressable className="bg-[#46a697] px-4 py-2 rounded">
+              <Text className="text-white font-medium">Join</Text>
+            </Pressable>
           </View>
+
           <Pressable className="bg-teal-500 px-4 py-2 rounded">
             <Text className="text-white font-medium">Join</Text>
           </Pressable>
@@ -86,11 +92,17 @@ const CalendarScreen = () => {
             <View className="flex-1">
               <Text className="font-bold text-base">Study Session</Text>
               <Text className="text-subtitle text-sm">7:00 PM - 8:00 PM</Text>
+
             </View>
+            <Pressable className="bg-[#46a697] px-4 py-2 rounded">
+              <Text className="text-white font-medium">Join</Text>
+            </Pressable>
           </View>
+
           <Pressable className="bg-teal-500 px-4 py-2 rounded">
             <Text className="text-white font-medium">Join</Text>
           </Pressable>
+
         </View>
       </View>
     </SafeAreaView>

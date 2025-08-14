@@ -1,16 +1,10 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-  Image,
-} from "react-native";
+import { View, TouchableOpacity, TextInput, Alert, Image } from "react-native";
 import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Heading, Subheading, Body } from "../../src/components/ui";
 
 import apiFetch from "../../services/api";
 
@@ -68,13 +62,13 @@ const SignUp = () => {
         </View>
 
         {error && (
-          <Text className="text-red-500 text-center mb-4">{error}</Text>
+          <Body className="text-red-500 text-center mb-4">{error}</Body>
         )}
 
         <View className="mb-6">
           <Text className="text-subtitle text-base font-semibold mb-2">
             Full Name
-          </Text>
+          </Subheading>
           <TextInput
             value={name}
             onChangeText={setName}
@@ -85,7 +79,7 @@ const SignUp = () => {
         <View className="mb-6">
           <Text className="text-subtitle text-base font-semibold mb-2">
             Email
-          </Text>
+          </Subheading>
           <TextInput
             value={email}
             onChangeText={setEmail}
@@ -127,7 +121,7 @@ const SignUp = () => {
         <View className="mb-6">
           <Text className="text-subtitle text-base font-semibold mb-2">
             Connect to Elder (Name or ID)
-          </Text>
+          </Subheading>
           <TextInput
             value={elder}
             onChangeText={setElder}
@@ -139,9 +133,7 @@ const SignUp = () => {
           onPress={handleSignUp}
           className="bg-primary rounded-xl py-4 shadow-md mb-4"
         >
-          <Text className="text-white text-center text-lg font-semibold">
-            Sign Up
-          </Text>
+          <Subheading className="text-white text-center">Sign Up</Subheading>
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">

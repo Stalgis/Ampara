@@ -63,13 +63,15 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
 
           <View className="flex-row justify-end items-center">
             <Pressable className="mr-4" onPress={onClose}>
-              <Text className="text-calm">Cancel</Text>
+              <Subheading className="text-calm">Cancel</Subheading>
             </Pressable>
             <Pressable
               className="bg-calm py-2 px-4 rounded"
               onPress={handleAddMedication}
             >
-              <Text className="text-white font-bold">Add Medication</Text>
+              <Subheading className="text-white font-bold">
+                Add Medication
+              </Subheading>
             </Pressable>
           </View>
         </View>

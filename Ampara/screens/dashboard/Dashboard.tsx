@@ -39,12 +39,12 @@ const Dashboard = () => {
                 color={tokens.highlight}
               />
               <View>
-                <Text id="Carer Name" className="font-bold text-lg text-text">
+                <Subheading id="Carer Name" className="font-bold text-lg text-text">
                   {name}
-                </Text>
-                <Text className="text-subtitle">
+                </Subheading>
+                <Body className="text-subtitle">
                   Last Check-in: Today, 9:30 AM
-                </Text>
+                </Body>
               </View>
             </View>
           </View>
@@ -64,56 +64,59 @@ const Dashboard = () => {
           <View className="border border-border rounded-xl py-4 px-2 mt-4 bg-background">
             <View className="flex-row justify-evenly items-center ">
               <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Mon</Text>
+                <Body className="text-sm mb-3">Mon</Body>
                 <Entypo name="emoji-happy" size={24} color="green" />
               </View>
               <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Tue</Text>
+                <Body className="text-sm mb-3">Tue</Body>
                 <FontAwesome6 name="meh" size={24} color="orange" />
               </View>
               <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Wed</Text>
+                <Body className="text-sm mb-3">Wed</Body>
                 <Entypo name="emoji-happy" size={24} color="green" />
               </View>
               <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Thu</Text>
+                <Body className="text-sm mb-3">Thu</Body>
                 <Entypo name="emoji-sad" size={24} color="red" />
               </View>
               <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Fri</Text>
+                <Body className="text-sm mb-3">Fri</Body>
                 <Entypo name="emoji-happy" size={24} color="green" />
               </View>
               <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Sat</Text>
+                <Body className="text-sm mb-3">Sat</Body>
                 <Entypo name="emoji-happy" size={24} color="green" />
               </View>
               <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Sun</Text>
+                <Body className="text-sm mb-3">Sun</Body>
                 <FontAwesome6 name="meh" size={24} color="orange" />
               </View>
             </View>
             <View className="border-b border-border my-4" />
             <View className="mx-1">
-              <Text className="font-bold text-lg text-text">
+              <Subheading className="font-bold text-lg text-text">
                 Weekly Summary:
               </Text>
               <Text className="text-sm text-subtitle mt-1">
+
                 The patient showed mostly positive emotions this week, with some
                 mild mood changes midweek. Continue to monitor for any
                 significant changes.
-              </Text>
+              </Body>
+              </View>
             </View>
-          </View>
 
           {/* Health alerts  */}
           <View className="mt-8 flex flex-row justify-between items-center">
             <Text className="font-bold text-xl text-text">Health Alerts</Text>
+
             <Pressable
               className="flex flex-row items-center"
               onPress={() => navigation.navigate("Health")}
             >
               <Text className="font-bold text-highlight">View all </Text>
               <AntDesign name="arrowright" size={14} color={tokens.highlight} />
+
             </Pressable>
           </View>
           <View className="mt-4">
@@ -143,9 +146,9 @@ const Dashboard = () => {
                   } px-4 py-2 rounded`}
                   onPress={() => setIsMedicationDone(!isMedicationDone)}
                 >
-                  <Text className="text-white font-medium">
+                  <Subheading className="text-white font-medium">
                     {isMedicationDone ? "Done" : "Due"}
-                  </Text>
+                  </Subheading>
                 </Pressable>
               </View>
             </View>
@@ -175,9 +178,9 @@ const Dashboard = () => {
                   } px-4 py-2 rounded`}
                   onPress={() => setIsAppointmentDone(!isAppointmentDone)}
                 >
-                  <Text className="text-white font-medium">
+                  <Subheading className="text-white font-medium">
                     {isAppointmentDone ? "Done" : "Due"}
-                  </Text>
+                  </Subheading>
                 </Pressable>
               </View>
             </View>
@@ -204,11 +207,11 @@ const Dashboard = () => {
                   <Text className="font-bold text-base">Group Meeting</Text>
                   <Text className="text-subtitle text-sm">
                     2:00 PM - 3:00 PM
-                  </Text>
+                  </Body>
                 </View>
               </View>
               <Pressable className="bg-calm px-4 py-2 rounded">
-                <Text className="text-white font-medium">Join</Text>
+                <Subheading className="text-white font-medium">Join</Subheading>
               </Pressable>
             </View>
 
@@ -222,11 +225,11 @@ const Dashboard = () => {
                   <Text className="font-bold text-base">Morning Coffee</Text>
                   <Text className="text-subtitle text-sm">
                     4:30 PM - 5:30 PM
-                  </Text>
+                  </Body>
                 </View>
               </View>
               <Pressable className="bg-calm px-4 py-2 rounded">
-                <Text className="text-white font-medium">Join</Text>
+                <Subheading className="text-white font-medium">Join</Subheading>
               </Pressable>
             </View>
 
@@ -240,11 +243,11 @@ const Dashboard = () => {
                   <Text className="font-bold text-base">Study Session</Text>
                   <Text className="text-subtitle text-sm">
                     7:00 PM - 8:00 PM
-                  </Text>
+                  </Body>
                 </View>
               </View>
               <Pressable className="bg-calm px-4 py-2 rounded">
-                <Text className="text-white font-medium">Join</Text>
+                <Subheading className="text-white font-medium">Join</Subheading>
               </Pressable>
             </View>
           </View>

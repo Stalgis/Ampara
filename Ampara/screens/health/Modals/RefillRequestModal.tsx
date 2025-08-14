@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, Pressable, Modal, FlatList } from "react-native";
+import { View, Pressable, Modal, FlatList } from "react-native";
+import { Heading, Subheading, Body } from "../../../src/components/ui";
 
 interface Medication {
   id: string;
@@ -35,12 +36,12 @@ const RefillRequestModal: React.FC<RefillRequestModalProps> = ({
                 className="border-b border-border py-3"
                 onPress={() => onSelectMedication(item)}
               >
-                <Text className="text-lg">{item.name}</Text>
+                <Subheading className="text-lg">{item.name}</Subheading>
               </Pressable>
             )}
           />
           <Pressable className="mt-4" onPress={onClose}>
-            <Text className="text-calm text-right">Cancel</Text>
+            <Subheading className="text-calm text-right">Cancel</Subheading>
           </Pressable>
         </View>
       </View>

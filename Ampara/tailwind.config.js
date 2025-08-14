@@ -5,6 +5,7 @@ module.exports = {
     "./App.{js,jsx,ts,tsx}",
     "./screens/**/*.{js,jsx,ts,tsx}",
     "./components/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   presets: [require("nativewind/preset")],
   theme: {
@@ -19,6 +20,11 @@ module.exports = {
         badge: "rgb(var(--color-badge) / <alpha-value>)",
         highlight: "rgb(var(--color-highlight) / <alpha-value>)",
         calm: "rgb(var(--color-calm) / <alpha-value>)",
+      },
+      spacing: {
+        4: "1rem", // 16px
+        6: "1.5rem", // 24px
+        8: "2rem", // 32px
       },
     },
   },

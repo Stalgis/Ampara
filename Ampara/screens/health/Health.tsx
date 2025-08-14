@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, SafeAreaView } from "react-native";
+import { View, Pressable, SafeAreaView } from "react-native";
 import Vitals from "./health_vitals";
 import Medications from "./health_medications";
 import HealthRecords from "./health_records";
+import { Subheading } from "../../src/components/ui";
 
 const Health = () => {
   const [selectedSection, setSelectedSection] = useState("vitals");
@@ -32,7 +33,7 @@ const Health = () => {
               } px-6 py-2 rounded`}
             >
               Vitals
-            </Text>
+            </Subheading>
           </Pressable>
           <Pressable onPress={() => setSelectedSection("medications")}> 
             <Text
@@ -41,7 +42,7 @@ const Health = () => {
               } px-4 py-2 rounded`}
             >
               Medications
-            </Text>
+            </Subheading>
           </Pressable>
           <Pressable onPress={() => setSelectedSection("records")}> 
             <Text
@@ -50,7 +51,7 @@ const Health = () => {
               } px-4 py-2 rounded`}
             >
               Records
-            </Text>
+            </Subheading>
           </Pressable>
         </View>
         <View className="border border-border rounded w-full bg-background">
