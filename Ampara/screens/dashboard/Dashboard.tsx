@@ -51,12 +51,12 @@ const Dashboard = () => {
     <SafeAreaView className="h-full bg-background">
       <ScrollView>
         <View className="mx-4">
-          <View className="flex flex-row w-full mt-8 rounded-lg overflow-hidden bg-[#ffffff]">
+          <View className="flex flex-row w-full mt-8 rounded-2xl overflow-hidden bg-[#ffffff]">
             {/* Left color strip */}
             <View className="w-1 bg-highlight" />
 
             {/* Main card */}
-            <View className="flex flex-row items-center flex-1 border border-border py-4 pr-8 rounded-r-lg">
+            <View className="flex flex-row items-center flex-1 border border-border py-4 pr-8 rounded-r-2xl">
               <Entypo
                 name="heart-outlined"
                 style={{
@@ -65,7 +65,7 @@ const Dashboard = () => {
                   backgroundColor: "#FEF9C3",
                   marginHorizontal: 16,
                 }}
-                size={26}
+                size={24}
                 color="#F59E0B"
               />
               <View>
@@ -91,43 +91,41 @@ const Dashboard = () => {
           </View>
 
           {/* Emotional weekdays list */}
-          <View className="border border-border rounded-xl py-4 px-2 mt-4 bg-[#ffffff]">
+          <View className="border border-border rounded-2xl py-4 px-2 mt-4 bg-[#ffffff]">
             <View className="flex-row justify-evenly items-center ">
               <View className="items-center space-y-1">
                 <Text className="text-sm mb-3">Mon</Text>
-                <Entypo name="emoji-happy" size={24} color="green" />
+                <Entypo name="emoji-happy" size={24} color="#A78BFA" />
               </View>
               <View className="items-center space-y-1">
                 <Text className="text-sm mb-3">Tue</Text>
-                <FontAwesome6 name="meh" size={24} color="orange" />
+                <FontAwesome6 name="meh" size={24} color="#F59E0B" />
               </View>
               <View className="items-center space-y-1">
                 <Text className="text-sm mb-3">Wed</Text>
-                <Entypo name="emoji-happy" size={24} color="green" />
+                <Entypo name="emoji-happy" size={24} color="#A78BFA" />
               </View>
               <View className="items-center space-y-1">
                 <Text className="text-sm mb-3">Thu</Text>
-                <Entypo name="emoji-sad" size={24} color="red" />
+                <Entypo name="emoji-sad" size={24} color="#F59E0B" />
               </View>
               <View className="items-center space-y-1">
                 <Text className="text-sm mb-3">Fri</Text>
-                <Entypo name="emoji-happy" size={24} color="green" />
+                <Entypo name="emoji-happy" size={24} color="#A78BFA" />
               </View>
               <View className="items-center space-y-1">
                 <Text className="text-sm mb-3">Sat</Text>
-                <Entypo name="emoji-happy" size={24} color="green" />
+                <Entypo name="emoji-happy" size={24} color="#A78BFA" />
               </View>
               <View className="items-center space-y-1">
                 <Text className="text-sm mb-3">Sun</Text>
-                <FontAwesome6 name="meh" size={24} color="orange" />
+                <FontAwesome6 name="meh" size={24} color="#F59E0B" />
               </View>
             </View>
-            <View className="border-b border-gray-200 my-4" />
+            <View className="border-b border-border my-4" />
             <View className="mx-1">
-              <Text className="font-bold text-lg text-text">
-                Weekly Summary:
-              </Text>
-              <Text className="text-sm text-gray-700 mt-1 text-subtitle">
+              <Text className="font-bold text-lg text-text">Weekly Summary:</Text>
+              <Text className="text-sm text-subtitle mt-1">
                 The patient showed mostly positive emotions this week, with some
                 mild mood changes midweek. Continue to monitor for any
                 significant changes.
@@ -147,30 +145,30 @@ const Dashboard = () => {
             </Pressable>
           </View>
           <View className="mt-4">
-            <View className="flex flex-row w-full mt-2 rounded-lg overflow-hidden bg-[#ffffff]">
+            <View className="flex flex-row w-full mt-2 rounded-2xl overflow-hidden bg-[#ffffff]">
               {!isMedicationDone && new Date().getHours() > 8 && (
-                <View className="w-1 bg-red-500" />
+                <View className="w-1 bg-highlight" />
               )}
               <View
                 className={`flex-row items-center justify-between flex-1 border border-border p-3 ${
                   !isMedicationDone && new Date().getHours() > 8
-                    ? "rounded-r-lg"
-                    : "rounded-lg"
+                    ? "rounded-r-2xl"
+                    : "rounded-2xl"
                 }`}
               >
                 <View className="flex-row items-center flex-1">
-                  <View className="bg-red-100 p-2 rounded-lg mr-3">
-                    <FontAwesome5 name="pills" size={20} color="#ef4444" />
+                  <View className="bg-badge p-2 rounded-2xl mr-3">
+                    <FontAwesome5 name="pills" size={24} color="#ef4444" />
                   </View>
                   <View className="flex-1">
                     <Text className="font-bold text-base">Medication</Text>
-                    <Text className="text-gray-400 text-sm">8:00 AM</Text>
+                    <Text className="text-subtitle text-sm">8:00 AM</Text>
                   </View>
                 </View>
                 <Pressable
                   className={`${
-                    isMedicationDone ? "bg-green-500" : "bg-calm"
-                  } px-4 py-2 rounded`}
+                    isMedicationDone ? "bg-primary" : "bg-calm"
+                  } px-4 py-2 rounded-2xl`}
                   onPress={() => setIsMedicationDone(!isMedicationDone)}
                 >
                   <Text className="text-white font-medium">
@@ -179,30 +177,30 @@ const Dashboard = () => {
                 </Pressable>
               </View>
             </View>
-            <View className="flex flex-row w-full mt-2 rounded-lg overflow-hidden bg-[#ffffff]">
+            <View className="flex flex-row w-full mt-2 rounded-2xl overflow-hidden bg-[#ffffff]">
               {!isAppointmentDone && new Date().getHours() > 11 && (
-                <View className="w-1 bg-red-500" />
+                <View className="w-1 bg-highlight" />
               )}
               <View
                 className={`flex-row items-center justify-between flex-1 border border-border p-3 ${
                   !isAppointmentDone && new Date().getHours() > 11
-                    ? "rounded-r-lg"
-                    : "rounded-lg"
+                    ? "rounded-r-2xl"
+                    : "rounded-2xl"
                 }`}
               >
                 <View className="flex-row items-center flex-1">
-                  <View className="bg-blue-100 p-2 rounded-lg mr-3">
-                    <Feather name="clock" size={20} color="#3b82f6" />
+                  <View className="bg-badge p-2 rounded-2xl mr-3">
+                    <Feather name="clock" size={24} color="#A78BFA" />
                   </View>
                   <View className="flex-1">
                     <Text className="font-bold text-base">Appointment</Text>
-                    <Text className="text-gray-400 text-sm">11:30 AM</Text>
+                    <Text className="text-subtitle text-sm">11:30 AM</Text>
                   </View>
                 </View>
                 <Pressable
                   className={`${
-                    isAppointmentDone ? "bg-green-500" : "bg-calm"
-                  } px-4 py-2 rounded`}
+                    isAppointmentDone ? "bg-primary" : "bg-calm"
+                  } px-4 py-2 rounded-2xl`}
                   onPress={() => setIsAppointmentDone(!isAppointmentDone)}
                 >
                   <Text className="text-white font-medium">

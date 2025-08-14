@@ -87,13 +87,13 @@ const Medications = () => {
         )}
         <View className="flex-row justify-between gap-2">
           <Pressable
-            className="border border-border rounded flex-1 py-3"
+            className="border border-border rounded-2xl flex-1 py-3"
             onPress={() => setRefillRequestModalVisible(true)}
           >
             <Text className="font-medium mx-auto text-lg">Refill Request</Text>
           </Pressable>
           <Pressable
-            className="bg-calm py-3 flex-1 rounded"
+            className="bg-calm py-3 flex-1 rounded-2xl"
             onPress={() => setAddMedicationModalVisible(true)}
           >
             <Text className="text-white font-medium mx-auto text-lg">
