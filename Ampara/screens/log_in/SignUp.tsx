@@ -1,16 +1,10 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-  Image,
-} from "react-native";
+import { View, TouchableOpacity, TextInput, Alert, Image } from "react-native";
 import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Heading, Subheading, Body } from "../../src/components/ui";
 
 // import { AuthContext } from '../../context/AuthContext'
 import apiFetch from "../../services/api";
@@ -67,17 +61,17 @@ const SignUp = () => {
             className="w-32 h-32 mb-2"
             resizeMode="contain"
           />
-          <Text className="text-3xl font-bold text-gray-800">Sign Up</Text>
+          <Heading>Sign Up</Heading>
         </View>
 
         {error && (
-          <Text className="text-red-500 text-center mb-4">{error}</Text>
+          <Body className="text-red-500 text-center mb-4">{error}</Body>
         )}
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
+          <Subheading className="text-gray-700 text-base mb-2">
             Full Name
-          </Text>
+          </Subheading>
           <TextInput
             value={name}
             onChangeText={setName}
@@ -86,9 +80,9 @@ const SignUp = () => {
         </View>
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
+          <Subheading className="text-gray-700 text-base mb-2">
             Email
-          </Text>
+          </Subheading>
           <TextInput
             value={email}
             onChangeText={setEmail}
@@ -99,9 +93,9 @@ const SignUp = () => {
         </View>
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
+          <Subheading className="text-gray-700 text-base mb-2">
             Password
-          </Text>
+          </Subheading>
           <View className="flex-row items-center border border-gray-300 rounded-lg bg-white/70">
             <TextInput
               value={password}
@@ -128,9 +122,9 @@ const SignUp = () => {
         </View>
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
+          <Subheading className="text-gray-700 text-base mb-2">
             Connect to Elder (Name or ID)
-          </Text>
+          </Subheading>
           <TextInput
             value={elder}
             onChangeText={setElder}
@@ -142,15 +136,13 @@ const SignUp = () => {
           onPress={handleSignUp}
           className="bg-primary rounded-xl py-4 shadow-md mb-4"
         >
-          <Text className="text-white text-center text-lg font-semibold">
-            Sign Up
-          </Text>
+          <Subheading className="text-white text-center">Sign Up</Subheading>
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">
-          <Text className="text-gray-600">Already have an account?</Text>
+          <Body className="text-gray-600">Already have an account?</Body>
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
-            <Text className="text-accent font-semibold ml-1">Log In</Text>
+            <Subheading className="text-accent ml-1">Log In</Subheading>
           </TouchableOpacity>
         </View>
       </View>
