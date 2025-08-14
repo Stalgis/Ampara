@@ -3,97 +3,106 @@ import { View, Pressable, SafeAreaView, Text } from "react-native";
 import { Calendar } from "react-native-calendars";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import colors from "tailwindcss/colors";
 
 const CalendarScreen = () => {
   return (
     <SafeAreaView className="bg-background h-full">
-      <View className="mx-4">
-        <Pressable className="bg-[#46a697] self-end rounded px-4 py-2 mt-4">
-          <Text className="text-white">Add Event +</Text>
-        </Pressable>
+      <Pressable className="bg-teal-500 self-end rounded p-2 m-2">
+        <Text className="text-white">Add Event +</Text>
+      </Pressable>
+      <View className="border border-border rounded-lg">
+        <Calendar
+          current={new Date().toISOString().split("T")[0]}
+          onDayPress={(day) => {
+            console.log("Selected day", day);
+          }}
+          markedDates={{
+            "2025-07-28": {
+              selected: true,
+              marked: true,
+              selectedColor: colors.blue[600],
+            },
+            "2025-07-30": { marked: true, dotColor: "red" },
+          }}
+          theme={{
+            selectedDayBackgroundColor: colors.blue[600],
+            todayTextColor: colors.emerald[500],
+            arrowColor: colors.blue[600],
+            textSectionTitleColor: colors.gray[600],
+          }}
+        />
+      </View>
+      <View className="flex flex-row items-center justify-between mt-6">
+        <Text className="font-bold text-xl">Today's Schedule</Text>
+        <View className="flex-row items-center ">
+          <Feather name="calendar" size={18} color={colors.gray[400]} className="mr-1" />
+          <Text className="text-subtitle">
+            {new Date().toLocaleDateString()}
+          </Text>
 
-        <View className="border border-gray-200 rounded-lg mt-4">
-          <Calendar
-            current={new Date().toISOString().split("T")[0]}
-            onDayPress={(day) => {
-              console.log("Selected day", day);
-            }}
-            markedDates={{
-              "2025-07-28": {
-                selected: true,
-                marked: true,
-                selectedColor: "#2563eb",
-              },
-              "2025-07-30": { marked: true, dotColor: "red" },
-            }}
-            theme={{
-              selectedDayBackgroundColor: "#2563eb",
-              todayTextColor: "#10b981",
-              arrowColor: "#2563eb",
-              textSectionTitleColor: "#4b5563",
-            }}
-          />
         </View>
 
-        <View className="flex flex-row items-center justify-between mt-6">
-          <Text className="font-bold text-xl">Today's Schedule</Text>
-          <View className="flex-row items-center">
-            <Feather name="calendar" size={18} color="#9ca3af" />
-            <Text className="text-gray-400 ml-1">
-              {new Date().toLocaleDateString()}
-            </Text>
+
+      {/* Today's Schedule Cards */}
+      <View className="mt-4">
+        {/* Card 1 - Users */}
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3">
+          <View className="flex-row items-center flex-1">
+            <View className="bg-blue-100 p-2 rounded-lg mr-3">
+              <FontAwesome name="users" size={20} color={colors.blue[600]} />
+            </View>
+            <View className="flex-1">
+              <Text className="font-bold text-base">Group Meeting</Text>
+              <Text className="text-subtitle text-sm">2:00 PM - 3:00 PM</Text>
+            </View>
           </View>
+          <Pressable className="bg-teal-500 px-4 py-2 rounded">
+            <Text className="text-white font-medium">Join</Text>
+          </Pressable>
         </View>
 
-        {/* Today's Schedule Cards */}
-        <View className="mt-4 flex gap-4">
-          {/* Card 1 - Users */}
-          <View className="flex-row items-center justify-between border border-gray-200 rounded-lg p-3 bg-white">
-            <View className="flex-row items-center flex-1">
-              <View className="bg-blue-100 p-2 rounded-lg mr-3">
-                <FontAwesome name="users" size={20} color="#2563eb" />
-              </View>
-              <View className="flex-1">
-                <Text className="font-bold text-base">Group Meeting</Text>
-                <Text className="text-gray-400 text-sm">2:00 PM - 3:00 PM</Text>
-              </View>
+        {/* Card 2 - Coffee */}
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3">
+          <View className="flex-row items-center flex-1">
+            <View className="bg-orange-100 p-2 rounded-lg mr-3">
+              <FontAwesome name="coffee" size={20} color={colors.orange[600]} />
+            </View>
+            <View className="flex-1">
+              <Text className="font-bold text-base">Morning Coffee</Text>
+              <Text className="text-subtitle text-sm">4:30 PM - 5:30 PM</Text>
+
             </View>
             <Pressable className="bg-[#46a697] px-4 py-2 rounded">
               <Text className="text-white font-medium">Join</Text>
             </Pressable>
           </View>
 
-          {/* Card 2 - Coffee */}
-          <View className="flex-row items-center justify-between border border-gray-200 rounded-lg p-3 bg-white">
-            <View className="flex-row items-center flex-1">
-              <View className="bg-orange-100 p-2 rounded-lg mr-3">
-                <FontAwesome name="coffee" size={20} color="#ea580c" />
-              </View>
-              <View className="flex-1">
-                <Text className="font-bold text-base">Morning Coffee</Text>
-                <Text className="text-gray-400 text-sm">4:30 PM - 5:30 PM</Text>
-              </View>
+          <Pressable className="bg-teal-500 px-4 py-2 rounded">
+            <Text className="text-white font-medium">Join</Text>
+          </Pressable>
+        </View>
+
+        {/* Card 3 - Book */}
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3">
+          <View className="flex-row items-center flex-1">
+            <View className="bg-green-100 p-2 rounded-lg mr-3">
+              <Feather name="book" size={20} color={colors.green[600]} />
+            </View>
+            <View className="flex-1">
+              <Text className="font-bold text-base">Study Session</Text>
+              <Text className="text-subtitle text-sm">7:00 PM - 8:00 PM</Text>
+
             </View>
             <Pressable className="bg-[#46a697] px-4 py-2 rounded">
               <Text className="text-white font-medium">Join</Text>
             </Pressable>
           </View>
 
-          {/* Card 3 - Book */}
-          <View className="flex-row items-center justify-between border border-gray-200 rounded-lg p-3 bg-white">
-            <View className="flex-row items-center flex-1">
-              <View className="bg-green-100 p-2 rounded-lg mr-3">
-                <Feather name="book" size={20} color="#16a34a" />
-              </View>
-              <View className="flex-1">
-                <Text className="font-bold text-base">Study Session</Text>
-                <Text className="text-gray-400 text-sm">7:00 PM - 8:00 PM</Text>
-              </View>
-            </View>
-            <Pressable className="bg-[#46a697] px-4 py-2 rounded">
-              <Text className="text-white font-medium">Join</Text>
-            </Pressable>
-          </View>
+          <Pressable className="bg-teal-500 px-4 py-2 rounded">
+            <Text className="text-white font-medium">Join</Text>
+          </Pressable>
+
         </View>
       </View>
     </SafeAreaView>

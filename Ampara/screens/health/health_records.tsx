@@ -68,7 +68,7 @@ const HealthRecords = () => {
         {records.map((record) => (
           <View
             key={record.id}
-            className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-white"
+            className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background"
           >
             <View>
               <Subheading className="font-bold text-xl text-text">
@@ -95,8 +95,8 @@ const HealthRecords = () => {
 
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-center items-center bg-black/30">
-          <View className="bg-white p-6 rounded-lg w-11/12">
-            <Heading className="text-xl mb-4">
+          <View className="bg-background p-6 rounded-lg w-11/12">
+            <Text className="font-bold text-xl mb-4">
               {selectedRecord?.visitType}
             </Heading>
             <Body className="text-subtitle text-sm mb-4">

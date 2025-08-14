@@ -17,9 +17,10 @@ const CallDetailsModal: React.FC<CallDetailsModalProps> = ({ visible, onClose })
       onRequestClose={onClose}
     >
       <View className="flex-1 justify-center items-center bg-black/30">
-        <View className="bg-white p-6 rounded-lg w-11/12">
-          <Heading className="text-lg mb-4">Call Details</Heading>
-          <Body className="text-base mb-4">
+        <View className="bg-background p-6 rounded-lg w-11/12">
+          <Text className="text-lg font-bold mb-4">Call Details</Text>
+          <Text className="text-base mb-4">
+
             This is a brief description of the call that took place.
           </Body>
           <Pressable
@@ -33,10 +34,11 @@ const CallDetailsModal: React.FC<CallDetailsModalProps> = ({ visible, onClose })
             </Subheading>
           </Pressable>
           <Pressable
-            className="bg-gray-300 p-3 rounded-lg items-center"
+            className="bg-border p-3 rounded-lg items-center"
             onPress={onClose}
           >
-            <Subheading className="text-black font-bold">Close</Subheading>
+            <Text className="text-text font-bold">Close</Text>
+
           </Pressable>
         </View>
       </View>

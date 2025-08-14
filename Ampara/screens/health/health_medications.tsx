@@ -52,7 +52,7 @@ const Medications = () => {
       <Heading className="text-xl text-text">Current Medications</Heading>
       <View id="container-vitals-cards" className="mt-4 flex gap-4">
         {medications.map(med => (
-          <View key={med.id} className="flex items-start justify-between border border-border rounded-lg p-3 mb-3 bg-white">
+          <View key={med.id} className="flex items-start justify-between border border-border rounded-lg p-3 mb-3 bg-background">
             <View className="flex-row justify-between w-full items-start">
               <View>
                 <Subheading className="font-bold text-xl text-text">{med.name}</Subheading>

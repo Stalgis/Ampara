@@ -64,7 +64,7 @@ const Vitals = () => {
     <View className="p-4">
       <Heading className="text-xl text-text">Recent Vitals</Heading>
       <View id="container-vitals-cards" className="mt-4 flex gap-4">
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
           <View className="flex-row items-center flex-1">
             <View className="bg-red-100 p-2 rounded-lg mr-3">
               <Ionicons name="heart-outline" size={24} color="red" />
@@ -84,7 +84,7 @@ const Vitals = () => {
             </Subheading>
           </View>
         </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
           <View className="flex-row items-center flex-1">
             <View className="bg-blue-100 p-2 rounded-lg mr-3">
               <Ionicons name="analytics-outline" size={24} color="blue" />
@@ -104,7 +104,7 @@ const Vitals = () => {
             </Subheading>
           </View>
         </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
           <View className="flex-row items-center flex-1">
             <View className="bg-green-100 p-2 rounded-lg mr-3">
               <Ionicons name="thermometer-outline" size={24} color="green" />
@@ -124,7 +124,7 @@ const Vitals = () => {
             </Subheading>
           </View>
         </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
           <View className="flex-row items-center flex-1">
             <View className="bg-purple-100 p-2 rounded-lg mr-3">
               <Ionicons name="water-outline" size={24} color="purple" />

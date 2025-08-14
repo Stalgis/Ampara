@@ -10,7 +10,7 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
-import { Heading, Subheading, Body } from "../../../src/components/ui";
+import colors from "tailwindcss/colors";
 
 interface AddHealthRecordModalProps {
   visible: boolean;
@@ -62,8 +62,8 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
               }}
               className="w-full"
             >
-              <View className="bg-white p-6 rounded-lg w-11/12">
-                <Heading className="text-xl mb-4">
+              <View className="bg-background p-6 rounded-lg w-11/12">
+                <Text className="font-bold text-xl mb-4">
                   Add New Health Record
                 </Heading>
 
@@ -73,7 +73,7 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                 <TextInput
                   className="border border-border rounded p-3 mb-4"
                   placeholder="e.g., Annual Check-up"
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor={colors.gray[400]}
                   value={title}
                   onChangeText={setTitle}
                 />
@@ -83,7 +83,7 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                 <TextInput
                   className="border border-border rounded p-3 mb-4"
                   placeholder="e.g., Dr. Smith"
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor={colors.gray[400]}
                   value={doctor}
                   onChangeText={setDoctor}
                 />
@@ -91,7 +91,7 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                 <TextInput
                   className="border border-border rounded p-3 mb-4"
                   placeholder="e.g., 2023-10-27"
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor={colors.gray[400]}
                   value={date}
                   onChangeText={setDate}
                 />
@@ -101,7 +101,7 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                 <TextInput
                   className="border border-border rounded p-3 mb-4"
                   placeholder="e.g., Routine check-up, all clear."
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor={colors.gray[400]}
                   value={summary}
                   onChangeText={setSummary}
                   multiline

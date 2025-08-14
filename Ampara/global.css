@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 252 211 77;
+    --color-accent: 251 191 36;
+    --color-background: 255 253 247;
+    --color-text: 63 63 70;
+    --color-subtitle: 107 114 128;
+    --color-border: 212 212 216;
+    --color-badge: 254 249 195;
+    --color-highlight: 245 158 11;
+    --color-calm: 167 139 250;
+  }
+  .dark {
+    --color-primary: 252 211 77;
+    --color-accent: 251 191 36;
+    --color-background: 24 24 27;
+    --color-text: 228 228 231;
+    --color-subtitle: 156 163 175;
+    --color-border: 39 39 42;
+    --color-badge: 63 63 70;
+    --color-highlight: 217 119 6;
+    --color-calm: 124 58 237;
+  }
+}
