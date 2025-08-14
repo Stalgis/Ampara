@@ -144,7 +144,7 @@ const Vitals = () => {
             </Subheading>
           </View>
         </View>
-        {/* <Pressable
+        <Pressable
           onPress={() => setModalVisible(true)}
           className="bg-calm px-4 py-3 rounded"
         >
@@ -170,44 +170,52 @@ const Vitals = () => {
         <Modal visible={modalVisible} animationType="slide" transparent>
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-background p-6 rounded-xl w-11/12">
-          <Heading className="text-xl mb-4 text-text">Update Vitals</Heading>
+              <Heading className="text-xl mb-4 text-text">
+                Update Vitals
+              </Heading>
 
-          <Subheading className="text-text mb-1">Heart Rate (bpm)</Subheading>
-          <TextInput
-            value={newHeartRate}
-            onChangeText={setNewHeartRate}
-            keyboardType="numeric"
-            placeholder="e.g. 75"
-            className="border border-border rounded p-2 mb-3"
-          />
+              <Subheading className="text-text mb-1">
+                Heart Rate (bpm)
+              </Subheading>
+              <TextInput
+                value={newHeartRate}
+                onChangeText={setNewHeartRate}
+                keyboardType="numeric"
+                placeholder="e.g. 75"
+                className="border border-border rounded p-2 mb-3"
+              />
 
-          <Subheading className="text-text mb-1">Blood Pressure (mmHg)</Subheading>
-          <TextInput
-            value={newBloodPressure}
-            onChangeText={setNewBloodPressure}
-            placeholder="e.g. 120/80"
-            className="border border-border rounded p-2 mb-3"
-          />
+              <Subheading className="text-text mb-1">
+                Blood Pressure (mmHg)
+              </Subheading>
+              <TextInput
+                value={newBloodPressure}
+                onChangeText={setNewBloodPressure}
+                placeholder="e.g. 120/80"
+                className="border border-border rounded p-2 mb-3"
+              />
 
-          <Subheading className="text-text mb-1">Temperature (°F)</Subheading>
-          <TextInput
-            value={newTemperature}
-            onChangeText={setNewTemperature}
-            keyboardType="numeric"
-            placeholder="e.g. 98.6"
-            className="border border-border rounded p-2 mb-3"
-          />
+              <Subheading className="text-text mb-1">
+                Temperature (°F)
+              </Subheading>
+              <TextInput
+                value={newTemperature}
+                onChangeText={setNewTemperature}
+                keyboardType="numeric"
+                placeholder="e.g. 98.6"
+                className="border border-border rounded p-2 mb-3"
+              />
 
-          <Subheading className="text-text mb-1">
-            Blood Glucose (mg/dL)
-          </Subheading>
-          <TextInput
-            value={newBloodGlucose}
-            onChangeText={setNewBloodGlucose}
-            keyboardType="numeric"
-            placeholder="e.g. 100"
-            className="border border-border rounded p-2 mb-4"
-          />
+              <Subheading className="text-text mb-1">
+                Blood Glucose (mg/dL)
+              </Subheading>
+              <TextInput
+                value={newBloodGlucose}
+                onChangeText={setNewBloodGlucose}
+                keyboardType="numeric"
+                placeholder="e.g. 100"
+                className="border border-border rounded p-2 mb-4"
+              />
 
               <View className="flex-row justify-between">
                 <Pressable
