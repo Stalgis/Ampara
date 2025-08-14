@@ -1,47 +1,53 @@
-import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
-import React, { useState, useContext } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAuth } from "../../controllers/AuthContext";
 
-// import AsyncStorage from "@react-native-async-storage/async-storage"; // Commented out as per new requirements
-
-// import { AuthContext } from "../../context/AuthContext"; // Corrected import path
-// import apiFetch from "../../services/api"; // Commented out as per new requirements
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import apiFetch from "../../services/api";
 
 const LogIn = () => {
   const navigation = useNavigation();
-  //   const { setIsAuthenticated } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const { setIsAuthenticated } = useAuth();
 
   const handleLogin = async () => {
     setError(null);
-    // Commented out actual login functionality as per new requirements
-    // try {
-    //   const response = await apiFetch("/auth/login", {
-    //     method: "POST",
-    //     body: JSON.stringify({ email, password }),
-    //   });
+    setLoading(true);
+    try {
+      const response = await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
 
-    //   if (!response.ok) {
-    //     const message = await response.text();
-    //     setError(message || "Login failed");
-    //     return;
-    //   }
+      if (!response.ok) {
+        const message = await response.text();
+        setError(message || "Login failed");
+        return;
+      }
 
-    //   const { access_token, user } = await response.json();
-    //   await AsyncStorage.setItem("access_token", access_token);
-    //   await AsyncStorage.setItem("user", JSON.stringify(user));
-    //   setIsAuthenticated(true);
-    // } catch (e) {
-    //   setError("Login failed");
-    // }
-    // setIsAuthenticated(true); // Temporarily navigate to dashboard
+      const { access_token, user } = await response.json();
+      await AsyncStorage.setItem("access_token", access_token);
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      setIsAuthenticated(true);
+    } catch (e) {
+      setError("Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -104,11 +110,16 @@ const LogIn = () => {
 
         <TouchableOpacity
           className="bg-primary rounded-xl py-4 shadow-md mb-4"
-          onPress={() => setIsAuthenticated(true)}
+          onPress={handleLogin}
+          disabled={loading}
         >
-          <Text className="text-white text-center text-lg font-semibold">
-            Log In
-          </Text>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text className="text-white text-center text-lg font-semibold">
+              Log In
+            </Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity

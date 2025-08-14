@@ -5,25 +5,25 @@ import {
   TextInput,
   Alert,
   Image,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// import { AuthContext } from '../../context/AuthContext'
 import apiFetch from "../../services/api";
 
 const SignUp = () => {
   const navigation = useNavigation();
-  // const { setIsAuthenticated } = useContext(AuthContext)
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [elder, setElder] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = async () => {
     const passwordRegex =
@@ -37,6 +37,7 @@ const SignUp = () => {
     }
 
     setError(null);
+    setLoading(true);
     try {
       const response = await apiFetch("/auth/register", {
         method: "POST",
@@ -55,6 +56,8 @@ const SignUp = () => {
       // setIsAuthenticated(true)
     } catch (e) {
       setError("Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -141,10 +144,15 @@ const SignUp = () => {
         <TouchableOpacity
           onPress={handleSignUp}
           className="bg-primary rounded-xl py-4 shadow-md mb-4"
+          disabled={loading}
         >
-          <Text className="text-white text-center text-lg font-semibold">
-            Sign Up
-          </Text>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text className="text-white text-center text-lg font-semibold">
+              Sign Up
+            </Text>
+          )}
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">
