@@ -7,12 +7,12 @@ import { useAuth } from "../../controllers/AuthContext";
 import Card from "../../src/components/ui/Card";
 import FormInput from "../../src/components/ui/FormInput";
 import PrimaryButton from "../../src/components/ui/PrimaryButton";
+import { Heading, Body } from "../../src/components/ui";
 
 // import AsyncStorage from "@react-native-async-storage/async-storage"; // Commented out as per new requirements
 
 // import { AuthContext } from "../../context/AuthContext"; // Corrected import path
 // import apiFetch from "../../services/api"; // Commented out as per new requirements
-
 
 const LogIn = () => {
   const navigation = useNavigation();
@@ -29,7 +29,7 @@ const LogIn = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-background justify-center items-center p-6">
-      <View className="w-full max-w-md bg-background rounded-xl p-8 border border-border">
+      <Card className="w-full max-w-md bg-background rounded-xl p-8 border border-border">
         <View className="items-center mb-4">
           <Image
             source={require("../../assets/Ampara_logo.png")}
@@ -57,7 +57,6 @@ const LogIn = () => {
           onChangeText={setPassword}
           secureTextEntry={!showPassword}
           rightIcon={
-
             <TouchableOpacity
               onPress={() => setShowPassword((s) => !s)}
               accessibilityRole="button"
@@ -81,7 +80,6 @@ const LogIn = () => {
           onPress={() => setIsAuthenticated(true)}
           className="mb-4 shadow-md"
         />
-
 
         <TouchableOpacity
           onPress={() => navigation.navigate("ForgotPassword")}
