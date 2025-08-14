@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: "#FFFDF7",
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 16,
     width: "80%",
   },
   modalTitle: {
@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
+    borderColor: "#D4D4D8",
+    borderRadius: 16,
     padding: 10,
     marginBottom: 10,
   },
@@ -123,14 +123,14 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 16,
     marginLeft: 10,
   },
   saveButton: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#A78BFA",
   },
   buttonText: {
-    color: "#2196F3",
+    color: "#3F3F46",
     fontWeight: "bold",
   },
   saveButtonText: {

@@ -65,10 +65,10 @@ const Vitals = () => {
         Recent Vitals
       </Text>
       <View id="container-vitals-cards" className="mt-4 flex gap-4">
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-2xl p-3 mb-3 bg-[#ffffff]">
           <View className="flex-row items-center flex-1">
-            <View className="bg-red-100 p-2 rounded-lg mr-3">
-              <Ionicons name="heart-outline" size={24} color="red" />
+            <View className="bg-badge p-2 rounded-2xl mr-3">
+              <Ionicons name="heart-outline" size={24} color="#F59E0B" />
             </View>
             <View className="flex-1">
               <Text className="font-bold text-base text-text">Heart Rate</Text>
@@ -81,10 +81,10 @@ const Vitals = () => {
             <Text className="font-bold text-lg text-text">{heartRate} bpm</Text>
           </View>
         </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-2xl p-3 mb-3 bg-[#ffffff]">
           <View className="flex-row items-center flex-1">
-            <View className="bg-blue-100 p-2 rounded-lg mr-3">
-              <Ionicons name="analytics-outline" size={24} color="blue" />
+            <View className="bg-badge p-2 rounded-2xl mr-3">
+              <Ionicons name="analytics-outline" size={24} color="#A78BFA" />
             </View>
             <View className="flex-1">
               <Text className="font-bold text-base text-text">
@@ -101,10 +101,10 @@ const Vitals = () => {
             </Text>
           </View>
         </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-2xl p-3 mb-3 bg-[#ffffff]">
           <View className="flex-row items-center flex-1">
-            <View className="bg-green-100 p-2 rounded-lg mr-3">
-              <Ionicons name="thermometer-outline" size={24} color="green" />
+            <View className="bg-badge p-2 rounded-2xl mr-3">
+              <Ionicons name="thermometer-outline" size={24} color="#A78BFA" />
             </View>
             <View className="flex-1">
               <Text className="font-bold text-base text-text">Temperature</Text>
@@ -119,10 +119,10 @@ const Vitals = () => {
             </Text>
           </View>
         </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff]">
+        <View className="flex-row items-center justify-between border border-border rounded-2xl p-3 mb-3 bg-[#ffffff]">
           <View className="flex-row items-center flex-1">
-            <View className="bg-purple-100 p-2 rounded-lg mr-3">
-              <Ionicons name="water-outline" size={24} color="purple" />
+            <View className="bg-badge p-2 rounded-2xl mr-3">
+              <Ionicons name="water-outline" size={24} color="#A78BFA" />
             </View>
             <View className="flex-1">
               <Text className="font-bold text-base text-text">
@@ -141,7 +141,7 @@ const Vitals = () => {
         </View>
         {/* <Pressable
           onPress={() => setModalVisible(true)}
-          className="bg-calm px-4 py-3 rounded"
+          className="bg-calm px-4 py-3 rounded-2xl"
         >
           <Text className="text-white font-medium mx-auto text-lg">
             Record New Vitals
@@ -155,7 +155,7 @@ const Vitals = () => {
         /> */}
         <Pressable
           onPress={() => setModalVisible(true)}
-          className="bg-calm px-4 py-3 rounded"
+          className="bg-calm px-4 py-3 rounded-2xl"
         >
           <Text className="text-white font-medium mx-auto text-lg">
             Record New Vitals
@@ -164,7 +164,7 @@ const Vitals = () => {
 
         <Modal visible={modalVisible} animationType="slide" transparent>
           <View className="flex-1 justify-center items-center bg-black/50">
-            <View className="bg-background p-6 rounded-xl w-11/12">
+            <View className="bg-background p-6 rounded-2xl w-11/12">
               <Text className="text-xl font-bold text-text mb-4">
                 Update Vitals
               </Text>
@@ -175,7 +175,7 @@ const Vitals = () => {
                 onChangeText={setNewHeartRate}
                 keyboardType="numeric"
                 placeholder="e.g. 75"
-                className="border border-border rounded p-2 mb-3"
+                className="border border-border rounded-2xl p-2 mb-3"
               />
 
               <Text className="text-text mb-1">Blood Pressure (mmHg)</Text>
@@ -183,7 +183,7 @@ const Vitals = () => {
                 value={newBloodPressure}
                 onChangeText={setNewBloodPressure}
                 placeholder="e.g. 120/80"
-                className="border border-border rounded p-2 mb-3"
+                className="border border-border rounded-2xl p-2 mb-3"
               />
 
               <Text className="text-text mb-1">Temperature (°F)</Text>
@@ -192,7 +192,7 @@ const Vitals = () => {
                 onChangeText={setNewTemperature}
                 keyboardType="numeric"
                 placeholder="e.g. 98.6"
-                className="border border-border rounded p-2 mb-3"
+                className="border border-border rounded-2xl p-2 mb-3"
               />
 
               <Text className="text-text mb-1">Blood Glucose (mg/dL)</Text>
@@ -201,19 +201,19 @@ const Vitals = () => {
                 onChangeText={setNewBloodGlucose}
                 keyboardType="numeric"
                 placeholder="e.g. 100"
-                className="border border-border rounded p-2 mb-4"
+                className="border border-border rounded-2xl p-2 mb-4"
               />
 
               <View className="flex-row justify-between">
                 <Pressable
                   onPress={() => setModalVisible(false)}
-                  className="bg-border px-4 py-2 rounded"
+                  className="bg-border px-4 py-2 rounded-2xl"
                 >
                   <Text className="text-text">Cancel</Text>
                 </Pressable>
                 <Pressable
                   onPress={recordNewVitals}
-                  className="bg-primary px-4 py-2 rounded"
+                  className="bg-primary px-4 py-2 rounded-2xl"
                 >
                   <Text className="text-text font-bold">Save</Text>
                 </Pressable>

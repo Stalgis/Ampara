@@ -62,40 +62,40 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
               }}
               className="w-full"
             >
-              <View className="bg-white p-6 rounded-lg w-11/12">
+              <View className="bg-background p-6 rounded-2xl w-11/12">
                 <Text className="font-bold text-xl mb-4">
                   Add New Health Record
                 </Text>
 
                 <Text className="font-medium text-text mb-1">Title</Text>
                 <TextInput
-                  className="border border-border rounded p-3 mb-4"
+                  className="border border-border rounded-2xl p-3 mb-4"
                   placeholder="e.g., Annual Check-up"
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor="#6B7280"
                   value={title}
                   onChangeText={setTitle}
                 />
                 <Text className="font-medium text-text mb-1">Doctor</Text>
                 <TextInput
-                  className="border border-border rounded p-3 mb-4"
+                  className="border border-border rounded-2xl p-3 mb-4"
                   placeholder="e.g., Dr. Smith"
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor="#6B7280"
                   value={doctor}
                   onChangeText={setDoctor}
                 />
                 <Text className="font-medium text-text mb-1">Date</Text>
                 <TextInput
-                  className="border border-border rounded p-3 mb-4"
+                  className="border border-border rounded-2xl p-3 mb-4"
                   placeholder="e.g., 2023-10-27"
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor="#6B7280"
                   value={date}
                   onChangeText={setDate}
                 />
                 <Text className="font-medium text-text mb-1">Summary</Text>
                 <TextInput
-                  className="border border-border rounded p-3 mb-4"
+                  className="border border-border rounded-2xl p-3 mb-4"
                   placeholder="e.g., Routine check-up, all clear."
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor="#6B7280"
                   value={summary}
                   onChangeText={setSummary}
                   multiline
@@ -106,7 +106,7 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                     <Text className="text-calm">Cancel</Text>
                   </Pressable>
                   <Pressable
-                    className="bg-calm py-2 px-4 rounded"
+                    className="bg-calm py-2 px-4 rounded-2xl"
                     onPress={handleAddRecord}
                   >
                     <Text className="text-white font-bold">Add Record</Text>
