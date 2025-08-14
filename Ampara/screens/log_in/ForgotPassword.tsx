@@ -1,14 +1,17 @@
-import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import Card from "../../src/components/ui/Card";
+import FormInput from "../../src/components/ui/FormInput";
+import PrimaryButton from "../../src/components/ui/PrimaryButton";
 
 const ForgotPassword = () => {
   const navigation = useNavigation();
 
   return (
     <SafeAreaView className="flex-1 bg-background justify-center items-center p-6">
-      <View className="w-full max-w-md bg-white/10 rounded-xl p-8 border border-border">
+      <Card className="w-full max-w-md p-8">
         <View className="items-center mb-8">
           <Image
             source={require("../../assets/Ampara_logo.png")}
@@ -20,29 +23,23 @@ const ForgotPassword = () => {
           </Text>
         </View>
 
-        <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
-            Email
-          </Text>
-          <TextInput
-            className="border border-gray-300 rounded-lg py-3 px-4 text-lg bg-white/70"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </View>
+        <FormInput
+          label="Email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-        <TouchableOpacity className="bg-primary rounded-xl py-4 shadow-md mb-4">
-          <Text className="text-white text-center text-lg font-semibold">
-            Send Reset Link
-          </Text>
-        </TouchableOpacity>
+        <PrimaryButton
+          title="Send Reset Link"
+          className="mb-4 shadow-md"
+        />
 
         <View className="flex-row justify-center mt-2">
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
             <Text className="text-accent font-semibold">Back to Log In</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Card>
     </SafeAreaView>
   );
 };

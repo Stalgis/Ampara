@@ -1,12 +1,5 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-  Image,
-} from "react-native";
-import React, { useState, useContext } from "react";
+import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -14,6 +7,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import { AuthContext } from '../../context/AuthContext'
 import apiFetch from "../../services/api";
+import Card from "../../src/components/ui/Card";
+import FormInput from "../../src/components/ui/FormInput";
+import PrimaryButton from "../../src/components/ui/PrimaryButton";
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -60,7 +56,7 @@ const SignUp = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white justify-center items-center p-6">
-      <View className="w-full max-w-md bg-white/10 rounded-xl p-8 border border-border bg-white">
+      <Card className="w-full max-w-md p-8">
         <View className="items-center mb-8">
           <Image
             source={require("../../assets/Ampara_logo.png")}
@@ -74,41 +70,26 @@ const SignUp = () => {
           <Text className="text-red-500 text-center mb-4">{error}</Text>
         )}
 
-        <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
-            Full Name
-          </Text>
-          <TextInput
-            value={name}
-            onChangeText={setName}
-            className="border border-gray-300 rounded-lg py-3 px-4 text-lg bg-white/70"
-          />
-        </View>
+        <FormInput
+          label="Full Name"
+          value={name}
+          onChangeText={setName}
+        />
 
-        <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
-            Email
-          </Text>
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            className="border border-gray-300 rounded-lg py-3 px-4 text-lg bg-white/70"
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-        </View>
+        <FormInput
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
-        <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
-            Password
-          </Text>
-          <View className="flex-row items-center border border-gray-300 rounded-lg bg-white/70">
-            <TextInput
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              className="flex-1 py-3 px-4 text-lg"
-            />
+        <FormInput
+          label="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+          rightIcon={
             <TouchableOpacity
               onPress={() => setShowPassword((s) => !s)}
               accessibilityRole="button"
@@ -124,28 +105,20 @@ const SignUp = () => {
                 color="gray"
               />
             </TouchableOpacity>
-          </View>
-        </View>
+          }
+        />
 
-        <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2">
-            Connect to Elder (Name or ID)
-          </Text>
-          <TextInput
-            value={elder}
-            onChangeText={setElder}
-            className="border border-gray-300 rounded-lg py-3 px-4 text-lg bg-white/70"
-          />
-        </View>
+        <FormInput
+          label="Connect to Elder (Name or ID)"
+          value={elder}
+          onChangeText={setElder}
+        />
 
-        <TouchableOpacity
+        <PrimaryButton
+          title="Sign Up"
           onPress={handleSignUp}
-          className="bg-primary rounded-xl py-4 shadow-md mb-4"
-        >
-          <Text className="text-white text-center text-lg font-semibold">
-            Sign Up
-          </Text>
-        </TouchableOpacity>
+          className="mb-4 shadow-md"
+        />
 
         <View className="flex-row justify-center mt-6">
           <Text className="text-gray-600">Already have an account?</Text>
@@ -153,7 +126,7 @@ const SignUp = () => {
             <Text className="text-accent font-semibold ml-1">Log In</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Card>
     </SafeAreaView>
   );
 };
