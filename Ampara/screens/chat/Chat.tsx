@@ -33,39 +33,39 @@ const Chat = () => {
     <SafeAreaView className="bg-background h-full">
       {/* <View
         id="select-view"
-        className="flex flex-row justify-center justify-evenly bg-gray-100 mx-6 rounded my-4 p-2"
+        className="flex flex-row justify-center justify-evenly bg-gray-100 mx-6 rounded-2xl my-4 p-2"
       >
         <Pressable onPress={() => setSelectedSection("message")}>
           <Text
-            className={`${selectedSection == "message" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
+            className={`${selectedSection == "message" ? "bg-white font-bold" : ""} px-4 py-2 rounded-2xl`}
           >
             Message
           </Text>
         </Pressable>
         <Pressable onPress={() => setSelectedSection("chatbot")}>
           <Text
-            className={`${selectedSection == "chatbot" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
+            className={`${selectedSection == "chatbot" ? "bg-white font-bold" : ""} px-4 py-2 rounded-2xl`}
           >
             ChatBot
           </Text>
         </Pressable>
         <Pressable onPress={() => setSelectedSection("advice")}>
           <Text
-            className={`${selectedSection == "advice" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
+            className={`${selectedSection == "advice" ? "bg-white font-bold" : ""} px-4 py-2 rounded-2xl`}
           >
             Advice
           </Text>
         </Pressable>
         <Pressable onPress={() => setSelectedSection("calls")}>
           <Text
-            className={`${selectedSection == "calls" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
+            className={`${selectedSection == "calls" ? "bg-white font-bold" : ""} px-4 py-2 rounded-2xl`}
           >
             Calls
           </Text>
         </Pressable>
       </View> */}
       <View className="mx-4">
-        <View className="bg-badge border border-highlight rounded-xl mt-4 p-3 flex flex-row items-center">
+        <View className="bg-badge border border-highlight rounded-2xl mt-4 p-3 flex flex-row items-center">
           {/* Logo */}
           <Image
             source={require("../../assets/Ampara_logo.png")}
@@ -82,7 +82,7 @@ const Chat = () => {
               Today I can mention her friend Mery's birthday, would you like
               that?
             </Text>
-            <Pressable className="bg-[#F59E0B] rounded-lg px-3 py-1 self-start">
+            <Pressable className="bg-highlight rounded-2xl px-3 py-1 self-start">
               <Text className="text-white text-sm font-medium">
                 Send Suggestion
               </Text>
@@ -99,13 +99,13 @@ const Chat = () => {
               <Text className="text-primary font-bold mr-1">{callFilter}</Text>
               <Feather
                 name={showFilterOptions ? "chevron-up" : "chevron-down"}
-                size={20}
+                size={24}
                 color="#F59E0B"
               />
             </Pressable>
           </View>
           {showFilterOptions && (
-            <View className="absolute right-0 top-8 bg-white border border-border rounded-lg mt-2 z-10 w-36">
+            <View className="absolute right-0 top-8 bg-white border border-border rounded-2xl mt-2 z-10 w-36">
               <Pressable
                 onPress={() => {
                   setCallFilter("Last 7 days");
@@ -129,10 +129,10 @@ const Chat = () => {
           {filteredCalls.map((call, index) => (
             <View
               key={index}
-              className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-[#ffffff] mt-2"
+              className="flex-row items-center justify-between border border-border rounded-2xl p-3 mb-3 bg-[#ffffff] mt-2"
             >
               <View className="flex-row items-center flex-1">
-                <View className="bg-primary p-2 rounded-lg mr-3">
+                <View className="bg-primary p-2 rounded-2xl mr-3">
                   <Feather name="phone" size={24} color="#3F3F46" />
                 </View>
                 <View className="flex-1">

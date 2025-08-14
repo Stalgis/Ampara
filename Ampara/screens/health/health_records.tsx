@@ -69,7 +69,7 @@ const HealthRecords = () => {
         {records.map((record) => (
           <View
             key={record.id}
-            className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-white"
+            className="flex-row items-center justify-between border border-border rounded-2xl p-3 mb-3 bg-white"
           >
             <View>
               <Text className="font-bold text-xl text-text">
@@ -85,7 +85,7 @@ const HealthRecords = () => {
           </View>
         ))}
         <Pressable
-          className="bg-calm py-3 rounded mt-4"
+          className="bg-calm py-3 rounded-2xl mt-4"
           onPress={() => setAddModalVisible(true)}
         >
           <Text className="text-white font-medium mx-auto text-lg">
@@ -96,7 +96,7 @@ const HealthRecords = () => {
 
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-center items-center bg-black/30">
-          <View className="bg-white p-6 rounded-lg w-11/12">
+          <View className="bg-white p-6 rounded-2xl w-11/12">
             <Text className="font-bold text-xl mb-4">
               {selectedRecord?.visitType}
             </Text>

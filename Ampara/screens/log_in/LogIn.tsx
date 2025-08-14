@@ -46,7 +46,7 @@ const LogIn = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-background justify-center items-center p-6">
-      <View className="w-full max-w-md bg-white/10 rounded-xl p-8 border border-border bg-white">
+      <View className="w-full max-w-md bg-white/10 rounded-2xl p-8 border border-border bg-white">
         <View className="items-center mb-4">
           <Image
             source={require("../../assets/Ampara_logo.png")}
@@ -57,27 +57,27 @@ const LogIn = () => {
         </View>
 
         {error && (
-          <Text className="text-red-500 text-center mb-4">{error}</Text>
+          <Text className="text-highlight text-center mb-4">{error}</Text>
         )}
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2 pl-3">
+          <Text className="text-text text-base font-semibold mb-2 pl-3">
             Email
           </Text>
           <TextInput
             value={email}
             onChangeText={setEmail}
-            className="border border-gray-300 rounded-lg py-3 px-4 text-lg bg-white/70"
+            className="border border-border rounded-2xl py-3 px-4 text-lg bg-white/70"
             autoCapitalize="none"
             keyboardType="email-address"
           />
         </View>
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2 pl-3">
+          <Text className="text-text text-base font-semibold mb-2 pl-3">
             Password
           </Text>
-          <View className="flex-row items-center border border-gray-300 rounded-lg bg-white/70">
+          <View className="flex-row items-center border border-border rounded-2xl bg-white/70">
             <TextInput
               value={password}
               onChangeText={setPassword}
@@ -96,14 +96,14 @@ const LogIn = () => {
               <Ionicons
                 name={showPassword ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="gray"
+                color="#6B7280"
               />
             </TouchableOpacity>
           </View>
         </View>
 
         <TouchableOpacity
-          className="bg-primary rounded-xl py-4 shadow-md mb-4"
+          className="bg-primary rounded-2xl py-4 shadow-md mb-4"
           onPress={() => setIsAuthenticated(true)}
         >
           <Text className="text-white text-center text-lg font-semibold">
@@ -121,7 +121,7 @@ const LogIn = () => {
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">
-          <Text className="text-gray-600">Don't have an account?</Text>
+          <Text className="text-subtitle">Don't have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text className="text-accent font-semibold ml-1">Sign Up</Text>
           </TouchableOpacity>

@@ -23,13 +23,13 @@ const Health = () => {
       <View className="mx-4">
         <View
           id="select-view"
-          className="flex flex-row justify-center justify-evenly bg-gray-100 rounded my-4 p-2"
+          className="flex flex-row justify-center justify-evenly bg-badge rounded-2xl my-4 p-2"
         >
           <Pressable onPress={() => setSelectedSection("vitals")}>
             <Text
               className={`${
                 selectedSection == "vitals" ? "bg-white font-bold" : ""
-              } px-6 py-2 rounded`}
+              } px-6 py-2 rounded-2xl`}
             >
               Vitals
             </Text>
@@ -38,7 +38,7 @@ const Health = () => {
             <Text
               className={`${
                 selectedSection == "medications" ? "bg-white font-bold" : ""
-              } px-4 py-2 rounded`}
+              } px-4 py-2 rounded-2xl`}
             >
               Medications
             </Text>
@@ -47,13 +47,13 @@ const Health = () => {
             <Text
               className={`${
                 selectedSection == "records" ? "bg-white font-bold" : ""
-              } px-4 py-2 rounded`}
+              } px-4 py-2 rounded-2xl`}
             >
               Records
             </Text>
           </Pressable>
         </View>
-        <View className="border border-border rounded w-full bg-[#ffffff]">
+        <View className="border border-border rounded-2xl w-full bg-[#ffffff]">
           {renderSection()}
         </View>
       </View>

@@ -53,7 +53,7 @@ const Medications = () => {
       </Text>
       <View id="container-vitals-cards" className="mt-4 flex gap-4">
         {medications.map(med => (
-          <View key={med.id} className="flex items-start justify-between border border-border rounded-lg p-3 mb-3 bg-white">
+          <View key={med.id} className="flex items-start justify-between border border-border rounded-2xl p-3 mb-3 bg-white">
             <View className="flex-row justify-between w-full items-start">
               <View>
                 <Text className="font-bold text-xl text-text">{med.name}</Text>
@@ -63,8 +63,8 @@ const Medications = () => {
                 <Text
                   className={`border ${
                     med.active
-                      ? "border-green-500 bg-green-200 text-green-700"
-                      : "border-red-500 bg-red-200 text-red-700"
+                      ? "border-primary bg-badge text-primary"
+                      : "border-highlight bg-badge text-highlight"
                   } rounded-full py-1 px-3 text-xs font-bold`}
                 >
                   {med.active ? "Active" : "Inactive"}
@@ -77,13 +77,13 @@ const Medications = () => {
         ))}
         <View className="flex-row justify-between gap-2">
           <Pressable
-            className="border border-border rounded flex-1 py-3"
+            className="border border-border rounded-2xl flex-1 py-3"
             onPress={() => setRefillRequestModalVisible(true)}
           >
             <Text className="font-medium mx-auto text-lg">Refill Request</Text>
           </Pressable>
           <Pressable
-            className="bg-calm py-3 flex-1 rounded"
+            className="bg-calm py-3 flex-1 rounded-2xl"
             onPress={() => setAddMedicationModalVisible(true)}
           >
             <Text className="text-white font-medium mx-auto text-lg">
