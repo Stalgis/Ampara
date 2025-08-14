@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Pressable, Modal, FlatList } from "react-native";
 import AddHealthRecordModal from "./Modals/AddHealthRecordModal";
+import EmptyState from "../../components/EmptyState";
 
 interface HealthRecord {
   id: string;
@@ -66,24 +67,28 @@ const HealthRecords = () => {
         Health Records
       </Text>
       <View id="container-records-cards" className="mt-4 flex gap-4">
-        {records.map((record) => (
-          <View
-            key={record.id}
-            className="flex-row items-center justify-between border border-border rounded-2xl p-3 mb-3 bg-white"
-          >
-            <View>
-              <Text className="font-bold text-xl text-text">
-                {record.visitType}
-              </Text>
-              <Text className="text-subtitle text-sm">
-                {record.doctor} - {record.date}
-              </Text>
+        {records.length === 0 ? (
+          <EmptyState message="No health records" />
+        ) : (
+          records.map((record) => (
+            <View
+              key={record.id}
+              className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-white"
+            >
+              <View>
+                <Text className="font-bold text-xl text-text">
+                  {record.visitType}
+                </Text>
+                <Text className="text-subtitle text-sm">
+                  {record.doctor} - {record.date}
+                </Text>
+              </View>
+              <Pressable onPress={() => openModal(record)}>
+                <Text className="text-calm font-bold">View</Text>
+              </Pressable>
             </View>
-            <Pressable onPress={() => openModal(record)}>
-              <Text className="text-calm font-bold">View</Text>
-            </Pressable>
-          </View>
-        ))}
+          ))
+        )}
         <Pressable
           className="bg-calm py-3 rounded-2xl mt-4"
           onPress={() => setAddModalVisible(true)}

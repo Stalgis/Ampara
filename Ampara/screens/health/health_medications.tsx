@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import AddMedicationModal from "./Modals/AddMedicationModal";
 import RefillRequestModal from "./Modals/RefillRequestModal";
+import EmptyState from "../../components/EmptyState";
 
 interface Medication {
   id: string;
@@ -52,29 +53,38 @@ const Medications = () => {
         Current Medications
       </Text>
       <View id="container-vitals-cards" className="mt-4 flex gap-4">
-        {medications.map(med => (
-          <View key={med.id} className="flex items-start justify-between border border-border rounded-2xl p-3 mb-3 bg-white">
-            <View className="flex-row justify-between w-full items-start">
-              <View>
-                <Text className="font-bold text-xl text-text">{med.name}</Text>
-                <Text className="text-subtitle text-sm">{med.dosage}, {med.frequency}</Text>
+        {medications.length === 0 ? (
+          <EmptyState message="No medications found" />
+        ) : (
+          medications.map((med) => (
+            <View
+              key={med.id}
+              className="flex items-start justify-between border border-border rounded-lg p-3 mb-3 bg-white"
+            >
+              <View className="flex-row justify-between w-full items-start">
+                <View>
+                  <Text className="font-bold text-xl text-text">{med.name}</Text>
+                  <Text className="text-subtitle text-sm">
+                    {med.dosage}, {med.frequency}
+                  </Text>
+                </View>
+                <Pressable onPress={() => toggleMedicationActive(med.id)}>
+                  <Text
+                    className={`border ${
+                      med.active
+                        ? "border-green-500 bg-green-200 text-green-700"
+                        : "border-red-500 bg-red-200 text-red-700"
+                    } rounded-full py-1 px-3 text-xs font-bold`}
+                  >
+                    {med.active ? "Active" : "Inactive"}
+                  </Text>
+                </Pressable>
               </View>
-              <Pressable onPress={() => toggleMedicationActive(med.id)}>
-                <Text
-                  className={`border ${
-                    med.active
-                      ? "border-primary bg-badge text-primary"
-                      : "border-highlight bg-badge text-highlight"
-                  } rounded-full py-1 px-3 text-xs font-bold`}
-                >
-                  {med.active ? "Active" : "Inactive"}
-                </Text>
-              </Pressable>
+              <View className="w-full h-px bg-border my-4" />
+              <Text>Next dose: Today, 8:00 PM</Text>
             </View>
-            <View className="w-full h-px bg-border my-4" />
-            <Text>Next dose: Today, 8:00 PM</Text>
-          </View>
-        ))}
+          ))
+        )}
         <View className="flex-row justify-between gap-2">
           <Pressable
             className="border border-border rounded-2xl flex-1 py-3"
