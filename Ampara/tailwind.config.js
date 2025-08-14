@@ -19,6 +19,11 @@ module.exports = {
         highlight: "#F59E0B",
         calm: "#A78BFA",
       },
+      spacing: {
+        4: "1rem", // 16px
+        6: "1.5rem", // 24px
+        8: "2rem", // 32px
+      },
     },
   },
   plugins: [],
