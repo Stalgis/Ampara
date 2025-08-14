@@ -1,10 +1,11 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
+import { Heading } from "../../src/components/ui";
 
 const Settings = () => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ fontSize: 24 }}>Settings Screen</Text>
+      <Heading style={{ fontSize: 24 }}>Settings Screen</Heading>
     </View>
   );
 };

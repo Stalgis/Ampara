@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Modal, View, Text, TextInput, Pressable } from "react-native";
+import { Modal, View, TextInput, Pressable } from "react-native";
+import { Heading, Subheading, Body } from "../../../src/components/ui";
 
 interface AddMedicationModalProps {
   visible: boolean;
@@ -36,7 +37,7 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
     <Modal visible={visible} animationType="slide" transparent>
       <View className="flex-1 justify-center items-center bg-black/30">
         <View className="bg-white p-6 rounded-lg w-11/12">
-          <Text className="font-bold text-xl mb-4">Add New Medication</Text>
+          <Heading className="text-xl mb-4">Add New Medication</Heading>
 
           <TextInput
             className="border border-border rounded p-3 mb-4"
@@ -62,13 +63,15 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
 
           <View className="flex-row justify-end items-center">
             <Pressable className="mr-4" onPress={onClose}>
-              <Text className="text-calm">Cancel</Text>
+              <Subheading className="text-calm">Cancel</Subheading>
             </Pressable>
             <Pressable
               className="bg-calm py-2 px-4 rounded"
               onPress={handleAddMedication}
             >
-              <Text className="text-white font-bold">Add Medication</Text>
+              <Subheading className="text-white font-bold">
+                Add Medication
+              </Subheading>
             </Pressable>
           </View>
         </View>

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Pressable, Image } from "react-native";
+import { View, SafeAreaView, Pressable, Image } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import CallDetailsModal from "./Modals/CallDetailsModal";
+import { Heading, Subheading, Body } from "../../src/components/ui";
 
 const Chat = () => {
   const [selectedSection, setSelectedSection] = useState("message");
@@ -31,39 +32,7 @@ const Chat = () => {
   });
   return (
     <SafeAreaView className="bg-background h-full">
-      {/* <View
-        id="select-view"
-        className="flex flex-row justify-center justify-evenly bg-gray-100 mx-6 rounded my-4 p-2"
-      >
-        <Pressable onPress={() => setSelectedSection("message")}>
-          <Text
-            className={`${selectedSection == "message" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
-          >
-            Message
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => setSelectedSection("chatbot")}>
-          <Text
-            className={`${selectedSection == "chatbot" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
-          >
-            ChatBot
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => setSelectedSection("advice")}>
-          <Text
-            className={`${selectedSection == "advice" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
-          >
-            Advice
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => setSelectedSection("calls")}>
-          <Text
-            className={`${selectedSection == "calls" ? "bg-white font-bold" : ""} px-4 py-2 rounded`}
-          >
-            Calls
-          </Text>
-        </Pressable>
-      </View> */}
+      {/* Tab selection view removed for brevity */}
       <View className="mx-4">
         <View className="bg-badge border border-highlight rounded-xl mt-4 p-3 flex flex-row items-center">
           {/* Logo */}
@@ -75,28 +44,30 @@ const Chat = () => {
 
           {/* Texto + Botón */}
           <View className="flex-1">
-            <Text className="text-text font-semibold text-base mb-1">
+            <Subheading className="text-text text-base mb-1">
               Ampara suggestions
-            </Text>
-            <Text className="text-subtitle text-sm mb-2">
+            </Subheading>
+            <Body className="text-subtitle text-sm mb-2">
               Today I can mention her friend Mery's birthday, would you like
               that?
-            </Text>
+            </Body>
             <Pressable className="bg-[#F59E0B] rounded-lg px-3 py-1 self-start">
-              <Text className="text-white text-sm font-medium">
+              <Subheading className="text-white text-sm font-medium">
                 Send Suggestion
-              </Text>
+              </Subheading>
             </Pressable>
           </View>
         </View>
         <View id="call-history" className="mt-4">
           <View className="flex-row justify-between items-center">
-            <Text className="text-text font-bold font-lg">Calls history</Text>
+            <Heading className="text-text text-lg">Calls history</Heading>
             <Pressable
               onPress={() => setShowFilterOptions(!showFilterOptions)}
               className="flex-row items-center"
             >
-              <Text className="text-primary font-bold mr-1">{callFilter}</Text>
+              <Subheading className="text-primary font-bold mr-1">
+                {callFilter}
+              </Subheading>
               <Feather
                 name={showFilterOptions ? "chevron-up" : "chevron-down"}
                 size={20}
@@ -113,7 +84,7 @@ const Chat = () => {
                 }}
                 className="p-3"
               >
-                <Text>Last 7 days</Text>
+                <Body>Last 7 days</Body>
               </Pressable>
               <Pressable
                 onPress={() => {
@@ -122,7 +93,7 @@ const Chat = () => {
                 }}
                 className="p-3"
               >
-                <Text>Last 30 days</Text>
+                <Body>Last 30 days</Body>
               </Pressable>
             </View>
           )}
@@ -136,12 +107,14 @@ const Chat = () => {
                   <Feather name="phone" size={24} color="#3F3F46" />
                 </View>
                 <View className="flex-1">
-                  <Text className="font-bold text-base text-text">Call</Text>
-                  <Text className="text-subtitle text-sm">{call.date}</Text>
+                  <Subheading className="font-bold text-base text-text">
+                    Call
+                  </Subheading>
+                  <Body className="text-subtitle text-sm">{call.date}</Body>
                 </View>
               </View>
               <Pressable onPress={() => setModalVisible(true)}>
-                <Text className="text-md text-text">{call.date}</Text>
+                <Body className="text-md text-text">{call.date}</Body>
               </Pressable>
             </View>
           ))}

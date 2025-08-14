@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFonts, Fraunces_700Bold } from "@expo-google-fonts/fraunces";
 import "./global.css";
 
 import Dashboard from "./screens/dashboard/Dashboard";
@@ -75,6 +76,7 @@ const MainTabs = () => (
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [fontsLoaded] = useFonts({ Fraunces_700Bold });
 
   useEffect(() => {
     const loadAuth = async () => {
@@ -90,7 +92,7 @@ export default function App() {
     loadAuth();
   }, []);
 
-  if (loading) {
+  if (loading || !fontsLoaded) {
     return null;
   }
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 import AddMedicationModal from "./Modals/AddMedicationModal";
 import RefillRequestModal from "./Modals/RefillRequestModal";
+import { Heading, Subheading, Body } from "../../src/components/ui";
 
 interface Medication {
   id: string;
@@ -48,19 +49,17 @@ const Medications = () => {
         medications={medications}
         onSelectMedication={handleSelectMedication}
       />
-      <Text className="font-bold text-xl font-text text-text">
-        Current Medications
-      </Text>
+      <Heading className="text-xl text-text">Current Medications</Heading>
       <View id="container-vitals-cards" className="mt-4 flex gap-4">
         {medications.map(med => (
           <View key={med.id} className="flex items-start justify-between border border-border rounded-lg p-3 mb-3 bg-white">
             <View className="flex-row justify-between w-full items-start">
               <View>
-                <Text className="font-bold text-xl text-text">{med.name}</Text>
-                <Text className="text-subtitle text-sm">{med.dosage}, {med.frequency}</Text>
+                <Subheading className="font-bold text-xl text-text">{med.name}</Subheading>
+                <Body className="text-subtitle text-sm">{med.dosage}, {med.frequency}</Body>
               </View>
               <Pressable onPress={() => toggleMedicationActive(med.id)}>
-                <Text
+                <Body
                   className={`border ${
                     med.active
                       ? "border-green-500 bg-green-200 text-green-700"
@@ -68,11 +67,11 @@ const Medications = () => {
                   } rounded-full py-1 px-3 text-xs font-bold`}
                 >
                   {med.active ? "Active" : "Inactive"}
-                </Text>
+                </Body>
               </Pressable>
             </View>
             <View className="w-full h-px bg-border my-4" />
-            <Text>Next dose: Today, 8:00 PM</Text>
+            <Body>Next dose: Today, 8:00 PM</Body>
           </View>
         ))}
         <View className="flex-row justify-between gap-2">
@@ -80,15 +79,17 @@ const Medications = () => {
             className="border border-border rounded flex-1 py-3"
             onPress={() => setRefillRequestModalVisible(true)}
           >
-            <Text className="font-medium mx-auto text-lg">Refill Request</Text>
+            <Subheading className="font-medium mx-auto text-lg">
+              Refill Request
+            </Subheading>
           </Pressable>
           <Pressable
             className="bg-calm py-3 flex-1 rounded"
             onPress={() => setAddMedicationModalVisible(true)}
           >
-            <Text className="text-white font-medium mx-auto text-lg">
+            <Subheading className="text-white font-medium mx-auto text-lg">
               Add Medication
-            </Text>
+            </Subheading>
           </Pressable>
         </View>
       </View>
