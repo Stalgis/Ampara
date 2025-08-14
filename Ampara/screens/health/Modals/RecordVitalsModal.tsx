@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import {
   Modal,
   View,
-  Text,
   TextInput,
   Pressable,
   StyleSheet,
 } from "react-native";
+import { Heading, Subheading } from "../../../src/components/ui";
 
 type Vitals = {
   heartRate?: number;
@@ -45,7 +45,7 @@ const RecordVitalsModal = ({
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Record New Vitals</Text>
+          <Heading style={styles.modalTitle}>Record New Vitals</Heading>
           <TextInput
             style={styles.input}
             placeholder="Heart Rate (bpm)"
@@ -75,15 +75,15 @@ const RecordVitalsModal = ({
           />
           <View style={styles.buttonContainer}>
             <Pressable style={styles.button} onPress={onClose}>
-              <Text style={styles.buttonText}>Cancel</Text>
+              <Subheading style={styles.buttonText}>Cancel</Subheading>
             </Pressable>
             <Pressable
               style={[styles.button, styles.saveButton]}
               onPress={handleSave}
             >
-              <Text style={[styles.buttonText, styles.saveButtonText]}>
+              <Subheading style={[styles.buttonText, styles.saveButtonText]}>
                 Save
-              </Text>
+              </Subheading>
             </Pressable>
           </View>
         </View>

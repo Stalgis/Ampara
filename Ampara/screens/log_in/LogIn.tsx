@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
+import { View, TouchableOpacity, TextInput, Image } from "react-native";
 import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAuth } from "../../controllers/AuthContext";
+import { Heading, Subheading, Body } from "../../src/components/ui";
 
 // import AsyncStorage from "@react-native-async-storage/async-storage"; // Commented out as per new requirements
 
@@ -53,17 +54,17 @@ const LogIn = () => {
             className="w-36 h-36"
             resizeMode="contain"
           />
-          <Text className="text-3xl font-bold text-text">Ampara</Text>
+          <Heading className="text-text">Ampara</Heading>
         </View>
 
         {error && (
-          <Text className="text-red-500 text-center mb-4">{error}</Text>
+          <Body className="text-red-500 text-center mb-4">{error}</Body>
         )}
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2 pl-3">
+          <Subheading className="text-gray-700 text-base mb-2 pl-3">
             Email
-          </Text>
+          </Subheading>
           <TextInput
             value={email}
             onChangeText={setEmail}
@@ -74,9 +75,9 @@ const LogIn = () => {
         </View>
 
         <View className="mb-6">
-          <Text className="text-gray-700 text-base font-semibold mb-2 pl-3">
+          <Subheading className="text-gray-700 text-base mb-2 pl-3">
             Password
-          </Text>
+          </Subheading>
           <View className="flex-row items-center border border-gray-300 rounded-lg bg-white/70">
             <TextInput
               value={password}
@@ -106,24 +107,20 @@ const LogIn = () => {
           className="bg-primary rounded-xl py-4 shadow-md mb-4"
           onPress={() => setIsAuthenticated(true)}
         >
-          <Text className="text-white text-center text-lg font-semibold">
-            Log In
-          </Text>
+          <Subheading className="text-white text-center">Log In</Subheading>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => navigation.navigate("ForgotPassword")}
           className="mt-2"
         >
-          <Text className="text-center text-accent font-semibold">
-            Forgot Password?
-          </Text>
+          <Subheading className="text-center text-accent">Forgot Password?</Subheading>
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">
-          <Text className="text-gray-600">Don't have an account?</Text>
+          <Body className="text-gray-600">Don't have an account?</Body>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-            <Text className="text-accent font-semibold ml-1">Sign Up</Text>
+            <Subheading className="text-accent ml-1">Sign Up</Subheading>
           </TouchableOpacity>
         </View>
       </View>

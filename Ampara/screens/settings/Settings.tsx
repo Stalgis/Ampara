@@ -1,4 +1,5 @@
 import React from "react";
+
 import { SafeAreaView, View, Text } from "react-native";
 
 const Settings = () => {
@@ -8,6 +9,7 @@ const Settings = () => {
         <Text className="text-2xl text-text">Settings Screen</Text>
       </View>
     </SafeAreaView>
+
   );
 };
 
