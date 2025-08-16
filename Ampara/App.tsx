@@ -5,7 +5,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { View, useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFonts, Fraunces_700Bold } from "@expo-google-fonts/fraunces";
 import "./global.css";
 
 import Dashboard from "./screens/dashboard/Dashboard";
@@ -16,12 +15,20 @@ import CalendarScreen from "./screens/calendar/Calendar";
 import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
 import { AuthContext } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
+import LogoTitle from "./src/components/ui/LogoTitle";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const AuthStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator
+    screenOptions={({ route }) => ({
+      headerTitleAlign: "left",
+      headerTitle: () => <LogoTitle title={route.name} />,
+      headerStyle: { backgroundColor: "#fff" }, // opcional
+      headerShadowVisible: true, // opcional
+    })}
+  >
     <Stack.Screen name="Welcome" component={WelcomeScreen} />
     <Stack.Screen name="LogIn" component={LogIn} />
     <Stack.Screen name="SignUp" component={SignUp} />
@@ -36,6 +43,12 @@ const MainTabs = () => {
     <Tab.Navigator
       initialRouteName="Dashboard"
       screenOptions={({ route }) => ({
+        headerTitleAlign: "left",
+        headerTitle: () => (
+          <LogoTitle
+            title={route.name === "Dashboard" ? "Ampara" : route.name}
+          />
+        ),
         tabBarIcon: ({ focused, color, size }) => {
           let iconName = "";
           switch (route.name) {
@@ -81,7 +94,6 @@ const MainTabs = () => {
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [fontsLoaded] = useFonts({ Fraunces_700Bold });
 
   useEffect(() => {
     const loadAuth = async () => {
@@ -97,7 +109,7 @@ export default function App() {
     loadAuth();
   }, []);
 
-  if (loading || !fontsLoaded) {
+  if (loading) {
     return null;
   }
 

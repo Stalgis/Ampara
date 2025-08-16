@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Modal, View, Text, Pressable } from "react-native";
 import FormInput from "../../../src/components/ui/FormInput";
 import PrimaryButton from "../../../src/components/ui/PrimaryButton";
+import { Subheading } from "../../../src/components/ui";
+import { gray } from "tailwindcss/colors";
 
 interface AddMedicationModalProps {
   visible: boolean;
@@ -44,7 +46,7 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
             label="Medication Name"
             containerClassName="mb-4"
             placeholder="e.g., Lisinopril"
-            placeholderTextColor={colors.gray[400]}
+            placeholderTextColor={"gray-400"}
             value={medicationName}
             onChangeText={setMedicationName}
           />
@@ -52,7 +54,7 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
             label="Dosage"
             containerClassName="mb-4"
             placeholder="e.g., 10mg"
-            placeholderTextColor={colors.gray[400]}
+            placeholderTextColor={"gray-400"}
             value={dosage}
             onChangeText={setDosage}
           />
@@ -60,7 +62,7 @@ const AddMedicationModal: React.FC<AddMedicationModalProps> = ({
             label="Frequency"
             containerClassName="mb-4"
             placeholder="e.g., Once daily at 8:00 AM"
-            placeholderTextColor={colors.gray[400]}
+            placeholderTextColor={"gray-400"}
             value={frequency}
             onChangeText={setFrequency}
           />

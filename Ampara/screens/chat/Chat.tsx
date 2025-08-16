@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -8,50 +8,111 @@ import {
   useColorScheme,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
-import CallDetailsModal from "./Modals/CallDetailsModal";
+import CallDetailsModal, { CallItem } from "./Modals/CallDetailsModal";
+import SendSuggestionModal, {
+  SuggestionPayload,
+} from "./Modals/SendSuggestionModal";
 import { designTokens } from "../../design-tokens";
 
+// --- OPTIONAL: if you already created filterCalls util, keep using it ---
+const parseMDYTime = (input: string): Date | null => {
+  const [datePartRaw, timePartRaw] = input.split(",").map((s) => s?.trim());
+  if (!datePartRaw) return null;
+  const [mm, dd, yyyy] = datePartRaw.split("/").map((n) => parseInt(n, 10));
+  if (!(mm >= 1 && mm <= 12) || !(dd >= 1 && dd <= 31) || !yyyy) return null;
+  let hours = 0,
+    minutes = 0;
+  if (timePartRaw) {
+    const m = timePartRaw.match(/^(\d{1,2}):(\d{2})(AM|PM)$/i);
+    if (m) {
+      hours = parseInt(m[1], 10) % 12;
+      minutes = parseInt(m[2], 10);
+      if (m[3].toUpperCase() === "PM") hours += 12;
+    }
+  }
+  return new Date(yyyy, mm - 1, dd, hours, minutes);
+};
+
+const daysBetween = (a: Date, b: Date): number => {
+  const A = new Date(a.getFullYear(), a.getMonth(), a.getDate()).getTime();
+  const B = new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
+  return Math.floor((A - B) / (1000 * 60 * 60 * 24));
+};
+
+const filterCalls = (
+  calls: CallItem[],
+  callFilter: string,
+  now = new Date()
+): CallItem[] => {
+  const limit =
+    callFilter === "Last 7 days"
+      ? 7
+      : callFilter === "Last 30 days"
+        ? 30
+        : Infinity;
+  return calls.filter((c) => {
+    const d = parseMDYTime(c.date);
+    if (!d) return false;
+    const diff = daysBetween(now, d);
+    return diff < limit;
+  });
+};
+
 const Chat = () => {
-  const [selectedSection, setSelectedSection] = useState("message");
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCall, setSelectedCall] = useState<CallItem | null>(null);
+  const [sendModalVisible, setSendModalVisible] = useState(false);
   const [callFilter, setCallFilter] = useState("Last 7 days");
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const scheme = useColorScheme() ?? "light";
   const tokens = designTokens[scheme];
 
-  const calls = [
-    { date: "08/08/2025, 9:00AM" },
-    { date: "07/15/2025, 11:30AM" },
-    { date: "06/20/2025, 3:00PM" },
+  const calls: CallItem[] = [
+    {
+      date: "08/08/2025, 9:00AM",
+      topic: "Birthday reminder for Mery",
+      description:
+        "We discussed calling Mery to wish her a happy birthday and planning a short afternoon visit next week.",
+    },
+    {
+      date: "08/15/2025, 11:30AM",
+      topic: "Medication follow‑up",
+      description:
+        "Quick check-in about morning pills. Confirmed dosage schedule and set a reminder for refills.",
+    },
+    {
+      date: "07/20/2025, 3:00PM",
+      topic: "Walk to the park",
+      description:
+        "Talked about a light walk in the nearby park depending on weather; shared safety tips and hydration reminders.",
+    },
   ];
 
-  const filteredCalls = calls.filter((call) => {
-    const callDate = new Date(call.date.split(",")[0]);
-    const today = new Date();
-    const diffTime = Math.abs(today.getTime() - callDate.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const filteredCalls = useMemo(
+    () => filterCalls(calls, callFilter),
+    [calls, callFilter]
+  );
 
-    if (callFilter === "Last 7 days") {
-      return diffDays <= 7;
-    }
-    if (callFilter === "Last 30 days") {
-      return diffDays <= 30;
-    }
-    return true;
-  });
+  const openCall = (call: CallItem) => {
+    setSelectedCall(call);
+    setModalVisible(true);
+  };
+
+  const handleSubmitSuggestion = (payload: SuggestionPayload) => {
+    // TODO: send to backend
+    console.log("Suggestion submitted", payload);
+  };
+
   return (
     <SafeAreaView className="bg-background h-full">
-      {/* Tab selection view removed for brevity */}
       <View className="mx-4">
-        <View className="bg-badge border border-highlight rounded-xl mt-4 p-3 flex flex-row items-center">
-          {/* Logo */}
+        {/* Ampara suggestions banner (existing) */}
+        <View className="bg-badge border border-highlight rounded-2xl mt-4 p-3 flex flex-row items-center">
           <Image
             source={require("../../assets/Ampara_logo.png")}
             className="w-20 h-20 mr-3"
             resizeMode="contain"
           />
-
-          {/* Texto + Botón */}
           <View className="flex-1">
             <Text className="text-text text-base mb-1">Ampara suggestions</Text>
             <Text className="text-subtitle text-sm mb-2">
@@ -65,9 +126,29 @@ const Chat = () => {
             </Pressable>
           </View>
         </View>
-        <View id="call-history" className="mt-4">
+
+        {/* NEW: Personalized suggestion box */}
+        <View className="border border-border bg-background rounded-2xl p-4 mt-4">
+          <Text className="text-text text-base font-semibold mb-1">
+            Send personalized suggestion
+          </Text>
+          <Text className="text-subtitle text-sm mb-3">
+            Tell Ampara exactly what you want it to say or remind. Choose the
+            type, topic and add details.
+          </Text>
+          <Pressable
+            onPress={() => setSendModalVisible(true)}
+            className="rounded-xl py-3 px-4 self-start"
+            style={{ backgroundColor: tokens.highlight }}
+          >
+            <Text className="text-white font-semibold">Send suggestion</Text>
+          </Pressable>
+        </View>
+
+        {/* Calls header + filter */}
+        <View id="call-history" className="mt-5">
           <View className="flex-row justify-between items-center">
-            <Text className="text-text text-lg">Calls history</Text>
+            <Text className="text-text text-lg font-bold">Calls history</Text>
             <Pressable
               onPress={() => setShowFilterOptions(!showFilterOptions)}
               className="flex-row items-center"
@@ -80,53 +161,115 @@ const Chat = () => {
               />
             </Pressable>
           </View>
+
           {showFilterOptions && (
-            <View className="absolute right-0 top-8 bg-background border border-border rounded-lg mt-2 z-10 w-36">
-              <Pressable
-                onPress={() => {
-                  setCallFilter("Last 7 days");
-                  setShowFilterOptions(false);
-                }}
-                className="p-3"
-              >
-                <Text>Last 7 days</Text>
-              </Pressable>
-              <Pressable
-                onPress={() => {
-                  setCallFilter("Last 30 days");
-                  setShowFilterOptions(false);
-                }}
-                className="p-3"
-              >
-                <Text>Last 30 days</Text>
-              </Pressable>
+            <View
+              className="absolute right-0 top-8 bg-background border border-border rounded-xl mt-2 w-40"
+              style={{ zIndex: 20, elevation: 20 }}
+            >
+              {["Last 7 days", "Last 30 days", "All"].map((opt) => (
+                <Pressable
+                  key={opt}
+                  onPress={() => {
+                    setCallFilter(opt);
+                    setShowFilterOptions(false);
+                  }}
+                  className="p-3"
+                >
+                  <Text style={{ color: tokens.text }}>{opt}</Text>
+                </Pressable>
+              ))}
             </View>
           )}
-          {filteredCalls.map((call, index) => (
-            <View
-              key={index}
-              className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background mt-2"
-            >
-              <View className="flex-row items-center flex-1">
-                <View className="bg-primary p-2 rounded-lg mr-3">
-                  <Feather name="phone" size={24} color={tokens.text} />
+
+          {/* Call cards */}
+          <View className="mt-2">
+            {filteredCalls.map((call, index) => (
+              <Pressable
+                key={`${call.date}-${index}`}
+                onPress={() => openCall(call)}
+                android_ripple={{ color: "rgba(0,0,0,0.06)" }}
+                className="mb-3"
+                accessibilityRole="button"
+                accessibilityLabel={`Open details for call on ${call.date}`}
+              >
+                <View
+                  className="flex-row items-center justify-between rounded-2xl p-4 bg-background border border-border"
+                  style={{
+                    shadowColor: "#000",
+                    shadowOpacity: 0.08,
+                    shadowRadius: 10,
+                    shadowOffset: { width: 0, height: 6 },
+                    elevation: 3,
+                  }}
+                >
+                  <View className="flex-row items-center flex-1">
+                    <View
+                      className="rounded-2xl mr-3 p-3"
+                      style={{ backgroundColor: tokens.highlight }}
+                    >
+                      <Feather name="phone" size={22} color="#FFFFFF" />
+                    </View>
+                    <View className="flex-1">
+                      <Text
+                        className="font-semibold text-base"
+                        style={{ color: tokens.text }}
+                      >
+                        Call
+                      </Text>
+                      <Text
+                        className="text-sm"
+                        numberOfLines={1}
+                        style={{ color: tokens.subtitle }}
+                      >
+                        {call.topic}
+                      </Text>
+                      <Text
+                        className="text-xs mt-1"
+                        style={{ color: tokens.subtitle }}
+                      >
+                        {call.date}
+                      </Text>
+                    </View>
+                  </View>
+                  <Feather
+                    name="chevron-right"
+                    size={20}
+                    color={tokens.subtitle}
+                  />
                 </View>
-                <View className="flex-1">
-                  <Text className="font-bold text-base text-text">Call</Text>
-                  <Text className="text-subtitle text-sm">{call.date}</Text>
-                </View>
-              </View>
-              <Pressable onPress={() => setModalVisible(true)}>
-                <Text className="text-md text-text">{call.date}</Text>
               </Pressable>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <View id=""></View>
       </View>
+
+      {/* Details Modal */}
       <CallDetailsModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
+        call={selectedCall}
+        tokens={{
+          background: tokens.background,
+          text: tokens.text,
+          subtitle: tokens.subtitle,
+          border: tokens.border,
+          highlight: tokens.highlight,
+        }}
+      />
+
+      {/* Send Suggestion Modal */}
+      <SendSuggestionModal
+        visible={sendModalVisible}
+        onClose={() => setSendModalVisible(false)}
+        onSubmit={handleSubmitSuggestion}
+        tokens={{
+          background: tokens.background,
+          text: tokens.text,
+          subtitle: tokens.subtitle,
+          border: tokens.border,
+          highlight: tokens.highlight,
+        }}
       />
     </SafeAreaView>
   );
