@@ -1,10 +1,19 @@
-import React, { useState } from "react";
-import { View, TextInput, Pressable, Modal, Text } from "react-native";
+import React, { useMemo, useState } from "react";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Pressable,
+  useColorScheme,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import RecordVitalsModal from "./Modals/RecordVitalsModal";
-import { Heading, Subheading, Body } from "../../src/components/ui";
+import { designTokens } from "../../design-tokens";
+import RecordVitalsModal, { VitalsPatch } from "./Modals/RecordVitalsModal";
 
-const Vitals = () => {
+const Vitals: React.FC = () => {
+  const scheme = useColorScheme() ?? "light";
+  const tokens = designTokens[scheme];
+
   const [heartRateTime, setHeartRateTime] = useState("Today, 8:00 AM");
   const [heartRate, setHeartRate] = useState(72);
   const [bloodPressureTime, setBloodPressureTime] = useState("Today, 8:00 AM");
@@ -15,10 +24,6 @@ const Vitals = () => {
   const [bloodGlucose, setBloodGlucose] = useState(90);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [newHeartRate, setNewHeartRate] = useState("");
-  const [newBloodPressure, setNewBloodPressure] = useState("");
-  const [newTemperature, setNewTemperature] = useState("");
-  const [newBloodGlucose, setNewBloodGlucose] = useState("");
 
   const getDateTimeString = () => {
     const now = new Date();
@@ -34,208 +39,150 @@ const Vitals = () => {
     return `${dateString}, ${timeString}`;
   };
 
-  const recordNewVitals = () => {
-    const dateTimeString = getDateTimeString();
-    if (newHeartRate) {
-      setHeartRate(Number(newHeartRate));
-      setHeartRateTime(dateTimeString);
+  const onSaveVitals = (patch: VitalsPatch) => {
+    const ts = getDateTimeString();
+    if (patch.heartRate != null) {
+      setHeartRate(patch.heartRate);
+      setHeartRateTime(ts);
     }
-    if (newBloodPressure) {
-      setBloodPressure(newBloodPressure);
-      setBloodPressureTime(dateTimeString);
+    if (patch.bloodPressure) {
+      setBloodPressure(patch.bloodPressure);
+      setBloodPressureTime(ts);
     }
-    if (newTemperature) {
-      setTemperature(Number(newTemperature));
-      setTemperatureTime(dateTimeString);
+    if (patch.temperature != null) {
+      setTemperature(patch.temperature);
+      setTemperatureTime(ts);
     }
-    if (newBloodGlucose) {
-      setBloodGlucose(Number(newBloodGlucose));
-      setBloodGlucoseTime(dateTimeString);
+    if (patch.bloodGlucose != null) {
+      setBloodGlucose(patch.bloodGlucose);
+      setBloodGlucoseTime(ts);
     }
-    // Clear form and close modal
-    setNewHeartRate("");
-    setNewBloodPressure("");
-    setNewTemperature("");
-    setNewBloodGlucose("");
-    setModalVisible(false);
   };
 
-  return (
-    <View className="p-4">
-      <Heading className="text-xl text-text">Recent Vitals</Heading>
-      <View id="container-vitals-cards" className="mt-4 flex gap-4">
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
-          <View className="flex-row items-center flex-1">
-            <View className="bg-red-100 p-2 rounded-lg mr-3">
-              <Ionicons name="heart-outline" size={24} color="red" />
-            </View>
-            <View className="flex-1">
-              <Subheading className="font-bold text-base text-text">
-                Heart Rate
-              </Subheading>
-              <Body className="text-subtitle text-sm">
-                Last updated: {heartRateTime}
-              </Body>
-            </View>
-          </View>
-          <View>
-            <Subheading className="font-bold text-lg text-text">
-              {heartRate} bpm
-            </Subheading>
-          </View>
-        </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
-          <View className="flex-row items-center flex-1">
-            <View className="bg-blue-100 p-2 rounded-lg mr-3">
-              <Ionicons name="analytics-outline" size={24} color="blue" />
-            </View>
-            <View className="flex-1">
-              <Subheading className="font-bold text-base text-text">
-                Blood Pressure
-              </Subheading>
-              <Body className="text-subtitle text-sm">
-                Last updated: {bloodPressureTime}
-              </Body>
-            </View>
-          </View>
-          <View>
-            <Subheading className="font-bold text-lg text-text">
-              {bloodPressure} mmHg
-            </Subheading>
-          </View>
-        </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
-          <View className="flex-row items-center flex-1">
-            <View className="bg-green-100 p-2 rounded-lg mr-3">
-              <Ionicons name="thermometer-outline" size={24} color="green" />
-            </View>
-            <View className="flex-1">
-              <Subheading className="font-bold text-base text-text">
-                Temperature
-              </Subheading>
-              <Body className="text-subtitle text-sm">
-                Last updated: {temperatureTime}
-              </Body>
-            </View>
-          </View>
-          <View>
-            <Subheading className="font-bold text-lg text-text">
-              {temperature} °F
-            </Subheading>
-          </View>
-        </View>
-        <View className="flex-row items-center justify-between border border-border rounded-lg p-3 mb-3 bg-background">
-          <View className="flex-row items-center flex-1">
-            <View className="bg-purple-100 p-2 rounded-lg mr-3">
-              <Ionicons name="water-outline" size={24} color="purple" />
-            </View>
-            <View className="flex-1">
-              <Subheading className="font-bold text-base text-text">
-                Blood Glucose
-              </Subheading>
-              <Body className="text-subtitle text-sm">
-                Last updated: {bloodGlucoseTime}
-              </Body>
-            </View>
-          </View>
-          <View>
-            <Subheading className="font-bold text-lg text-text">
-              {bloodGlucose} mg/dL
-            </Subheading>
-          </View>
-        </View>
-        <Pressable
-          onPress={() => setModalVisible(true)}
-          className="bg-calm px-4 py-3 rounded"
+  const Card = ({
+    icon,
+    title,
+    subtitle,
+    value,
+    valueSuffix,
+    iconBg,
+    iconColor,
+  }: {
+    icon: keyof typeof Ionicons.glyphMap;
+    title: string;
+    subtitle: string;
+    value: string | number;
+    valueSuffix?: string;
+    iconBg: string;
+    iconColor: string;
+  }) => (
+    <View
+      className="flex-row items-center justify-between rounded-2xl p-4 mb-3 bg-background border"
+      style={{
+        borderColor: tokens.border,
+        shadowColor: "#000",
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 2,
+      }}
+    >
+      <View className="flex-row items-center flex-1">
+        <View
+          className="rounded-2xl mr-3 p-3"
+          style={{ backgroundColor: iconBg }}
         >
-          <Subheading className="text-white font-medium mx-auto text-lg">
-            Record New Vitals
-          </Subheading>
-        </Pressable>
-
-        <RecordVitalsModal
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onSave={recordNewVitals}
-        />
-        <Pressable
-          onPress={() => setModalVisible(true)}
-          className="bg-calm px-4 py-3 rounded"
-        >
-          <Subheading className="text-white font-medium mx-auto text-lg">
-            Record New Vitals
-          </Subheading>
-        </Pressable>
-
-        <Modal visible={modalVisible} animationType="slide" transparent>
-          <View className="flex-1 justify-center items-center bg-black/50">
-            <View className="bg-background p-6 rounded-xl w-11/12">
-              <Heading className="text-xl mb-4 text-text">
-                Update Vitals
-              </Heading>
-
-              <Subheading className="text-text mb-1">
-                Heart Rate (bpm)
-              </Subheading>
-              <TextInput
-                value={newHeartRate}
-                onChangeText={setNewHeartRate}
-                keyboardType="numeric"
-                placeholder="e.g. 75"
-                className="border border-border rounded p-2 mb-3"
-              />
-
-              <Subheading className="text-text mb-1">
-                Blood Pressure (mmHg)
-              </Subheading>
-              <TextInput
-                value={newBloodPressure}
-                onChangeText={setNewBloodPressure}
-                placeholder="e.g. 120/80"
-                className="border border-border rounded p-2 mb-3"
-              />
-
-              <Subheading className="text-text mb-1">
-                Temperature (°F)
-              </Subheading>
-              <TextInput
-                value={newTemperature}
-                onChangeText={setNewTemperature}
-                keyboardType="numeric"
-                placeholder="e.g. 98.6"
-                className="border border-border rounded p-2 mb-3"
-              />
-
-              <Subheading className="text-text mb-1">
-                Blood Glucose (mg/dL)
-              </Subheading>
-              <TextInput
-                value={newBloodGlucose}
-                onChangeText={setNewBloodGlucose}
-                keyboardType="numeric"
-                placeholder="e.g. 100"
-                className="border border-border rounded p-2 mb-4"
-              />
-
-              <View className="flex-row justify-between">
-                <Pressable
-                  onPress={() => setModalVisible(false)}
-                  className="bg-border px-4 py-2 rounded"
-                >
-                  <Body className="text-text">Cancel</Body>
-                </Pressable>
-                <Pressable
-                  onPress={recordNewVitals}
-                  className="bg-primary px-4 py-2 rounded"
-                >
-                  <Subheading className="text-text font-bold">Save</Subheading>
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </Modal>
+          <Ionicons name={icon} size={20} color={iconColor} />
+        </View>
+        <View className="flex-1">
+          <Text
+            className="font-semibold text-base"
+            style={{ color: tokens.text }}
+          >
+            {title}
+          </Text>
+          <Text
+            className="text-sm"
+            style={{ color: tokens.subtitle }}
+            numberOfLines={1}
+          >
+            {subtitle}
+          </Text>
+        </View>
+      </View>
+      <View>
+        <Text className="font-semibold text-lg" style={{ color: tokens.text }}>
+          {value} {valueSuffix ?? ""}
+        </Text>
       </View>
     </View>
+  );
+
+  return (
+    <SafeAreaView className="bg-background h-fit">
+      <View className="m-4">
+        <Text className="text-xl font-bold" style={{ color: tokens.text }}>
+          Recent Vitals
+        </Text>
+
+        <View className="mt-4">
+          <Card
+            icon="heart-outline"
+            title="Heart Rate"
+            subtitle={`Last updated: ${heartRateTime}`}
+            value={heartRate}
+            valueSuffix="bpm"
+            iconBg="#fee2e2"
+            iconColor="#ef4444"
+          />
+          <Card
+            icon="analytics-outline"
+            title="Blood Pressure"
+            subtitle={`Last updated: ${bloodPressureTime}`}
+            value={bloodPressure}
+            valueSuffix="mmHg"
+            iconBg="#dbeafe"
+            iconColor="#2563eb"
+          />
+          <Card
+            icon="thermometer-outline"
+            title="Temperature"
+            subtitle={`Last updated: ${temperatureTime}`}
+            value={temperature}
+            valueSuffix="°F"
+            iconBg="#dcfce7"
+            iconColor="#16a34a"
+          />
+          <Card
+            icon="water-outline"
+            title="Blood Glucose"
+            subtitle={`Last updated: ${bloodGlucoseTime}`}
+            value={bloodGlucose}
+            valueSuffix="mg/dL"
+            iconBg="#ede9fe"
+            iconColor="#7c3aed"
+          />
+        </View>
+
+        <Pressable
+          onPress={() => setModalVisible(true)}
+          className="rounded-xl py-3 px-4 self-start mt-3"
+          style={{ backgroundColor: tokens.highlight }}
+        >
+          <Text className="text-white font-semibold">Record New Vitals</Text>
+        </Pressable>
+      </View>
+
+      <RecordVitalsModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSave={(patch) => {
+          onSaveVitals(patch);
+          setModalVisible(false);
+        }}
+        tokens={tokens}
+      />
+    </SafeAreaView>
   );
 };
 
