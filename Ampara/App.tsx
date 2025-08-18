@@ -119,9 +119,11 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-      <ThemeProvider>
-        <AppNavigation isAuthenticated={isAuthenticated} />
-      </ThemeProvider>
+      <View className="flex-1">
+        <NavigationContainer>
+          {isAuthenticated ? <MainTabs /> : <AuthStack />}
+        </NavigationContainer>
+      </View>
     </AuthContext.Provider>
   );
 }

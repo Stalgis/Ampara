@@ -166,7 +166,7 @@ const Vitals: React.FC = () => {
 
         <Pressable
           onPress={() => setModalVisible(true)}
-          className="rounded-xl py-3 px-4 self-start mt-3"
+          className="rounded-xl py-3 px-4 self-start mt-3 mx-auto"
           style={{ backgroundColor: tokens.highlight }}
         >
           <Text className="text-white font-semibold">Record New Vitals</Text>
