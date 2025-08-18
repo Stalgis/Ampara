@@ -7,7 +7,7 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import { View } from "react-native";
+import { View, useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
@@ -18,14 +18,21 @@ import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
 import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
 import { AuthContext } from "./controllers/AuthContext";
-import { ThemeProvider, useTheme } from "./controllers/ThemeContext";
-import AppHeader from "./AppHeader";
+import { designTokens } from "./design-tokens";
+import LogoTitle from "./src/components/ui/LogoTitle";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const AuthStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator
+    screenOptions={({ route }) => ({
+      headerTitleAlign: "left",
+      headerTitle: () => <LogoTitle title={route.name} />,
+      headerStyle: { backgroundColor: "#fff" }, // opcional
+      headerShadowVisible: true, // opcional
+    })}
+  >
     <Stack.Screen name="Welcome" component={WelcomeScreen} />
     <Stack.Screen name="LogIn" component={LogIn} />
     <Stack.Screen name="SignUp" component={SignUp} />
@@ -33,69 +40,58 @@ const AuthStack = () => (
   </Stack.Navigator>
 );
 
-const MainTabs = () => (
-  <Tab.Navigator
-    initialRouteName="Dashboard"
-    screenOptions={({ route }) => ({
-      header: () => (
-        <AppHeader title={route.name === "Dashboard" ? "Ampara" : undefined} />
-      ),
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName = "";
-        switch (route.name) {
-          case "Dashboard":
-            iconName = focused ? "home" : "home-outline";
-            break;
-          case "Chat":
-            iconName = focused
-              ? "chatbox-ellipses"
-              : "chatbox-ellipses-outline";
-            break;
-          case "Calendar":
-            iconName = focused ? "calendar" : "calendar-outline";
-            break;
-          case "Health":
-            iconName = focused ? "heart" : "heart-outline";
-            break;
-          case "Settings":
-            iconName = focused ? "settings" : "settings-outline";
-            break;
-        }
-        return (
-          <Ionicons
-            name={iconName as keyof typeof Ionicons.glyphMap}
-            size={size}
-            color={color}
-          />
-        );
-      },
-      tabBarActiveTintColor: "#F59E0B",
-      tabBarInactiveTintColor: "#6B7280",
-    })}
-  >
-    <Tab.Screen name="Dashboard" component={Dashboard} />
-    <Tab.Screen name="Chat" component={Chat} />
-    <Tab.Screen name="Calendar" component={CalendarScreen} />
-    <Tab.Screen name="Health" component={Health} />
-    <Tab.Screen name="Settings" component={Settings} />
-  </Tab.Navigator>
-);
-
-const AppNavigation = ({
-  isAuthenticated,
-}: {
-  isAuthenticated: boolean;
-}) => {
-  const { colorScheme } = useTheme();
-
+const MainTabs = () => {
+  const scheme = useColorScheme() ?? "light";
+  const tokens = designTokens[scheme];
   return (
-    <View className="flex-1">
-      <NavigationContainer
-        theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-      >
-        {isAuthenticated ? <MainTabs /> : <AuthStack />}
-      </NavigationContainer>
-    </View>
+    <Tab.Navigator
+      initialRouteName="Dashboard"
+      screenOptions={({ route }) => ({
+        headerTitleAlign: "left",
+        headerTitle: () => (
+          <LogoTitle
+            title={route.name === "Dashboard" ? "Ampara" : route.name}
+          />
+        ),
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName = "";
+          switch (route.name) {
+            case "Dashboard":
+              iconName = focused ? "home" : "home-outline";
+              break;
+            case "Chat":
+              iconName = focused
+                ? "chatbox-ellipses"
+                : "chatbox-ellipses-outline";
+              break;
+            case "Calendar":
+              iconName = focused ? "calendar" : "calendar-outline";
+              break;
+            case "Health":
+              iconName = focused ? "heart" : "heart-outline";
+              break;
+            case "Settings":
+              iconName = focused ? "settings" : "settings-outline";
+              break;
+          }
+          return (
+            <Ionicons
+              name={iconName as keyof typeof Ionicons.glyphMap}
+              size={size}
+              color={color}
+            />
+          );
+        },
+        tabBarActiveTintColor: tokens.highlight,
+        tabBarInactiveTintColor: tokens.subtitle,
+      })}
+    >
+      <Tab.Screen name="Dashboard" component={Dashboard} />
+      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="Calendar" component={CalendarScreen} />
+      <Tab.Screen name="Health" component={Health} />
+      <Tab.Screen name="Settings" component={Settings} />
+    </Tab.Navigator>
   );
 };
 

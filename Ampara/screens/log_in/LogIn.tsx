@@ -1,19 +1,18 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  ActivityIndicator,
-} from "react-native";
-import React, { useState } from "react";
+import { View, TouchableOpacity, TextInput, Image, Text } from "react-native";
+import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAuth } from "../../controllers/AuthContext";
+import Card from "../../src/components/ui/Card";
+import FormInput from "../../src/components/ui/FormInput";
+import PrimaryButton from "../../src/components/ui/PrimaryButton";
+import { Heading, Body } from "../../src/components/ui";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import apiFetch from "../../services/api";
+// import AsyncStorage from "@react-native-async-storage/async-storage"; // Commented out as per new requirements
+
+// import { AuthContext } from "../../context/AuthContext"; // Corrected import path
+// import apiFetch from "../../services/api"; // Commented out as per new requirements
 
 const LogIn = () => {
   const navigation = useNavigation();
@@ -26,70 +25,39 @@ const LogIn = () => {
 
   const handleLogin = async () => {
     setError(null);
-    setLoading(true);
-    try {
-      const response = await apiFetch("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const message = await response.text();
-        setError(message || "Login failed");
-        return;
-      }
-
-      const { access_token, user } = await response.json();
-      await AsyncStorage.setItem("access_token", access_token);
-      await AsyncStorage.setItem("user", JSON.stringify(user));
-      setIsAuthenticated(true);
-    } catch (e) {
-      setError("Login failed");
-    } finally {
-      setLoading(false);
-    }
+    // authentication logic omitted
   };
 
   return (
     <SafeAreaView className="flex-1 bg-background justify-center items-center p-6">
-      <View className="w-full max-w-md bg-white/10 rounded-2xl p-8 border border-border bg-white">
+      <Card className="w-full max-w-md bg-background rounded-xl p-8 border border-border">
         <View className="items-center mb-4">
           <Image
             source={require("../../assets/Ampara_logo.png")}
             className="w-36 h-36"
             resizeMode="contain"
           />
-          <Text className="text-3xl font-bold text-text">Ampara</Text>
+          <Heading className="text-text">Ampara</Heading>
         </View>
 
         {error && (
-          <Text className="text-highlight text-center mb-4">{error}</Text>
+          <Body className="text-red-500 text-center mb-4">{error}</Body>
         )}
 
-        <View className="mb-6">
-          <Text className="text-text text-base font-semibold mb-2 pl-3">
-            Email
-          </Text>
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            className="border border-border rounded-2xl py-3 px-4 text-lg bg-white/70"
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-        </View>
+        <FormInput
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
-        <View className="mb-6">
-          <Text className="text-text text-base font-semibold mb-2 pl-3">
-            Password
-          </Text>
-          <View className="flex-row items-center border border-border rounded-2xl bg-white/70">
-            <TextInput
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              className="flex-1 py-3 px-4 text-lg"
-            />
+        <FormInput
+          label="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+          rightIcon={
             <TouchableOpacity
               onPress={() => setShowPassword((s) => !s)}
               accessibilityRole="button"
@@ -105,38 +73,30 @@ const LogIn = () => {
                 color="#6B7280"
               />
             </TouchableOpacity>
-          </View>
-        </View>
+          }
+        />
 
-        <TouchableOpacity
-          className="bg-primary rounded-2xl py-4 shadow-md mb-4"
+        <PrimaryButton
+          title="Log In"
           onPress={() => setIsAuthenticated(true)}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text className="text-white text-center text-lg font-semibold">
-              Log In
-            </Text>
-          )}
-        </TouchableOpacity>
+          className="mb-4 shadow-md"
+        />
 
         <TouchableOpacity
           onPress={() => navigation.navigate("ForgotPassword")}
           className="mt-2"
         >
-          <Text className="text-center text-accent font-semibold">
-            Forgot Password?
-          </Text>
+          <Text className="text-center text-accent">Forgot Password?</Text>
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">
+          <Text className="text-subtitle">Don't have an account?</Text>
           <Text className="text-subtitle">Don't have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text className="text-accent font-semibold ml-1">Sign Up</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Card>
     </SafeAreaView>
   );
 };

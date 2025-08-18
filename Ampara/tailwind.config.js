@@ -1,23 +1,30 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: [
     "./App.{js,jsx,ts,tsx}",
     "./screens/**/*.{js,jsx,ts,tsx}",
     "./components/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
       colors: {
-        primary: "#FCD34D",
-        accent: "#FBBF24",
-        background: "#FFFDF7",
-        text: "#3F3F46",
-        subtitle: "#6B7280",
-        border: "#D4D4D8",
-        badge: "#FEF9C3",
-        highlight: "#F59E0B",
-        calm: "#A78BFA",
+        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        accent: "rgb(var(--color-accent) / <alpha-value>)",
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        text: "rgb(var(--color-text) / <alpha-value>)",
+        subtitle: "rgb(var(--color-subtitle) / <alpha-value>)",
+        border: "rgb(var(--color-border) / <alpha-value>)",
+        badge: "rgb(var(--color-badge) / <alpha-value>)",
+        highlight: "rgb(var(--color-highlight) / <alpha-value>)",
+        calm: "rgb(var(--color-calm) / <alpha-value>)",
+      },
+      spacing: {
+        4: "1rem", // 16px
+        6: "1.5rem", // 24px
+        8: "2rem", // 32px
       },
     },
   },

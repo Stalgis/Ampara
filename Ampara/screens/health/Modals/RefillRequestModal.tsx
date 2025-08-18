@@ -1,5 +1,15 @@
 import React from "react";
-import { View, Text, Pressable, Modal, FlatList } from "react-native";
+import {
+  Modal,
+  View,
+  Text,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import { Subheading } from "../../../src/components/ui";
 
 interface Medication {
   id: string;
@@ -14,6 +24,13 @@ interface RefillRequestModalProps {
   onClose: () => void;
   medications: Medication[];
   onSelectMedication: (medication: Medication) => void;
+  tokens: {
+    background: string;
+    text: string;
+    subtitle: string;
+    border: string;
+    highlight: string;
+  };
 }
 
 const RefillRequestModal: React.FC<RefillRequestModalProps> = ({
@@ -21,29 +38,121 @@ const RefillRequestModal: React.FC<RefillRequestModalProps> = ({
   onClose,
   medications,
   onSelectMedication,
+  tokens,
 }) => {
   return (
-    <Modal visible={visible} animationType="slide" transparent>
-      <View className="flex-1 justify-center items-center bg-black/30">
-        <View className="bg-white p-6 rounded-2xl w-11/12 max-h-[80%]">
-          <Text className="font-bold text-xl mb-4">Request a Refill</Text>
-          <FlatList
-            data={medications}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <Pressable
-                className="border-b border-border py-3"
-                onPress={() => onSelectMedication(item)}
+    <Modal
+      visible={visible}
+      animationType="fade"
+      transparent
+      onRequestClose={onClose}
+    >
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        {/* Backdrop only hides keyboard */}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.35)" }} />
+        </TouchableWithoutFeedback>
+
+        {/* Centered card */}
+        <View
+          style={{ position: "absolute", inset: 0 }}
+          pointerEvents="box-none"
+        >
+          <View
+            className="items-center justify-center"
+            style={{ flex: 1, padding: 16 }}
+            pointerEvents="box-none"
+          >
+            <View
+              className="rounded-2xl w-11/12"
+              style={{
+                backgroundColor: tokens.background,
+                borderWidth: 1,
+                borderColor: tokens.border,
+                shadowColor: "#000",
+                shadowOpacity: 0.15,
+                shadowRadius: 12,
+                shadowOffset: { width: 0, height: 8 },
+                elevation: 10,
+                padding: 20,
+              }}
+            >
+              <Text
+                className="text-lg font-bold mb-1"
+                style={{ color: tokens.text }}
               >
-                <Text className="text-lg">{item.name}</Text>
-              </Pressable>
-            )}
-          />
-          <Pressable className="mt-4" onPress={onClose}>
-            <Text className="text-calm text-right">Cancel</Text>
-          </Pressable>
+                Request a Refill
+              </Text>
+              <Text className="text-xs mb-4" style={{ color: tokens.subtitle }}>
+                Choose a medication to request a refill.
+              </Text>
+
+              {/* Simple list (not scrollable by request). If you have many meds, consider truncating or switching back to FlatList. */}
+              <View>
+                {medications.slice(0, 6).map((item) => (
+                  <Pressable
+                    key={item.id}
+                    onPress={() => onSelectMedication(item)}
+                    className="py-3"
+                    style={{ borderBottomWidth: 1, borderColor: tokens.border }}
+                  >
+                    <Subheading
+                      className="text-base"
+                      style={{ color: tokens.text }}
+                    >
+                      {item.name}
+                    </Subheading>
+                    <Text
+                      className="text-xs mt-0.5"
+                      style={{ color: tokens.subtitle }}
+                    >
+                      {item.dosage} · {item.frequency}
+                    </Text>
+                  </Pressable>
+                ))}
+                {medications.length > 6 && (
+                  <Text
+                    className="text-xs mt-2"
+                    style={{ color: tokens.subtitle }}
+                  >
+                    Showing first 6. Add scrolling if your list is longer.
+                  </Text>
+                )}
+              </View>
+
+              <View className="flex-row gap-3 mt-5">
+                <Pressable
+                  onPress={onClose}
+                  className="flex-1 rounded-xl py-3"
+                  style={{ borderWidth: 1, borderColor: tokens.border }}
+                >
+                  <Text
+                    className="text-center font-semibold"
+                    style={{ color: tokens.text }}
+                  >
+                    Cancel
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={onClose}
+                  className="flex-1 rounded-xl py-3"
+                  style={{ backgroundColor: tokens.highlight }}
+                >
+                  <Text
+                    className="text-center font-semibold"
+                    style={{ color: "#fff" }}
+                  >
+                    Done
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

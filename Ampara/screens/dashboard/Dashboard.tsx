@@ -1,74 +1,47 @@
-import React from "react";
-import { useState } from "react";
-import { View, Text, SafeAreaView, Pressable, ScrollView } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Pressable,
+  ScrollView,
+  useColorScheme,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import EmptyState from "../../components/EmptyState";
+import colors from "tailwindcss/colors";
+import { designTokens } from "../../design-tokens";
 
 const Dashboard = () => {
-  const [name, setName] = useState("Martha Johnson");
+  const [name] = useState("Martha Johnson");
   const [isMedicationDone, setIsMedicationDone] = useState(false);
   const [isAppointmentDone, setIsAppointmentDone] = useState(false);
   const navigation = useNavigation<any>();
+  const scheme = useColorScheme() ?? "light";
+  const tokens = designTokens[scheme];
 
-  interface Activity {
-    id: string;
-    title: string;
-    time: string;
-    icon: React.ReactNode;
-    bg: string;
-  }
-
-  const [activities] = useState<Activity[]>([
-    {
-      id: "1",
-      title: "Group Meeting",
-      time: "2:00 PM - 3:00 PM",
-      icon: <FontAwesome name="users" size={20} color="#2563eb" />,
-      bg: "bg-blue-100",
-    },
-    {
-      id: "2",
-      title: "Morning Coffee",
-      time: "4:30 PM - 5:30 PM",
-      icon: <FontAwesome name="coffee" size={20} color="#ea580c" />,
-      bg: "bg-orange-100",
-    },
-    {
-      id: "3",
-      title: "Study Session",
-      time: "7:00 PM - 8:00 PM",
-      icon: <Feather name="book" size={20} color="#16a34a" />,
-      bg: "bg-green-100",
-    },
-  ]);
   return (
     <SafeAreaView className="h-full bg-background">
       <ScrollView>
         <View className="mx-4">
-          <View className="flex flex-row w-full mt-8 rounded-2xl overflow-hidden bg-[#ffffff]">
+          {/* Header Card */}
+          <View className="flex flex-row w-full mt-8 rounded-2xl overflow-hidden bg-background shadow-sm border border-border">
             {/* Left color strip */}
             <View className="w-1 bg-highlight" />
-
             {/* Main card */}
-            <View className="flex flex-row items-center flex-1 border border-border py-4 pr-8 rounded-r-2xl">
-              <Entypo
-                name="heart-outlined"
-                style={{
-                  padding: 12,
-                  borderRadius: 9999,
-                  backgroundColor: "#FEF9C3",
-                  marginHorizontal: 16,
-                }}
-                size={24}
-                color="#F59E0B"
-              />
-              <View>
+            <View className="flex-row items-center flex-1 py-4 pr-4 rounded-r-2xl">
+              <View className="p-3 rounded-full bg-badge mx-4">
+                <Entypo
+                  name="heart-outlined"
+                  size={22}
+                  color={tokens.highlight}
+                />
+              </View>
+              <View className="flex-1">
                 <Text id="Carer Name" className="font-bold text-lg text-text">
                   {name}
                 </Text>
@@ -80,51 +53,70 @@ const Dashboard = () => {
           </View>
 
           {/* Emotional check-ins */}
-          <View className="mt-8 flex flex-row justify-between items-center">
-            <Text className=" font-bold text-xl text-text">
+          <View className="mt-8 flex-row justify-between items-center">
+            <Text className="font-bold text-xl text-text">
               Emotional Check-ins
             </Text>
-            <Pressable className="flex flex-row items-center">
-              <Text className="font-bold text-highlight">View all </Text>
-              <AntDesign name="arrowright" size={14} color="#F59E0B" />
+            <Pressable className="flex-row items-center">
+              <Text className="font-bold text-highlight mr-1">View all</Text>
+              <AntDesign name="arrowright" size={14} color={tokens.highlight} />
             </Pressable>
           </View>
 
           {/* Emotional weekdays list */}
-          <View className="border border-border rounded-2xl py-4 px-2 mt-4 bg-[#ffffff]">
-            <View className="flex-row justify-evenly items-center ">
-              <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Mon</Text>
-                <Entypo name="emoji-happy" size={24} color="#A78BFA" />
+          <View className="border border-border rounded-2xl py-4 px-3 mt-4 bg-background shadow-sm">
+            <View className="flex-row justify-between px-1">
+              <View className="items-center">
+                <Text className="text-sm mb-2 text-text">Mon</Text>
+                <Entypo
+                  name="emoji-happy"
+                  size={22}
+                  color={colors.green[600]}
+                />
               </View>
-              <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Tue</Text>
-                <FontAwesome6 name="meh" size={24} color="#F59E0B" />
+              <View className="items-center">
+                <Text className="text-sm mb-2 text-text">Tue</Text>
+                <FontAwesome6 name="meh" size={20} color={colors.orange[500]} />
               </View>
-              <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Wed</Text>
-                <Entypo name="emoji-happy" size={24} color="#A78BFA" />
+              <View className="items-center">
+                <Text className="text-sm mb-2 text-text">Wed</Text>
+                <Entypo
+                  name="emoji-happy"
+                  size={22}
+                  color={colors.green[600]}
+                />
               </View>
-              <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Thu</Text>
-                <Entypo name="emoji-sad" size={24} color="#F59E0B" />
+              <View className="items-center">
+                <Text className="text-sm mb-2 text-text">Thu</Text>
+                <Entypo name="emoji-sad" size={22} color={colors.red[500]} />
               </View>
-              <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Fri</Text>
-                <Entypo name="emoji-happy" size={24} color="#A78BFA" />
+              <View className="items-center">
+                <Text className="text-sm mb-2 text-text">Fri</Text>
+                <Entypo
+                  name="emoji-happy"
+                  size={22}
+                  color={colors.green[600]}
+                />
               </View>
-              <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Sat</Text>
-                <Entypo name="emoji-happy" size={24} color="#A78BFA" />
+              <View className="items-center">
+                <Text className="text-sm mb-2 text-text">Sat</Text>
+                <Entypo
+                  name="emoji-happy"
+                  size={22}
+                  color={colors.green[600]}
+                />
               </View>
-              <View className="items-center space-y-1">
-                <Text className="text-sm mb-3">Sun</Text>
-                <FontAwesome6 name="meh" size={24} color="#F59E0B" />
+              <View className="items-center">
+                <Text className="text-sm mb-2 text-text">Sun</Text>
+                <FontAwesome6 name="meh" size={20} color={colors.orange[500]} />
               </View>
             </View>
+
             <View className="border-b border-border my-4" />
-            <View className="mx-1">
-              <Text className="font-bold text-lg text-text">Weekly Summary:</Text>
+            <View className="px-1">
+              <Text className="font-bold text-lg text-text">
+                Weekly Summary:
+              </Text>
               <Text className="text-sm text-subtitle mt-1">
                 The patient showed mostly positive emotions this week, with some
                 mild mood changes midweek. Continue to monitor for any
@@ -133,77 +125,77 @@ const Dashboard = () => {
             </View>
           </View>
 
-          {/* Health alerts  */}
-          <View className="mt-8 flex flex-row justify-between items-center">
-            <Text className=" font-bold text-xl">Health Alerts</Text>
+          {/* Health alerts */}
+          <View className="mt-8 flex-row justify-between items-center">
+            <Text className="font-bold text-xl text-text">Health Alerts</Text>
             <Pressable
-              className="flex flex-row items-center"
+              className="flex-row items-center"
               onPress={() => navigation.navigate("Health")}
             >
-              <Text className="font-bold text-highlight">View all </Text>
-              <AntDesign name="arrowright" size={14} color="#F59E0B" />
+              <Text className="font-bold text-highlight mr-1">View all</Text>
+              <AntDesign name="arrowright" size={14} color={tokens.highlight} />
             </Pressable>
           </View>
+
           <View className="mt-4">
-            <View className="flex flex-row w-full mt-2 rounded-2xl overflow-hidden bg-[#ffffff]">
+            {/* Medication */}
+            <View className="flex-row w-full mt-2 rounded-2xl overflow-hidden bg-background shadow-sm border border-border">
               {!isMedicationDone && new Date().getHours() > 8 && (
                 <View className="w-1 bg-highlight" />
               )}
-              <View
-                className={`flex-row items-center justify-between flex-1 border border-border p-3 ${
-                  !isMedicationDone && new Date().getHours() > 8
-                    ? "rounded-r-2xl"
-                    : "rounded-2xl"
-                }`}
-              >
+              <View className="flex-row items-center justify-between flex-1 p-3">
                 <View className="flex-row items-center flex-1">
-                  <View className="bg-badge p-2 rounded-2xl mr-3">
-                    <FontAwesome5 name="pills" size={24} color="#ef4444" />
+                  <View className="bg-red-100 p-2 rounded-xl mr-3">
+                    <FontAwesome6
+                      name="pills"
+                      size={18}
+                      color={colors.red[500]}
+                    />
                   </View>
                   <View className="flex-1">
-                    <Text className="font-bold text-base">Medication</Text>
+                    <Text className="font-bold text-base text-text">
+                      Medication
+                    </Text>
                     <Text className="text-subtitle text-sm">8:00 AM</Text>
                   </View>
                 </View>
                 <Pressable
-                  className={`${
-                    isMedicationDone ? "bg-primary" : "bg-calm"
-                  } px-4 py-2 rounded-2xl`}
+                  className={`px-4 py-2 rounded-xl ${
+                    isMedicationDone ? "bg-green-500" : "bg-calm"
+                  }`}
                   onPress={() => setIsMedicationDone(!isMedicationDone)}
                 >
-                  <Text className="text-white font-medium">
+                  <Text className="text-white font-semibold">
                     {isMedicationDone ? "Done" : "Due"}
                   </Text>
                 </Pressable>
               </View>
             </View>
-            <View className="flex flex-row w-full mt-2 rounded-2xl overflow-hidden bg-[#ffffff]">
+
+            {/* Appointment */}
+            <View className="flex-row w-full mt-2 rounded-2xl overflow-hidden bg-background shadow-sm border border-border">
               {!isAppointmentDone && new Date().getHours() > 11 && (
                 <View className="w-1 bg-highlight" />
               )}
-              <View
-                className={`flex-row items-center justify-between flex-1 border border-border p-3 ${
-                  !isAppointmentDone && new Date().getHours() > 11
-                    ? "rounded-r-2xl"
-                    : "rounded-2xl"
-                }`}
-              >
+              <View className="flex-row items-center justify-between flex-1 p-3">
                 <View className="flex-row items-center flex-1">
-                  <View className="bg-badge p-2 rounded-2xl mr-3">
-                    <Feather name="clock" size={24} color="#A78BFA" />
+                  <View className="bg-blue-100 p-2 rounded-xl mr-3">
+                    <Feather name="clock" size={18} color={colors.blue[600]} />
                   </View>
                   <View className="flex-1">
-                    <Text className="font-bold text-base">Appointment</Text>
+                    <Text className="font-bold text-base text-text">
+                      Appointment
+                    </Text>
                     <Text className="text-subtitle text-sm">11:30 AM</Text>
                   </View>
                 </View>
                 <Pressable
-                  className={`${
-                    isAppointmentDone ? "bg-primary" : "bg-calm"
-                  } px-4 py-2 rounded-2xl`}
+                  className={`px-4 py-2 rounded-xl ${
+                    isAppointmentDone ? "bg-green-500" : "bg-calm"
+                  }`}
                   onPress={() => setIsAppointmentDone(!isAppointmentDone)}
                 >
-                  <Text className="text-white font-medium">
+                  <Text className="text-white font-semibold">
                     {isAppointmentDone ? "Done" : "Due"}
                   </Text>
                 </Pressable>
@@ -211,40 +203,88 @@ const Dashboard = () => {
             </View>
           </View>
 
-          <View className="mt-8 flex flex-row justify-between items-center">
-            <Text className=" font-bold text-xl">Upcoming Activities</Text>
+          {/* Upcoming Activities */}
+          <View className="mt-8 flex-row justify-between items-center">
+            <Text className="font-bold text-xl text-text">
+              Upcoming Activities
+            </Text>
             <Pressable
-              className="flex flex-row items-center"
+              className="flex-row items-center"
               onPress={() => navigation.navigate("Calendar")}
             >
-              <Text className="font-bold text-highlight">View all </Text>
-              <AntDesign name="arrowright" size={14} color="#F59E0B" />
+              <Text className="font-bold text-highlight mr-1">View all</Text>
+              <AntDesign name="arrowright" size={14} color={tokens.highlight} />
             </Pressable>
           </View>
+
           <View className="mt-4">
-            {activities.length === 0 ? (
-              <EmptyState message="No upcoming activities" />
-            ) : (
-              activities.map((activity) => (
-                <View
-                  key={activity.id}
-                  className="flex-row items-center justify-between border border-gray-200 rounded-lg p-3 mb-3 bg-[#ffffff]"
-                >
-                  <View className="flex-row items-center flex-1">
-                    <View className={`${activity.bg} p-2 rounded-lg mr-3`}>
-                      {activity.icon}
-                    </View>
-                    <View className="flex-1">
-                      <Text className="font-bold text-base">{activity.title}</Text>
-                      <Text className="text-gray-400 text-sm">{activity.time}</Text>
-                    </View>
-                  </View>
-                  <Pressable className="bg-calm px-4 py-2 rounded">
-                    <Text className="text-white font-medium">Join</Text>
-                  </Pressable>
+            {/* Card 1 - Users */}
+            <View className="flex-row items-center justify-between border border-border rounded-2xl p-3 mb-3 bg-background shadow-sm">
+              <View className="flex-row items-center flex-1">
+                <View className="bg-blue-100 p-2 rounded-xl mr-3">
+                  <FontAwesome
+                    name="users"
+                    size={18}
+                    color={colors.blue[600]}
+                  />
                 </View>
-              ))
-            )}
+                <View className="flex-1">
+                  <Text className="font-bold text-base text-text">
+                    Group Meeting
+                  </Text>
+                  <Text className="text-subtitle text-sm">
+                    2:00 PM - 3:00 PM
+                  </Text>
+                </View>
+              </View>
+              <Pressable className="bg-calm px-4 py-2 rounded-xl">
+                <Text className="text-white font-semibold">Join</Text>
+              </Pressable>
+            </View>
+
+            {/* Card 2 - Coffee */}
+            <View className="flex-row items-center justify-between border border-border rounded-2xl p-3 mb-3 bg-background shadow-sm">
+              <View className="flex-row items-center flex-1">
+                <View className="bg-orange-100 p-2 rounded-xl mr-3">
+                  <FontAwesome
+                    name="coffee"
+                    size={18}
+                    color={colors.orange[600]}
+                  />
+                </View>
+                <View className="flex-1">
+                  <Text className="font-bold text-base text-text">
+                    Morning Coffee
+                  </Text>
+                  <Text className="text-subtitle text-sm">
+                    4:30 PM - 5:30 PM
+                  </Text>
+                </View>
+              </View>
+              <Pressable className="bg-calm px-4 py-2 rounded-xl">
+                <Text className="text-white font-semibold">Join</Text>
+              </Pressable>
+            </View>
+
+            {/* Card 3 - Book */}
+            <View className="flex-row items-center justify-between border border-border rounded-2xl p-3 bg-background shadow-sm">
+              <View className="flex-row items-center flex-1">
+                <View className="bg-green-100 p-2 rounded-xl mr-3">
+                  <Feather name="book" size={18} color={colors.green[600]} />
+                </View>
+                <View className="flex-1">
+                  <Text className="font-bold text-base text-text">
+                    Study Session
+                  </Text>
+                  <Text className="text-subtitle text-sm">
+                    7:00 PM - 8:00 PM
+                  </Text>
+                </View>
+              </View>
+              <Pressable className="bg-calm px-4 py-2 rounded-xl">
+                <Text className="text-white font-semibold">Join</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </ScrollView>
