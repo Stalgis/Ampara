@@ -206,22 +206,22 @@ const Medications = () => {
                   <Pressable
                     onPress={() => {
                       // quick toggle example (no extra state if you don't need it):
-                      cameraRef.current?.resumePreview?.();
+                      setCameraOpen(false);
+                      setAddMedicationModalVisible(true);
                     }}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 20,
-                      backgroundColor: "rgba(0,0,0,0.5)",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
+                    // style={{
+                    //   width: 40,
+                    //   height: 40,
+                    //   borderRadius: 20,
+                    //   backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    //   alignItems: "center",
+                    //   justifyContent: "center",
+                    // }}
+                    className="bg-highlight z-50 rounded rounded-[50] px-2"
                   >
-                    <Ionicons
-                      name="camera-reverse-outline"
-                      size={22}
-                      color="#fff"
-                    />
+                    <Text className="text-white m-auto">
+                      Add medication manually
+                    </Text>
                   </Pressable>
                 </View>
 
