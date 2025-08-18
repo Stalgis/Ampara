@@ -141,7 +141,7 @@ const Dashboard = () => {
             {/* Medication */}
             <View className="flex-row w-full mt-2 rounded-2xl overflow-hidden bg-background shadow-sm border border-border">
               {!isMedicationDone && new Date().getHours() > 8 && (
-                <View className="w-1 bg-red-500" />
+                <View className="w-1 bg-highlight" />
               )}
               <View className="flex-row items-center justify-between flex-1 p-3">
                 <View className="flex-row items-center flex-1">
@@ -175,7 +175,7 @@ const Dashboard = () => {
             {/* Appointment */}
             <View className="flex-row w-full mt-2 rounded-2xl overflow-hidden bg-background shadow-sm border border-border">
               {!isAppointmentDone && new Date().getHours() > 11 && (
-                <View className="w-1 bg-red-500" />
+                <View className="w-1 bg-highlight" />
               )}
               <View className="flex-row items-center justify-between flex-1 p-3">
                 <View className="flex-row items-center flex-1">

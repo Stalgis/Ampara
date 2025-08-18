@@ -1,4 +1,3 @@
-
 import {
   View,
   TouchableOpacity,
@@ -7,7 +6,7 @@ import {
   Image,
   Text,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -27,6 +26,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [elder, setElder] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = async () => {
     const passwordRegex =
@@ -40,6 +40,7 @@ const SignUp = () => {
     }
 
     setError(null);
+    setLoading(true);
     try {
       const response = await apiFetch("/auth/register", {
         method: "POST",
@@ -57,6 +58,8 @@ const SignUp = () => {
       await AsyncStorage.setItem("user", JSON.stringify(user));
     } catch (e) {
       setError("Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,17 +73,14 @@ const SignUp = () => {
             resizeMode="contain"
           />
           <Text className="text-3xl font-bold text-text">Sign Up</Text>
+          <Text className="text-3xl font-bold text-text">Sign Up</Text>
         </View>
 
         {error && (
           <Body className="text-red-500 text-center mb-4">{error}</Body>
         )}
 
-        <FormInput
-          label="Full Name"
-          value={name}
-          onChangeText={setName}
-        />
+        <FormInput label="Full Name" value={name} onChangeText={setName} />
 
         <FormInput
           label="Email"
@@ -108,7 +108,7 @@ const SignUp = () => {
               <Ionicons
                 name={showPassword ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="gray"
+                color="#6B7280"
               />
             </TouchableOpacity>
           }
@@ -119,7 +119,6 @@ const SignUp = () => {
           onChangeText={setElder}
         />
 
-
         <PrimaryButton
           title="Sign Up"
           onPress={handleSignUp}
@@ -127,6 +126,7 @@ const SignUp = () => {
         />
 
         <View className="flex-row justify-center mt-6">
+          <Text className="text-subtitle">Already have an account?</Text>
           <Text className="text-subtitle">Already have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
             <Text className="text-accent font-semibold ml-1">Log In</Text>

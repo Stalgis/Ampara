@@ -1,5 +1,9 @@
-import React, { useState, useEffect, createContext } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
@@ -115,11 +119,9 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-      <View className="flex-1">
-        <NavigationContainer>
-          {isAuthenticated ? <MainTabs /> : <AuthStack />}
-        </NavigationContainer>
-      </View>
+      <ThemeProvider>
+        <AppNavigation isAuthenticated={isAuthenticated} />
+      </ThemeProvider>
     </AuthContext.Provider>
   );
 }

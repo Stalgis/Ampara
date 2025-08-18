@@ -20,6 +20,7 @@ const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const { setIsAuthenticated } = useAuth();
 
   const handleLogin = async () => {
@@ -69,7 +70,7 @@ const LogIn = () => {
               <Ionicons
                 name={showPassword ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="gray"
+                color="#6B7280"
               />
             </TouchableOpacity>
           }
@@ -89,6 +90,7 @@ const LogIn = () => {
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-6">
+          <Text className="text-subtitle">Don't have an account?</Text>
           <Text className="text-subtitle">Don't have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text className="text-accent font-semibold ml-1">Sign Up</Text>

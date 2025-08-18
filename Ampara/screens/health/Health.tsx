@@ -23,7 +23,7 @@ const Health = () => {
       <View className="mx-4">
         <View
           id="select-view"
-          className="flex flex-row justify-center justify-evenly bg-gray-100 rounded my-4 p-2"
+          className="flex flex-row justify-center justify-evenly bg-badge rounded-2xl my-4 p-2"
         >
           <Pressable onPress={() => setSelectedSection("vitals")}>
             <Text

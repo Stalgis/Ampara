@@ -26,10 +26,7 @@ const ForgotPassword = () => {
           autoCapitalize="none"
         />
 
-        <PrimaryButton
-          title="Send Reset Link"
-          className="mb-4 shadow-md"
-        />
+        <PrimaryButton title="Send Reset Link" className="mb-4 shadow-md" />
 
         <View className="flex-row justify-center mt-2">
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
