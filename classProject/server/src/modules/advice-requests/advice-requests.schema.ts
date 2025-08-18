@@ -8,24 +8,20 @@ export class AdviceRequest {
   @Prop({ type: Types.ObjectId, ref: 'ElderUser', required: true })
   elderId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: false })
-  visitorId?: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  visitorId: Types.ObjectId;
 
   @Prop({ required: true })
   question: string;
 
   @Prop()
-  response?: string;
+  response: string;
 
   @Prop({ required: true })
   askedAt: Date;
 
   @Prop()
-  answeredAt?: Date;
+  answeredAt: Date;
 }
 
 export const AdviceRequestSchema = SchemaFactory.createForClass(AdviceRequest);
-
-// Indexes for efficient queries
-AdviceRequestSchema.index({ elderId: 1, askedAt: -1 });
-AdviceRequestSchema.index({ visitorId: 1 });

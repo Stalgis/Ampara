@@ -2,13 +2,11 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AdviceRequestsController } from './advice-requests.controller';
 import { AdviceRequestsService } from './advice-requests.service';
-import { AdviceRequest, AdviceRequestSchema } from './advice-request.schema';
+import { AdviceRequest, AdviceRequestSchema } from './advice-requests.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: AdviceRequest.name, schema: AdviceRequestSchema },
-    ]),
+    MongooseModule.forFeature([{ name: AdviceRequest.name, schema: AdviceRequestSchema }]),
   ],
   controllers: [AdviceRequestsController],
   providers: [AdviceRequestsService],
