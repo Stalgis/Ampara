@@ -19,6 +19,7 @@ import ElderUserProfile from "./screens/elder_profile/elder_profile";
 import { AuthContext } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
 import LogoTitle from "./src/components/ui/LogoTitle";
+import { ThemeProvider } from "./controllers/ThemeContext";
 
 // Navegadores
 const Tab = createBottomTabNavigator();
@@ -216,11 +217,13 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-      <View className="flex-1">
-        <NavigationContainer>
-          {isAuthenticated ? <MainTabs /> : <AuthStack />}
-        </NavigationContainer>
-      </View>
+      <ThemeProvider>
+        <View className="flex-1">
+          <NavigationContainer>
+            {isAuthenticated ? <MainTabs /> : <AuthStack />}
+          </NavigationContainer>
+        </View>
+      </ThemeProvider>
     </AuthContext.Provider>
   );
 }
