@@ -20,6 +20,7 @@ import { AuthContext, User } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
 import LogoTitle from "./src/components/ui/LogoTitle";
 import apiFetch from "./services/api";
+import { ThemeProvider } from "./controllers/ThemeContext";
 
 // Navegadores
 const Tab = createBottomTabNavigator();
@@ -236,14 +237,14 @@ export default function App() {
   if (loading) return null;
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, user, setUser }}
-    >
-      <View className="flex-1">
-        <NavigationContainer>
-          {isAuthenticated ? <MainTabs /> : <AuthStack />}
-        </NavigationContainer>
-      </View>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+      <ThemeProvider>
+        <View className="flex-1">
+          <NavigationContainer>
+            {isAuthenticated ? <MainTabs /> : <AuthStack />}
+          </NavigationContainer>
+        </View>
+      </ThemeProvider>
     </AuthContext.Provider>
   );
 }
