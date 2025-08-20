@@ -15,11 +15,11 @@ const SecondaryButton: React.FC<SecondaryButtonProps> = ({
 }) => {
   return (
     <Pressable
-      className={`bg-accent rounded-xl py-4 items-center ${className}`}
+      className={`bg-accent dark:bg-accent-dark border border-accent dark:border-accent-dark rounded-xl py-4 items-center ${className}`}
       {...rest}
     >
       <Text
-        className={`text-white text-center text-lg font-semibold ${textClassName}`}
+        className={`text-text dark:text-text-dark text-center text-lg font-semibold ${textClassName}`}
       >
         {title}
       </Text>
