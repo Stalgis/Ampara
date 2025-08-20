@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { View, Text, TextInput, TextInputProps } from "react-native";
 
 export interface FormInputProps extends TextInputProps {
@@ -24,8 +24,8 @@ const FormInput: React.FC<FormInputProps> = ({
         <TextInput className={inputClassName} {...inputProps} />
         {rightIcon}
       </View>
-    </View>
-  );
-};
+    );
+  }
+);
 
 export default FormInput;
