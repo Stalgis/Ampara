@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useColorScheme } from "react-native";
+import { useColorScheme as useRNColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NativeWindStyleSheet } from "nativewind";
+import { useColorScheme as useNWColorScheme } from "nativewind"; // ✅ new import
 
 export type ThemePreference = "light" | "dark" | "system";
 
@@ -22,37 +22,40 @@ export const ThemeContext = createContext<ThemeContextValue>({
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const systemColorScheme = useColorScheme();
+  const deviceScheme = useRNColorScheme(); // system scheme from RN
+  const { setColorScheme: setNWColorScheme } = useNWColorScheme(); // control NativeWind
   const [theme, setThemeState] = useState<ThemePreference>("system");
 
-  const colorScheme = theme === "system" ? systemColorScheme || "light" : theme;
+  const effectiveScheme: "light" | "dark" =
+    theme === "system" ? deviceScheme || "light" : theme;
 
   useEffect(() => {
-    const loadTheme = async () => {
+    (async () => {
       const stored = await AsyncStorage.getItem(THEME_KEY);
       if (stored === "light" || stored === "dark" || stored === "system") {
         setThemeState(stored);
       }
-    };
-    loadTheme();
+    })();
   }, []);
 
+  // ✅ Tell NativeWind which scheme to use
   useEffect(() => {
-    NativeWindStyleSheet.setColorScheme(colorScheme);
-  }, [colorScheme]);
+    setNWColorScheme(effectiveScheme);
+  }, [effectiveScheme, setNWColorScheme]);
 
   const setTheme = (value: ThemePreference) => {
     setThemeState(value);
-    AsyncStorage.setItem(THEME_KEY, value);
+    AsyncStorage.setItem(THEME_KEY, value).catch(() => {});
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, colorScheme, setTheme }}>
+    <ThemeContext.Provider
+      value={{ theme, colorScheme: effectiveScheme, setTheme }}
+    >
       {children}
     </ThemeContext.Provider>
   );
 };
 
 export const useTheme = () => useContext(ThemeContext);
-
 export default ThemeProvider;
