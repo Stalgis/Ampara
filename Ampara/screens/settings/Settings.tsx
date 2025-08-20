@@ -89,8 +89,8 @@ const Settings: React.FC = () => {
   const scheme = colorScheme;
   const tokens = designTokens[scheme];
   const navigation = useNavigation<any>();
-  const { setIsAuthenticated, user } = useAuth();
-
+  const { signOut } = useAuth();
+//   const { setIsAuthenticated, user } = useAuth();
   const [notifications, setNotifications] = useState(true);
 
   const onSignOut = () => {
@@ -99,7 +99,13 @@ const Settings: React.FC = () => {
       {
         text: "Sign out",
         style: "destructive",
-        onPress: () => setIsAuthenticated(false),
+        onPress: async () => {
+          await signOut();
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Welcome" }],
+          });
+        },
       },
     ]);
   };

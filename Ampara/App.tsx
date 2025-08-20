@@ -219,7 +219,12 @@ export default function App() {
     loadAuth();
   }, []);
 
-  useEffect(() => {
+  const signOut = async () => {
+    await AsyncStorage.removeItem("access_token");
+    setIsAuthenticated(false);
+  };
+
+<!--   useEffect(() => {
     if (!isAuthenticated) {
       setUser(null);
       return;
@@ -236,19 +241,25 @@ export default function App() {
       }
     };
     fetchUser();
-  }, [isAuthenticated]);
+  }, [isAuthenticated]); -->
 
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, signOut }}>
+      <View className="flex-1">
+        <NavigationContainer>
+          {isAuthenticated ? <MainTabs /> : <AuthStack />}
+        </NavigationContainer>
+      </View>
+<!--     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
       <ThemeProvider>
         <View className="flex-1">
           <NavigationContainer>
             {isAuthenticated ? <MainTabs /> : <AuthStack />}
           </NavigationContainer>
         </View>
-      </ThemeProvider>
+      </ThemeProvider> -->
     </AuthContext.Provider>
   );
 }

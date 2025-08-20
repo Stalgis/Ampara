@@ -13,15 +13,20 @@ export type User = {
 export type AuthContextValue = {
   isAuthenticated: boolean;
   setIsAuthenticated: (v: boolean) => void;
-  user: User | null;
-  setUser: (u: User | null) => void;
+  /**
+   * Clears auth data and navigates user out of the protected area.
+   */
+  signOut: () => Promise<void>;
+<!--   user: User | null;
+  setUser: (u: User | null) => void; -->
 };
 
 export const AuthContext = createContext<AuthContextValue>({
   isAuthenticated: false,
   setIsAuthenticated: () => {},
-  user: null,
-  setUser: () => {},
+  signOut: async () => {},
+<!--   user: null,
+  setUser: () => {}, -->
 });
 
 export const useAuth = () => useContext(AuthContext);
