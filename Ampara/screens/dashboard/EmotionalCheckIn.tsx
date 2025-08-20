@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   Pressable,
   ScrollView,
-  useColorScheme,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 
