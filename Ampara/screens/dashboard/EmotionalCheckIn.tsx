@@ -11,7 +11,6 @@ import { useRoute } from "@react-navigation/native";
 
 const EmotionalCheckIns = () => {
   const route = useRoute();
-  const { name = "Unknown" } = (route.params as { name?: string }) || {};
   return (
     <SafeAreaView className="h-full bg-background">
       <ScrollView>

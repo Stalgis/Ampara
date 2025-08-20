@@ -127,7 +127,6 @@ const SignUp = () => {
 
         <View className="flex-row justify-center mt-6">
           <Text className="text-subtitle">Already have an account?</Text>
-          <Text className="text-subtitle">Already have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
             <Text className="text-accent font-semibold ml-1">Log In</Text>
           </TouchableOpacity>

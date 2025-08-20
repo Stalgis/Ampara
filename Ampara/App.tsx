@@ -45,12 +45,12 @@ function DashboardStackScreen() {
       <DashboardInnerStack.Screen
         name="EmotionalCheckIns"
         component={EmotionalCheckIn}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <DashboardInnerStack.Screen
         name="ElderUserProfile"
         component={ElderUserProfile}
-        options={{headerShown: false}} 
+        options={{ headerShown: false }}
       />
     </DashboardInnerStack.Navigator>
   );
@@ -73,17 +73,17 @@ const AuthStack = () => (
     <AuthStackNav.Screen
       name="LogIn"
       component={LogIn}
-      options={{ headerTitle: () => <LogoTitle title="Log In" /> }}
+      options={{ headerShown: false }}
     />
     <AuthStackNav.Screen
       name="SignUp"
       component={SignUp}
-      options={{ headerTitle: () => <LogoTitle title="Sign Up" /> }}
+      options={{ headerShown: false }}
     />
     <AuthStackNav.Screen
       name="ForgotPassword"
       component={ForgotPassword}
-      options={{ headerTitle: () => <LogoTitle title="Forgot Password" /> }}
+      options={{ headerShown: false }}
     />
   </AuthStackNav.Navigator>
 );
@@ -109,7 +109,11 @@ const MainTabs = () => {
           headerTitle: () => <LogoTitle title="Ampara" />,
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
-              name={(focused ? "home" : "home-outline") as keyof typeof Ionicons.glyphMap}
+              name={
+                (focused
+                  ? "home"
+                  : "home-outline") as keyof typeof Ionicons.glyphMap
+              }
               size={size}
               color={color}
             />
@@ -124,7 +128,9 @@ const MainTabs = () => {
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
               name={
-                (focused ? "chatbox-ellipses" : "chatbox-ellipses-outline") as keyof typeof Ionicons.glyphMap
+                (focused
+                  ? "chatbox-ellipses"
+                  : "chatbox-ellipses-outline") as keyof typeof Ionicons.glyphMap
               }
               size={size}
               color={color}
@@ -139,7 +145,11 @@ const MainTabs = () => {
           headerTitle: () => <LogoTitle title="Calendar" />,
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
-              name={(focused ? "calendar" : "calendar-outline") as keyof typeof Ionicons.glyphMap}
+              name={
+                (focused
+                  ? "calendar"
+                  : "calendar-outline") as keyof typeof Ionicons.glyphMap
+              }
               size={size}
               color={color}
             />
@@ -153,7 +163,11 @@ const MainTabs = () => {
           headerTitle: () => <LogoTitle title="Health" />,
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
-              name={(focused ? "heart" : "heart-outline") as keyof typeof Ionicons.glyphMap}
+              name={
+                (focused
+                  ? "heart"
+                  : "heart-outline") as keyof typeof Ionicons.glyphMap
+              }
               size={size}
               color={color}
             />
@@ -167,7 +181,11 @@ const MainTabs = () => {
           headerTitle: () => <LogoTitle title="Settings" />,
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
-              name={(focused ? "settings" : "settings-outline") as keyof typeof Ionicons.glyphMap}
+              name={
+                (focused
+                  ? "settings"
+                  : "settings-outline") as keyof typeof Ionicons.glyphMap
+              }
               size={size}
               color={color}
             />

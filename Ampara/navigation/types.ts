@@ -1,11 +1,17 @@
 export type RootStackParamList = {
-  Main: undefined;                  // holds the tabs
-  EmotionalCheckIns: undefined;     // details screen you want to push
+  Main: undefined; // holds the tabs
+  EmotionalCheckIns: undefined; // details screen you want to push
 };
 
 export type DashboardInnerStackParamList = {
   DashboardHome: undefined;
   EmotionalCheckIns: undefined;
+  ElderUserProfile: {
+    elderName: string;
+    dob: string;
+    tags: string[];
+    avatarUrl?: string;
+  };
 };
 
 export type MainTabParamList = {

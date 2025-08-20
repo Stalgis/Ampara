@@ -95,7 +95,6 @@ const LogIn = () => {
 
         <View className="flex-row justify-center mt-6">
           <Text className="text-subtitle">Don't have an account?</Text>
-          <Text className="text-subtitle">Don't have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text className="text-accent font-semibold ml-1">Sign Up</Text>
           </TouchableOpacity>

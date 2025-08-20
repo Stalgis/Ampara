@@ -9,7 +9,9 @@ import {
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import CallDetailsModal, { CallItem } from "./Modals/CallDetailsModal";
-import SendSuggestionModal, { SuggestionPayload } from "./Modals/SendSuggestionModal";
+import SendSuggestionModal, {
+  SuggestionPayload,
+} from "./Modals/SendSuggestionModal";
 import { designTokens } from "../../design-tokens";
 
 /**
@@ -49,9 +51,16 @@ import { designTokens } from "../../design-tokens";
  */
 
 // Mock submit while backend is not connected
-const mockSubmitSuggestion = (payload: SuggestionPayload, delay = 1000, shouldFail = false) =>
+const mockSubmitSuggestion = (
+  payload: SuggestionPayload,
+  delay = 1000,
+  shouldFail = false
+) =>
   new Promise<void>((resolve, reject) =>
-    setTimeout(() => (shouldFail ? reject(new Error("Network error")) : resolve()), delay)
+    setTimeout(
+      () => (shouldFail ? reject(new Error("Network error")) : resolve()),
+      delay
+    )
   );
 
 // --- OPTIONAL: if you already created filterCalls util, keep using it ---
@@ -79,8 +88,17 @@ const daysBetween = (a: Date, b: Date): number => {
   return Math.floor((A - B) / (1000 * 60 * 60 * 24));
 };
 
-const filterCalls = (calls: CallItem[], callFilter: string, now = new Date()): CallItem[] => {
-  const limit = callFilter === "Last 7 days" ? 7 : callFilter === "Last 30 days" ? 30 : Infinity;
+const filterCalls = (
+  calls: CallItem[],
+  callFilter: string,
+  now = new Date()
+): CallItem[] => {
+  const limit =
+    callFilter === "Last 7 days"
+      ? 7
+      : callFilter === "Last 30 days"
+      ? 30
+      : Infinity;
   return calls.filter((c) => {
     const d = parseMDYTime(c.date);
     if (!d) return false;
@@ -93,24 +111,41 @@ const Chat = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCall, setSelectedCall] = useState<CallItem | null>(null);
   const [sendModalVisible, setSendModalVisible] = useState(false);
-  const [callFilter, setCallFilter] = useState("Last 7 days");
+  const [callFilter, setCallFilter] = useState("All");
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const scheme = useColorScheme() ?? "light";
   const tokens = designTokens[scheme];
 
   // Transient banner state for suggestion sending (loading/success/error)
-  const [sendState, setSendState] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [sendState, setSendState] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [bannerVisible, setBannerVisible] = useState(false);
+
+  const [suggestionState, setSuggestionState] = useState({
+    visible: true,
+    sent: false,
+  });
+
+  const handleSendSuggestionCard = () => {
+    setSuggestionState({ ...suggestionState, sent: true });
+    setTimeout(() => {
+      setSuggestionState({ visible: false, sent: false });
+    }, 2000);
+  };
 
   // Auto-hide the banner a few seconds after success/error/loading
   useEffect(() => {
     if (sendState !== "idle") {
       setBannerVisible(true);
-      const t = setTimeout(() => {
-        setBannerVisible(false);
-        // Return to idle after the banner is gone
-        if (sendState !== "loading") setSendState("idle");
-      }, sendState === "loading" ? 1200 : 1800);
+      const t = setTimeout(
+        () => {
+          setBannerVisible(false);
+          // Return to idle after the banner is gone
+          if (sendState !== "loading") setSendState("idle");
+        },
+        sendState === "loading" ? 1200 : 1800
+      );
       return () => clearTimeout(t);
     }
   }, [sendState]);
@@ -136,7 +171,10 @@ const Chat = () => {
     },
   ];
 
-  const filteredCalls = useMemo(() => filterCalls(calls, callFilter), [calls, callFilter]);
+  const filteredCalls = useMemo(
+    () => filterCalls(calls, callFilter),
+    [calls, callFilter]
+  );
 
   const openCall = (call: CallItem) => {
     setSelectedCall(call);
@@ -166,31 +204,49 @@ const Chat = () => {
     <SafeAreaView className="bg-background h-full">
       <View className="mx-4">
         {/* Ampara suggestions banner (existing) */}
-        <View className="bg-badge border border-highlight rounded-2xl mt-4 p-3 flex flex-row items-center">
-          <Image
-            source={require("../../assets/Ampara_logo.png")}
-            className="w-20 h-20 mr-3"
-            resizeMode="contain"
-          />
-          <View className="flex-1">
-            <Text className="text-text text-base mb-1">Ampara suggestions</Text>
-            <Text className="text-subtitle text-sm mb-2">
-              Today I can mention her friend Mery's birthday, would you like that?
-            </Text>
-            <Pressable
-              onPress={() => setSendModalVisible(true)}
-              className="bg-highlight rounded-lg px-3 py-1 self-start"
-            >
-              <Text className="text-white text-sm font-medium">Send Suggestion</Text>
-            </Pressable>
+        {suggestionState.visible && (
+          <View className="bg-badge border border-highlight rounded-2xl mt-4 p-3 flex flex-row items-center">
+            <Image
+              source={require("../../assets/Ampara_logo.png")}
+              className="w-20 h-20 mr-3"
+              resizeMode="contain"
+            />
+            <View className="flex-1">
+              {suggestionState.sent ? (
+                <Text className="text-text text-base font-semibold">
+                  Suggestion sent!
+                </Text>
+              ) : (
+                <>
+                  <Text className="text-text text-base mb-1">
+                    Ampara suggestions
+                  </Text>
+                  <Text className="text-subtitle text-sm mb-2">
+                    Today I can mention her friend Mery's birthday, would you
+                    like that?
+                  </Text>
+                  <Pressable
+                    onPress={handleSendSuggestionCard}
+                    className="bg-highlight rounded-lg px-3 py-1 self-start"
+                  >
+                    <Text className="text-white text-sm font-medium">
+                      Send Suggestion
+                    </Text>
+                  </Pressable>
+                </>
+              )}
+            </View>
           </View>
-        </View>
+        )}
 
         {/* NEW: Personalized suggestion box */}
         <View className="border border-border bg-background rounded-2xl p-4 mt-4">
-          <Text className="text-text text-base font-semibold mb-1">Send personalized suggestion</Text>
+          <Text className="text-text text-base font-semibold mb-1">
+            Send personalized suggestion
+          </Text>
           <Text className="text-subtitle text-sm mb-3">
-            Tell Ampara exactly what you want it to say or remind. Choose the type, topic and add details.
+            Tell Ampara exactly what you want it to say or remind. Choose the
+            type, topic and add details.
           </Text>
           <Pressable
             onPress={() => setSendModalVisible(true)}
@@ -210,7 +266,11 @@ const Chat = () => {
               className="flex-row items-center"
             >
               <Text className="text-primary font-bold mr-1">{callFilter}</Text>
-              <Feather name={showFilterOptions ? "chevron-up" : "chevron-down"} size={20} color={tokens.highlight} />
+              <Feather
+                name={showFilterOptions ? "chevron-up" : "chevron-down"}
+                size={20}
+                color={tokens.highlight}
+              />
             </Pressable>
           </View>
 
@@ -256,22 +316,39 @@ const Chat = () => {
                   }}
                 >
                   <View className="flex-row items-center flex-1">
-                    <View className="rounded-2xl mr-3 p-3" style={{ backgroundColor: tokens.highlight }}>
+                    <View
+                      className="rounded-2xl mr-3 p-3"
+                      style={{ backgroundColor: tokens.highlight }}
+                    >
                       <Feather name="phone" size={22} color="#FFFFFF" />
                     </View>
                     <View className="flex-1">
-                      <Text className="font-semibold text-base" style={{ color: tokens.text }}>
+                      <Text
+                        className="font-semibold text-base"
+                        style={{ color: tokens.text }}
+                      >
                         Call
                       </Text>
-                      <Text className="text-sm" numberOfLines={1} style={{ color: tokens.subtitle }}>
+                      <Text
+                        className="text-sm"
+                        numberOfLines={1}
+                        style={{ color: tokens.subtitle }}
+                      >
                         {call.topic}
                       </Text>
-                      <Text className="text-xs mt-1" style={{ color: tokens.subtitle }}>
+                      <Text
+                        className="text-xs mt-1"
+                        style={{ color: tokens.subtitle }}
+                      >
                         {call.date}
                       </Text>
                     </View>
                   </View>
-                  <Feather name="chevron-right" size={20} color={tokens.subtitle} />
+                  <Feather
+                    name="chevron-right"
+                    size={20}
+                    color={tokens.subtitle}
+                  />
                 </View>
               </Pressable>
             ))}
