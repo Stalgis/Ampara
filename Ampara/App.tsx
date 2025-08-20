@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DefaultTheme as NavigationDefaultTheme,
+  DarkTheme as NavigationDarkTheme,
+} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import { View, useColorScheme } from "react-native";
+import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
@@ -19,8 +23,8 @@ import ElderUserProfile from "./screens/elder_profile/elder_profile";
 import { AuthContext, User } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
 import LogoTitle from "./src/components/ui/LogoTitle";
+import { ThemeProvider, useTheme } from "./controllers/ThemeContext";
 import apiFetch from "./services/api";
-import { ThemeProvider } from "./controllers/ThemeContext";
 
 // Navegadores
 const Tab = createBottomTabNavigator();
@@ -92,8 +96,8 @@ const AuthStack = () => (
 
 /** Tabs principales de la app autenticada */
 const MainTabs = () => {
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
 
   return (
     <Tab.Navigator
@@ -248,3 +252,22 @@ export default function App() {
     </AuthContext.Provider>
   );
 }
+
+const AppNavigation = ({
+  isAuthenticated,
+}: {
+  isAuthenticated: boolean;
+}) => {
+  const { colorScheme } = useTheme();
+  return (
+    <View className="flex-1">
+      <NavigationContainer
+        theme={
+          colorScheme === "dark" ? NavigationDarkTheme : NavigationDefaultTheme
+        }
+      >
+        {isAuthenticated ? <MainTabs /> : <AuthStack />}
+      </NavigationContainer>
+    </View>
+  );
+};

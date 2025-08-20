@@ -10,7 +10,6 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { useColorScheme } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -796,7 +795,6 @@ const OfflineBanner: React.FC<{ syncedAt?: string }> = ({ syncedAt }) => (
 // ──────────────────────────────────────────────────────────────────────────────
 
 export default function ElderUserProfile() {
-  const colorScheme = useColorScheme();
   const route = useRoute<ElderProfileRoute>();
   const { elderName, dob, tags, avatarUrl } = route.params;
 

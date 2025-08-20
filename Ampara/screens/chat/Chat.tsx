@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   Pressable,
   Image,
-  useColorScheme,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import CallDetailsModal, { CallItem } from "./Modals/CallDetailsModal";
@@ -13,6 +12,7 @@ import SendSuggestionModal, {
   SuggestionPayload,
 } from "./Modals/SendSuggestionModal";
 import { designTokens } from "../../design-tokens";
+import { useTheme } from "../../controllers/ThemeContext";
 
 /**
  * -----------------------------  API CONTRACT (commented)  -----------------------------
@@ -113,8 +113,8 @@ const Chat = () => {
   const [sendModalVisible, setSendModalVisible] = useState(false);
   const [callFilter, setCallFilter] = useState("All");
   const [showFilterOptions, setShowFilterOptions] = useState(false);
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
 
   // Transient banner state for suggestion sending (loading/success/error)
   const [sendState, setSendState] = useState<
