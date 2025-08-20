@@ -1,5 +1,5 @@
-import { View, TouchableOpacity, TextInput, Image, Text } from "react-native";
-import React, { useState, useContext } from "react";
+import { View, TouchableOpacity, Image, Text, Alert } from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -10,11 +10,8 @@ import PrimaryButton from "../../src/components/ui/PrimaryButton";
 import { Heading, Body } from "../../src/components/ui";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "../../navigation/types";
-
-// import AsyncStorage from "@react-native-async-storage/async-storage"; // Commented out as per new requirements
-
-// import { AuthContext } from "../../context/AuthContext"; // Corrected import path
-// import apiFetch from "../../services/api"; // Commented out as per new requirements
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import apiFetch from "../../services/api";
 
 type AuthNav = NativeStackNavigationProp<AuthStackParamList>;
 
@@ -25,11 +22,44 @@ const LogIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { setIsAuthenticated } = useAuth();
+  const { setIsAuthenticated, setUser } = useAuth();
 
   const handleLogin = async () => {
     setError(null);
-    // authentication logic omitted
+    setLoading(true);
+    try {
+      const response = await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        const message = await response.text();
+        setError(message || "Login failed");
+        return;
+      }
+      const { access_token } = await response.json();
+      await AsyncStorage.setItem("access_token", access_token);
+      setIsAuthenticated(true);
+      try {
+        const userRes = await apiFetch("/user/me");
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          setUser(userData);
+        }
+      } catch (err) {
+        Alert.alert(
+          "Network Error",
+          "Could not fetch user information. Please try again later."
+        );
+      }
+    } catch (e) {
+      Alert.alert(
+        "Network Error",
+        "Unable to connect. Please check your internet connection."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -81,8 +111,9 @@ const LogIn = () => {
         />
 
         <PrimaryButton
-          title="Log In"
-          onPress={() => setIsAuthenticated(true)}
+          title={loading ? "Loading..." : "Log In"}
+          onPress={handleLogin}
+          disabled={loading}
           className="mb-4 shadow-md"
         />
 
