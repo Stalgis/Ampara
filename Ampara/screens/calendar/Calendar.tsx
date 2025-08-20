@@ -4,7 +4,6 @@ import {
   Pressable,
   SafeAreaView,
   Text,
-  useColorScheme,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import Feather from "@expo/vector-icons/Feather";
@@ -12,6 +11,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import colors from "tailwindcss/colors";
 import { designTokens } from "../../design-tokens";
 import AddEventModal, { EventPayload } from "./Modals/AddEventModal";
+import { useTheme } from "../../controllers/ThemeContext";
 
 export type EventItem = {
   id: string;
@@ -50,8 +50,8 @@ const iconForType = (
 };
 
 const CalendarScreen: React.FC = () => {
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
 
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]

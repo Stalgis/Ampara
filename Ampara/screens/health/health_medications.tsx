@@ -7,7 +7,6 @@ import {
   Image,
   Text,
   ActivityIndicator,
-  useColorScheme,
 } from "react-native";
 import { CameraView, useCameraPermissions, CameraType } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +14,7 @@ import AddMedicationModal from "./Modals/AddMedicationModal";
 import RefillRequestModal from "./Modals/RefillRequestModal";
 import { Heading, Subheading, Body } from "../../src/components/ui";
 import { designTokens } from "../../design-tokens"; // ✅ add this
+import { useTheme } from "../../controllers/ThemeContext";
 interface Medication {
   id: string;
   name: string;
@@ -24,8 +24,8 @@ interface Medication {
 }
 
 const Medications = () => {
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
   const [addMedicationModalVisible, setAddMedicationModalVisible] =
     useState(false);
   const [refillRequestModalVisible, setRefillRequestModalVisible] =

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Pressable, Modal, Text, useColorScheme } from "react-native";
+import { View, Pressable, Modal, Text } from "react-native";
 import AddHealthRecordModal from "./Modals/AddHealthRecordModal";
 import { Heading, Body } from "../../src/components/ui";
 import { designTokens } from "../../design-tokens";
+import { useTheme } from "../../controllers/ThemeContext";
 
 interface HealthRecord {
   id: string;
@@ -13,8 +14,8 @@ interface HealthRecord {
 }
 
 const HealthRecords: React.FC = () => {
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
 
   const [modalVisible, setModalVisible] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);

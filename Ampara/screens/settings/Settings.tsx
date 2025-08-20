@@ -7,11 +7,11 @@ import {
   Text,
   Pressable,
   Switch,
-  useColorScheme,
   Alert,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { designTokens } from "../../design-tokens";
+import { useTheme } from "../../controllers/ThemeContext";
 
 // Reusable row
 const Row = ({
@@ -84,13 +84,13 @@ const Card = ({
 );
 
 const Settings: React.FC = () => {
-  const scheme = useColorScheme() ?? "light";
+  const { colorScheme, setTheme } = useTheme();
+  const scheme = colorScheme;
   const tokens = designTokens[scheme];
   const navigation = useNavigation<any>();
   const { setIsAuthenticated } = useAuth();
 
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(scheme === "dark");
 
   const onSignOut = () => {
     Alert.alert("Sign out", "Are you sure you want to sign out?", [
@@ -158,7 +158,12 @@ const Settings: React.FC = () => {
             icon={<Feather name="moon" size={18} color={tokens.subtitle} />}
             label="Dark Mode"
             tokens={tokens}
-            right={<Switch value={darkMode} onValueChange={setDarkMode} />}
+            right={
+              <Switch
+                value={scheme === "dark"}
+                onValueChange={(value) => setTheme(value ? "dark" : "light")}
+              />
+            }
           />
           <Row
             icon={<Feather name="sliders" size={18} color={tokens.subtitle} />}
