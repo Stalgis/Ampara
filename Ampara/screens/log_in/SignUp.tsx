@@ -64,7 +64,7 @@ const SignUp = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white justify-center items-center p-6">
+    <SafeAreaView className="flex-1 bg-background dark:bg-background-dark justify-center items-center p-6">
       <Card className="w-full max-w-md p-8">
         <View className="items-center mb-8">
           <Image
@@ -72,8 +72,8 @@ const SignUp = () => {
             className="w-32 h-32 mb-2"
             resizeMode="contain"
           />
-          <Text className="text-3xl font-bold text-text">Sign Up</Text>
-          <Text className="text-3xl font-bold text-text">Sign Up</Text>
+          <Text className="text-3xl font-bold text-text dark:text-text-dark">Sign Up</Text>
+          <Text className="text-3xl font-bold text-text dark:text-text-dark">Sign Up</Text>
         </View>
 
         {error && (

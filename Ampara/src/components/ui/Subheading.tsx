@@ -8,7 +8,7 @@ interface Props extends TextProps {
 export default function Subheading({ className = "", style, ...props }: Props) {
   return (
     <Text
-      className={`text-lg font-semibold text-gray-700 ${className}`}
+      className={`text-lg font-semibold text-text dark:text-text-dark ${className}`}
       style={[style]}
       {...props}
     />

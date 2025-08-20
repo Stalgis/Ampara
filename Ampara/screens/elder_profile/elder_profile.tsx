@@ -222,12 +222,12 @@ const SectionCard: React.FC<{
   className?: string;
 }> = ({ title, right, children, className }) => (
   <View
-    className={`bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 shadow-sm ${
+    className={`bg-background dark:bg-background-dark rounded-2xl border border-border dark:border-border-dark p-4 shadow-sm ${
       className ?? ""
     }`}
   >
     <View className="flex-row items-center justify-between mb-3">
-      <Text className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <Text className="text-lg font-semibold text-text dark:text-text-dark">
         {title}
       </Text>
       {right}
@@ -240,8 +240,12 @@ const Chip: React.FC<{ label: string; className?: string }> = ({
   label,
   className,
 }) => (
-  <View className={`px-3 py-1 rounded-full border text-xs ${className ?? ""}`}>
-    <Text className="text-xs text-neutral-700 dark:text-neutral-200">
+  <View
+    className={`px-3 py-1 rounded-full border border-border dark:border-border-dark text-xs ${
+      className ?? ""
+    }`}
+  >
+    <Text className="text-xs text-text dark:text-text-dark">
       {label}
     </Text>
   </View>
@@ -276,16 +280,16 @@ const Header: React.FC<{
           </View>
         )}
         <View className="flex-1">
-          <Text className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+          <Text className="text-xl font-semibold text-text dark:text-text-dark">
             {elder.name}
             {elder.preferredName ? (
-              <Text className="text-neutral-500 dark:text-neutral-400">
+              <Text className="text-subtitle dark:text-subtitle-dark">
                 {" "}
                 · “{elder.preferredName}”
               </Text>
             ) : null}
           </Text>
-          <Text className="text-neutral-600 dark:text-neutral-400">
+          <Text className="text-subtitle dark:text-subtitle-dark">
             {age} years
           </Text>
           <View className="flex-row mt-2 space-x-2 gap-1">
@@ -389,20 +393,20 @@ const SegmentedTabs: React.FC<{
   onChange: (i: number) => void;
 }> = ({ tabs, active, onChange }) => (
   <View className="px-4">
-    <View className="bg-neutral-100 dark:bg-neutral-800 rounded-2xl p-1 flex-row">
+    <View className="bg-background dark:bg-background-dark rounded-2xl p-1 flex-row">
       {tabs.map((t, i) => (
         <Pressable
           key={t}
           onPress={() => onChange(i)}
           className={`flex-1 p-2 rounded-xl ${
-            i === active ? "bg-white dark:bg-neutral-900 shadow" : ""
+            i === active ? "bg-background dark:bg-background-dark shadow" : ""
           }`}
         >
           <Text
             className={`text-center font-medium ${
               i === active
-                ? "text-neutral-900 dark:text-neutral-50"
-                : "text-neutral-500 dark:text-neutral-400"
+                ? "text-text dark:text-text-dark"
+                : "text-subtitle dark:text-subtitle-dark"
             }`}
           >
             {t}
@@ -432,13 +436,13 @@ const MedsTodayCard: React.FC<{
           className="flex-row items-start border border-border rounded gap-4 p-2"
         >
           <View className="w-12">
-            <Text className="text-neutral-600 dark:text-neutral-400 font-medium">
+            <Text className="text-subtitle dark:text-subtitle-dark font-medium">
               {formatTime(m.time)}
             </Text>
           </View>
           <View className="flex-1">
-            <Text className="text-neutral-900 dark:text-neutral-100 font-semibold">
-              {m.name} <Text className="text-neutral-500">{m.dosage}</Text>
+            <Text className="text-text dark:text-text-dark font-semibold">
+              {m.name} <Text className="text-subtitle dark:text-subtitle-dark">{m.dosage}</Text>
             </Text>
             <View className="mt-1">
               {m.status === "TAKEN" && (
@@ -452,7 +456,7 @@ const MedsTodayCard: React.FC<{
                 </Text>
               )}
               {m.status === "UPCOMING" && (
-                <Text className="text-neutral-500 text-xs">Upcoming</Text>
+                <Text className="text-subtitle dark:text-subtitle-dark text-xs">Upcoming</Text>
               )}
             </View>
           </View>
@@ -478,9 +482,9 @@ const MedsTodayCard: React.FC<{
               {m.status === "UPCOMING" && (
                 <Pressable
                   onPress={() => onSkip(m.id)}
-                  className="px-3 py-1 rounded-full bg-neutral-100 border border-neutral-300"
+                  className="px-3 py-1 rounded-full bg-neutral-100 border border-border dark:border-border-dark"
                 >
-                  <Text className="text-neutral-700 text-xs font-medium">
+                  <Text className="text-text dark:text-text-dark text-xs font-medium">
                     Skip
                   </Text>
                 </Pressable>
@@ -506,24 +510,24 @@ const AllergiesCard: React.FC<{
       canEdit ? (
         <Pressable
           onPress={onAdd}
-          className="px-3 py-1 rounded-full border border-neutral-300"
+          className="px-3 py-1 rounded-full border border-border dark:border-border-dark"
         >
-          <Text className="text-xs font-medium text-neutral-700">Add</Text>
+          <Text className="text-xs font-medium text-text dark:text-text-dark">Add</Text>
         </Pressable>
       ) : undefined
     }
   >
     {allergies.length === 0 ? (
-      <Text className="text-neutral-500">No allergies recorded.</Text>
+      <Text className="text-subtitle dark:text-subtitle-dark">No allergies recorded.</Text>
     ) : (
       <View className="space-y-2">
         {allergies.map((a) => (
           <View key={a.id} className="flex-row items-center justify-between">
             <View>
-              <Text className="font-medium text-neutral-900 dark:text-neutral-100">
+              <Text className="font-medium text-text dark:text-text-dark">
                 {a.allergen}
               </Text>
-              <Text className="text-xs text-neutral-500">
+              <Text className="text-xs text-subtitle dark:text-subtitle-dark">
                 {a.reaction ?? "—"} {a.severity ? `• ${a.severity}` : ""}
               </Text>
             </View>
@@ -531,7 +535,7 @@ const AllergiesCard: React.FC<{
               <View className="flex-row space-x-2 gap-2">
                 <Pressable
                   onPress={() => onEdit(a.id)}
-                  className="px-3 py-1 rounded-full border border-neutral-300"
+                  className="px-3 py-1 rounded-full border border-border dark:border-border-dark"
                 >
                   <Text className="text-xs">Edit</Text>
                 </Pressable>
@@ -561,9 +565,9 @@ const VitalsSnapshotCard: React.FC<{
       canAdd ? (
         <Pressable
           onPress={onAdd}
-          className="px-3 py-1 rounded-full border border-neutral-300"
+          className="px-3 py-1 rounded-full border border-border dark:border-border-dark"
         >
-          <Text className="text-xs font-medium text-neutral-700">Add</Text>
+          <Text className="text-xs font-medium text-text dark:text-text-dark">Add</Text>
         </Pressable>
       ) : undefined
     }
@@ -575,12 +579,12 @@ const VitalsSnapshotCard: React.FC<{
           <Chip label={`HR ${vitals.hr ?? "—"}`} />
           <Chip label={`SpO₂ ${vitals.spo2 ?? "—"}%`} />
         </View>
-        <Text className="text-xs text-neutral-500">
+        <Text className="text-xs text-subtitle dark:text-subtitle-dark">
           {new Date(vitals.timestamp).toLocaleString()}
         </Text>
       </View>
     ) : (
-      <Text className="text-neutral-500">No readings yet.</Text>
+      <Text className="text-subtitle dark:text-subtitle-dark">No readings yet.</Text>
     )}
   </SectionCard>
 );
@@ -596,26 +600,26 @@ const StaffNotesCard: React.FC<{
       canAdd ? (
         <Pressable
           onPress={onAdd}
-          className="px-3 py-1 rounded-full border border-neutral-300"
+          className="px-3 py-1 rounded-full border border-border dark:border-border-dark"
         >
-          <Text className="text-xs font-medium text-neutral-700">Add</Text>
+          <Text className="text-xs font-medium text-text dark:text-text-dark">Add</Text>
         </Pressable>
       ) : undefined
     }
   >
     {notes.length === 0 ? (
-      <Text className="text-neutral-500">No notes yet.</Text>
+      <Text className="text-subtitle dark:text-subtitle-dark">No notes yet.</Text>
     ) : (
       <View className="space-y-3">
         {notes.slice(0, 3).map((n) => (
           <View key={n.id}>
-            <Text className="text-neutral-900 dark:text-neutral-100 font-medium">
+            <Text className="text-text dark:text-text-dark font-medium">
               {n.author}{" "}
-              <Text className="text-xs text-neutral-500">
+              <Text className="text-xs text-subtitle dark:text-subtitle-dark">
                 ({n.role}) • {new Date(n.timestamp).toLocaleString()}
               </Text>
             </Text>
-            <Text className="text-neutral-700 dark:text-neutral-200">
+            <Text className="text-text dark:text-text-dark">
               {n.text}
             </Text>
           </View>
@@ -640,19 +644,19 @@ const ProfileBasicsCard: React.FC<{
       canEdit ? (
         <Pressable
           onPress={onEdit}
-          className="px-3 py-1 rounded-full border border-neutral-300"
+          className="px-3 py-1 rounded-full border border-border dark:border-border-dark"
         >
-          <Text className="text-xs font-medium text-neutral-700">Edit</Text>
+          <Text className="text-xs font-medium text-text dark:text-text-dark">Edit</Text>
         </Pressable>
       ) : undefined
     }
   >
     <View className="space-y-2">
-      <Text className="text-neutral-900 dark:text-neutral-100">
+      <Text className="text-text dark:text-text-dark">
         Preferred name:{" "}
         <Text className="font-medium">{elder.preferredName ?? "—"}</Text>
       </Text>
-      <Text className="text-neutral-900 dark:text-neutral-100">
+      <Text className="text-text dark:text-text-dark">
         Birthday:{" "}
         <Text className="font-medium">
           {new Date(elder.dob).toLocaleDateString()}
@@ -681,15 +685,15 @@ const ContactsCard: React.FC<{
       canEdit ? (
         <Pressable
           onPress={onAdd}
-          className="px-3 py-1 rounded-full border border-neutral-300"
+          className="px-3 py-1 rounded-full border border-border dark:border-border-dark"
         >
-          <Text className="text-xs font-medium text-neutral-700">Add</Text>
+          <Text className="text-xs font-medium text-text dark:text-text-dark">Add</Text>
         </Pressable>
       ) : undefined
     }
   >
     {contacts.length === 0 ? (
-      <Text className="text-neutral-500">
+      <Text className="text-subtitle dark:text-subtitle-dark">
         Add family or staff so they can be notified.
       </Text>
     ) : (
@@ -697,11 +701,11 @@ const ContactsCard: React.FC<{
         {contacts.map((c) => (
           <View key={c.id} className="flex-row items-center justify-between">
             <View>
-              <Text className="text-neutral-900 dark:text-neutral-100 font-medium">
+              <Text className="text-text dark:text-text-dark font-medium">
                 {c.name}{" "}
-                <Text className="text-xs text-neutral-500">({c.role})</Text>
+                <Text className="text-xs text-subtitle dark:text-subtitle-dark">({c.role})</Text>
               </Text>
-              <Text className="text-xs text-neutral-500">
+              <Text className="text-xs text-subtitle dark:text-subtitle-dark">
                 {c.phone ?? c.email ?? "—"}
               </Text>
             </View>
@@ -716,7 +720,7 @@ const ContactsCard: React.FC<{
                 <>
                   <Pressable
                     onPress={() => onEdit(c.id)}
-                    className="px-3 py-1 rounded-full border border-neutral-300"
+                    className="px-3 py-1 rounded-full border border-border dark:border-border-dark"
                   >
                     <Text className="text-xs">Edit</Text>
                   </Pressable>
@@ -742,15 +746,15 @@ const ReassuranceCard: React.FC<{
 }> = ({ lastCallAt, lastSeenAt }) => (
   <SectionCard title="Recent Activity">
     <View className="space-y-1">
-      <Text className="text-neutral-900 dark:text-neutral-100">
+      <Text className="text-text dark:text-text-dark">
         Last call:{" "}
-        <Text className="text-neutral-600 dark:text-neutral-300">
+        <Text className="text-subtitle dark:text-subtitle-dark">
           {lastCallAt ? new Date(lastCallAt).toLocaleString() : "—"}
         </Text>
       </Text>
-      <Text className="text-neutral-900 dark:text-neutral-100">
+      <Text className="text-text dark:text-text-dark">
         Last seen by caregiver:{" "}
-        <Text className="text-neutral-600 dark:text-neutral-300">
+        <Text className="text-subtitle dark:text-subtitle-dark">
           {lastSeenAt ? new Date(lastSeenAt).toLocaleString() : "—"}
         </Text>
       </Text>
@@ -767,7 +771,7 @@ const AuditRow: React.FC<{ updatedBy?: string; updatedAt?: string }> = ({
   updatedAt,
 }) => (
   <View className="px-4 py-6">
-    <Text className="text-xs text-neutral-500 text-center">
+    <Text className="text-xs text-subtitle dark:text-subtitle-dark text-center">
       Last updated {updatedAt ? new Date(updatedAt).toLocaleString() : "—"}{" "}
       {updatedBy ? `by ${updatedBy}` : ""}
     </Text>
@@ -780,9 +784,9 @@ const AuditRow: React.FC<{ updatedBy?: string; updatedAt?: string }> = ({
 
 const OfflineBanner: React.FC<{ syncedAt?: string }> = ({ syncedAt }) => (
   <View className="px-4">
-    <View className="bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-2xl p-3 mb-3 flex-row items-center">
+    <View className="bg-background dark:bg-background-dark border border-border dark:border-border-dark rounded-2xl p-3 mb-3 flex-row items-center">
       <Ionicons name="cloud-offline" size={16} color="#525252" />
-      <Text className="ml-2 text-neutral-700 dark:text-neutral-200 text-sm">
+      <Text className="ml-2 text-text dark:text-text-dark text-sm">
         Offline — showing last synced.{" "}
         {syncedAt ? `Synced: ${new Date(syncedAt).toLocaleTimeString()}` : ""}
       </Text>
@@ -862,7 +866,7 @@ export default function ElderUserProfile() {
     Alert.alert("Calling", contacts.find((c) => c.id === id)?.name ?? "");
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-neutral-950 ">
+    <SafeAreaView className="flex-1 bg-background dark:bg-background-dark ">
       <ScrollView
         contentContainerStyle={{ paddingBottom: 24 }}
         className="mt-4"
