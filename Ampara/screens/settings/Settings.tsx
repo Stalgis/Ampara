@@ -87,7 +87,7 @@ const Settings: React.FC = () => {
   const scheme = useColorScheme() ?? "light";
   const tokens = designTokens[scheme];
   const navigation = useNavigation<any>();
-  const { setIsAuthenticated } = useAuth();
+  const { setIsAuthenticated, user } = useAuth();
 
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(scheme === "dark");
@@ -122,16 +122,23 @@ const Settings: React.FC = () => {
             </View>
             <View className="flex-1">
               <Text className="font-semibold" style={{ color: tokens.text }}>
-                Jane Smith
+                {user?.name ?? ""}
               </Text>
               <Text className="text-xs" style={{ color: tokens.subtitle }}>
-                Caregiver
+                {user?.role ?? ""}
               </Text>
             </View>
             <Pressable
               className="rounded-lg px-3 py-2"
               style={{ backgroundColor: tokens.highlight }}
-              onPress={() => console.log("view profile")}
+              onPress={() =>
+                navigation.navigate("ElderUserProfile", {
+                  elderName: user?.name ?? "",
+                  dob: user?.dob ?? "",
+                  tags: user?.tags ?? [],
+                  avatarUrl: user?.avatarUrl,
+                })
+              }
             >
               <Text className="text-white font-semibold">View Profile</Text>
             </Pressable>
