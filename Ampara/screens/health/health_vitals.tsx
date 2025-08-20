@@ -4,15 +4,15 @@ import {
   View,
   Text,
   Pressable,
-  useColorScheme,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { designTokens } from "../../design-tokens";
 import RecordVitalsModal, { VitalsPatch } from "./Modals/RecordVitalsModal";
+import { useTheme } from "../../controllers/ThemeContext";
 
 const Vitals: React.FC = () => {
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
 
   const [heartRateTime, setHeartRateTime] = useState("Today, 8:00 AM");
   const [heartRate, setHeartRate] = useState(72);

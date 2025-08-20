@@ -14,8 +14,8 @@ import {
   SafeAreaView,
   Pressable,
   ScrollView,
-  useColorScheme,
 } from "react-native";
+import { useTheme } from "../../controllers/ThemeContext";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -34,8 +34,8 @@ const Dashboard = ({ navigation }: { navigation: DashboardNavigationProp }) => {
   const [isMedicationDone, setIsMedicationDone] = useState(false);
   const [isAppointmentDone, setIsAppointmentDone] = useState(false);
 
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
 
   return (
     <SafeAreaView className="h-full bg-background">

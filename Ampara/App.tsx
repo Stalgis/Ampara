@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DefaultTheme as NavigationDefaultTheme,
+  DarkTheme as NavigationDarkTheme,
+} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import { View, useColorScheme } from "react-native";
+import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
@@ -16,9 +20,11 @@ import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
 import EmotionalCheckIn from "./screens/dashboard/EmotionalCheckIn";
 import ElderUserProfile from "./screens/elder_profile/elder_profile";
 
-import { AuthContext } from "./controllers/AuthContext";
+import { AuthContext, User } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
 import LogoTitle from "./src/components/ui/LogoTitle";
+import { ThemeProvider, useTheme } from "./controllers/ThemeContext";
+import apiFetch from "./services/api";
 
 // Navegadores
 const Tab = createBottomTabNavigator();
@@ -90,8 +96,8 @@ const AuthStack = () => (
 
 /** Tabs principales de la app autenticada */
 const MainTabs = () => {
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
 
   return (
     <Tab.Navigator
@@ -198,6 +204,7 @@ const MainTabs = () => {
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -217,6 +224,25 @@ export default function App() {
     setIsAuthenticated(false);
   };
 
+<!--   useEffect(() => {
+    if (!isAuthenticated) {
+      setUser(null);
+      return;
+    }
+    const fetchUser = async () => {
+      try {
+        const res = await apiFetch("/user/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+      } catch (err) {
+        console.error("Failed to load user", err);
+      }
+    };
+    fetchUser();
+  }, [isAuthenticated]); -->
+
   if (loading) return null;
 
   return (
@@ -226,6 +252,33 @@ export default function App() {
           {isAuthenticated ? <MainTabs /> : <AuthStack />}
         </NavigationContainer>
       </View>
+<!--     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+      <ThemeProvider>
+        <View className="flex-1">
+          <NavigationContainer>
+            {isAuthenticated ? <MainTabs /> : <AuthStack />}
+          </NavigationContainer>
+        </View>
+      </ThemeProvider> -->
     </AuthContext.Provider>
   );
 }
+
+const AppNavigation = ({
+  isAuthenticated,
+}: {
+  isAuthenticated: boolean;
+}) => {
+  const { colorScheme } = useTheme();
+  return (
+    <View className="flex-1">
+      <NavigationContainer
+        theme={
+          colorScheme === "dark" ? NavigationDarkTheme : NavigationDefaultTheme
+        }
+      >
+        {isAuthenticated ? <MainTabs /> : <AuthStack />}
+      </NavigationContainer>
+    </View>
+  );
+};
