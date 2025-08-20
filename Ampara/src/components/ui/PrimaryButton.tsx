@@ -15,11 +15,11 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 }) => {
   return (
     <Pressable
-      className={`bg-primary rounded-xl py-4 items-center ${className}`}
+      className={`bg-primary dark:bg-primary-dark border border-primary dark:border-primary-dark rounded-xl py-4 items-center ${className}`}
       {...rest}
     >
       <Text
-        className={`text-white text-center text-lg font-semibold ${textClassName}`}
+        className={`text-text dark:text-text-dark text-center text-lg font-semibold ${textClassName}`}
       >
         {title}
       </Text>
