@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { View, Text, TextInput, TextInputProps } from "react-native";
 
 export interface FormInputProps extends TextInputProps {
@@ -12,7 +12,7 @@ export interface FormInputProps extends TextInputProps {
 const FormInput: React.FC<FormInputProps> = ({
   label,
   containerClassName = "mb-6",
-  labelClassName = "text-gray-700 text-base font-semibold mb-2",
+  labelClassName = "text-text dark:text-text-dark text-base font-semibold mb-2",
   inputClassName = "flex-1 py-3 px-4 text-lg",
   rightIcon,
   ...inputProps
@@ -20,12 +20,12 @@ const FormInput: React.FC<FormInputProps> = ({
   return (
     <View className={containerClassName}>
       <Text className={labelClassName}>{label}</Text>
-      <View className="flex-row items-center border border-gray-300 rounded-lg bg-white/70">
+      <View className="flex-row items-center border border-border dark:border-border-dark rounded-lg bg-background/70 dark:bg-background-dark/70">
         <TextInput className={inputClassName} {...inputProps} />
         {rightIcon}
       </View>
-    </View>
-  );
-};
+    );
+  }
+);
 
 export default FormInput;

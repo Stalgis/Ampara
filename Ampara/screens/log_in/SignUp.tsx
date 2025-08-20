@@ -5,8 +5,12 @@ import {
   Alert,
   Image,
   Text,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  Keyboard,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -27,6 +31,9 @@ const SignUp = () => {
   const [elder, setElder] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const emailRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInput>(null);
+  const elderRef = useRef<TextInput>(null);
 
   const handleSignUp = async () => {
     const passwordRegex =
@@ -64,7 +71,7 @@ const SignUp = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white justify-center items-center p-6">
+    <SafeAreaView className="flex-1 bg-background dark:bg-background-dark justify-center items-center p-6">
       <Card className="w-full max-w-md p-8">
         <View className="items-center mb-8">
           <Image
@@ -72,67 +79,87 @@ const SignUp = () => {
             className="w-32 h-32 mb-2"
             resizeMode="contain"
           />
-          <Text className="text-3xl font-bold text-text">Sign Up</Text>
-          <Text className="text-3xl font-bold text-text">Sign Up</Text>
+          <Text className="text-3xl font-bold text-text dark:text-text-dark">Sign Up</Text>
+          <Text className="text-3xl font-bold text-text dark:text-text-dark">Sign Up</Text>
         </View>
 
-        {error && (
-          <Body className="text-red-500 text-center mb-4">{error}</Body>
-        )}
+            {error && (
+              <Body className="text-red-500 text-center mb-4">{error}</Body>
+            )}
 
-        <FormInput label="Full Name" value={name} onChangeText={setName} />
+            <FormInput
+              label="Full Name"
+              value={name}
+              onChangeText={setName}
+              returnKeyType="next"
+              onSubmitEditing={() => emailRef.current?.focus()}
+            />
 
-        <FormInput
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-        />
+            <FormInput
+              ref={emailRef}
+              label="Email"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              returnKeyType="next"
+              onSubmitEditing={() => passwordRef.current?.focus()}
+            />
 
-        <FormInput
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword}
-          rightIcon={
-            <TouchableOpacity
-              onPress={() => setShowPassword((s) => !s)}
-              accessibilityRole="button"
-              accessibilityLabel={
-                showPassword ? "Hide password" : "Show password"
+            <FormInput
+              ref={passwordRef}
+              label="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              returnKeyType="next"
+              onSubmitEditing={() => elderRef.current?.focus()}
+              rightIcon={
+                <TouchableOpacity
+                  onPress={() => setShowPassword((s) => !s)}
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    showPassword ? "Hide password" : "Show password"
+                  }
+                  hitSlop={8}
+                  className="p-3"
+                >
+                  <Ionicons
+                    name={showPassword ? "eye-off-outline" : "eye-outline"}
+                    size={24}
+                    color="#6B7280"
+                  />
+                </TouchableOpacity>
               }
-              hitSlop={8}
-              className="p-3"
-            >
-              <Ionicons
-                name={showPassword ? "eye-off-outline" : "eye-outline"}
-                size={24}
-                color="#6B7280"
-              />
-            </TouchableOpacity>
-          }
-        />
-        <FormInput
-          label="Connect to Elder (Name or ID)"
-          value={elder}
-          onChangeText={setElder}
-        />
+            />
+            <FormInput
+              ref={elderRef}
+              label="Connect to Elder (Name or ID)"
+              value={elder}
+              onChangeText={setElder}
+              returnKeyType="done"
+              onSubmitEditing={() => {
+                Keyboard.dismiss();
+                handleSignUp();
+              }}
+            />
 
-        <PrimaryButton
-          title="Sign Up"
-          onPress={handleSignUp}
-          className="mb-4 shadow-md"
-        />
+            <PrimaryButton
+              title="Sign Up"
+              onPress={handleSignUp}
+              className="mb-4 shadow-md"
+            />
 
-        <View className="flex-row justify-center mt-6">
-          <Text className="text-subtitle">Already have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
-            <Text className="text-accent font-semibold ml-1">Log In</Text>
-          </TouchableOpacity>
-        </View>
-      </Card>
-    </SafeAreaView>
+            <View className="flex-row justify-center mt-6">
+              <Text className="text-subtitle">Already have an account?</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
+                <Text className="text-accent font-semibold ml-1">Log In</Text>
+              </TouchableOpacity>
+            </View>
+          </Card>
+        </SafeAreaView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

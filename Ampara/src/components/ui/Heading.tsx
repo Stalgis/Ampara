@@ -8,7 +8,7 @@ interface Props extends TextProps {
 export default function Heading({ className = "", style, ...props }: Props) {
   return (
     <Text
-      className={`text-3xl font-bold text-gray-800 ${className}`}
+      className={`text-3xl font-bold text-text dark:text-text-dark ${className}`}
       style={[style]}
       {...props}
     />

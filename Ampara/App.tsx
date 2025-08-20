@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Alert } from "react-native";
+import { StatusBar } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
@@ -256,26 +257,40 @@ export default function App() {
     <AuthContext.Provider
       value={{ isAuthenticated, setIsAuthenticated, user, setUser, signOut }}
     >
-      <View className="flex-1">
-        <NavigationContainer>
-          {isAuthenticated ? <MainTabs /> : <AuthStack />}
-        </NavigationContainer>
-      </View>
+      <ThemeProvider>
+        <AppShell isAuthenticated={isAuthenticated} />
+      </ThemeProvider>
     </AuthContext.Provider>
   );
 }
 
-const AppNavigation = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+const AppShell = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
+  const baseTheme =
+    colorScheme === "dark" ? NavigationDarkTheme : NavigationDefaultTheme;
+  const navTheme = {
+    ...baseTheme,
+    colors: {
+      ...baseTheme.colors,
+      primary: tokens.primary,
+      background: tokens.background,
+      card: tokens.background,
+      text: tokens.text,
+      border: tokens.border,
+      notification: tokens.accent,
+    },
+  };
   return (
-    <View className="flex-1">
-      <NavigationContainer
-        theme={
-          colorScheme === "dark" ? NavigationDarkTheme : NavigationDefaultTheme
-        }
-      >
-        {isAuthenticated ? <MainTabs /> : <AuthStack />}
-      </NavigationContainer>
-    </View>
+    <>
+      <StatusBar
+        barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+      />
+      <View className="flex-1 bg-background dark:bg-background-dark">
+        <NavigationContainer theme={navTheme}>
+          {isAuthenticated ? <MainTabs /> : <AuthStack />}
+        </NavigationContainer>
+      </View>
+    </>
   );
 };

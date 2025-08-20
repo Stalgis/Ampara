@@ -191,6 +191,8 @@ const Medications = () => {
                 >
                   <Pressable
                     onPress={() => setCameraOpen(false)}
+                    accessibilityRole="button"
+                    accessibilityLabel="Close camera"
                     style={{
                       width: 40,
                       height: 40,
@@ -238,6 +240,8 @@ const Medications = () => {
                   <Pressable
                     onPress={handleTakePhoto}
                     disabled={!cameraReady}
+                    accessibilityRole="button"
+                    accessibilityLabel="Capture photo"
                     style={{
                       width: 76,
                       height: 76,

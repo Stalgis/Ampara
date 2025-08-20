@@ -8,7 +8,7 @@ interface Props extends TextProps {
 export default function Body({ className = "", style, ...props }: Props) {
   return (
     <Text
-      className={`text-base text-gray-700 ${className}`}
+      className={`text-base text-text dark:text-text-dark ${className}`}
       style={[style]}
       {...props}
     />
