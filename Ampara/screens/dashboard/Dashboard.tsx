@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { CompositeNavigationProp } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import {
   MainTabParamList,
-  RootStackParamList,
   DashboardInnerStackParamList,
 } from "../../navigation/types";
 import { designTokens } from "../../design-tokens";
@@ -22,14 +21,12 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
 import colors from "tailwindcss/colors";
-// import { MainTabParamList, DashboardInnerStackParamList } from "../../navigation/types";
 
-type DashboardNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<DashboardInnerStackParamList, "DashboardHome">,
-  BottomTabNavigationProp<MainTabParamList, "Dashboard">
->;
-
-const Dashboard = ({ navigation }: { navigation: DashboardNavigationProp }) => {
+const Dashboard = () => {
+  const navigation =
+    useNavigation<
+      StackNavigationProp<DashboardInnerStackParamList, "DashboardHome">
+    >();
   const [name] = useState("Martha Johnson");
   const [isMedicationDone, setIsMedicationDone] = useState(false);
   const [isAppointmentDone, setIsAppointmentDone] = useState(false);
@@ -154,7 +151,11 @@ const Dashboard = ({ navigation }: { navigation: DashboardNavigationProp }) => {
             <Text className="font-bold text-xl text-text">Health Alerts</Text>
             <Pressable
               className="flex-row items-center"
-              onPress={() => navigation.getParent()?.navigate("Health")} // ← cambia de tab
+              onPress={() =>
+                navigation
+                  .getParent<BottomTabNavigationProp<MainTabParamList>>()
+                  ?.navigate("Health")
+              }
             >
               <Text className="font-bold text-highlight mr-1">View all</Text>
               <AntDesign name="arrowright" size={14} color={tokens.highlight} />
@@ -234,7 +235,11 @@ const Dashboard = ({ navigation }: { navigation: DashboardNavigationProp }) => {
             </Text>
             <Pressable
               className="flex-row items-center"
-              onPress={() => navigation.getParent()?.navigate("Calendar")} // ← cambia de tab
+              onPress={() =>
+                navigation
+                  .getParent<BottomTabNavigationProp<MainTabParamList>>()
+                  ?.navigate("Calendar")
+              }
             >
               <Text className="font-bold text-highlight mr-1">View all</Text>
               <AntDesign name="arrowright" size={14} color={tokens.highlight} />
