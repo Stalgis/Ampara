@@ -44,23 +44,13 @@ export class ElderUser {
   @Prop({ required: true })
   dateOfBirth: Date;
 
-  @Prop({
-    type: [PhoneNumber],
-    required: true,
-    validate: [
-      (val: PhoneNumber[]) => val.length > 0,
-      'At least one phone number is required',
-    ],
-  })
+  @Prop({ type: [PhoneNumber], required: true })
   phoneNumbers: PhoneNumber[];
 
   @Prop({ type: [EmergencyContact], default: [] })
   emergencyContacts: EmergencyContact[];
 
-  @Prop({
-    type: MedicalInfo,
-    default: () => ({ conditions: [], medications: [], allergies: [] }),
-  })
+  @Prop({ type: MedicalInfo, default: {} })
   medicalInfo: MedicalInfo;
 
   @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
@@ -68,7 +58,3 @@ export class ElderUser {
 }
 
 export const ElderUserSchema = SchemaFactory.createForClass(ElderUser);
-
-// Indexes for efficient queries
-ElderUserSchema.index({ 'phoneNumbers.number': 1 });
-ElderUserSchema.index({ caregivers: 1 });

@@ -1,47 +1,38 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
 import { MoodsService } from './moods.service';
-import { CreateMoodDto } from './dto/create-mood.dto';
-import { UpdateMoodDto } from './dto/update-mood.dto';
+import { Mood } from './moods.schema';
 
 @Controller('moods')
 export class MoodsController {
   constructor(private readonly moodsService: MoodsService) {}
 
   @Post()
-  create(@Body() createMoodDto: CreateMoodDto) {
+  async create(@Body() createMoodDto: Partial<Mood>): Promise<Mood> {
     return this.moodsService.create(createMoodDto);
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Mood[]> {
     return this.moodsService.findAll();
   }
 
+  @Get('elder/:elderId')
+  async findByElder(@Param('elderId') elderId: string): Promise<Mood[]> {
+    return this.moodsService.findByElder(elderId);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<Mood> {
     return this.moodsService.findOne(id);
   }
 
-  @Get('elder/:elderId')
-  findByElderId(@Param('elderId') elderId: string) {
-    return this.moodsService.findByElderId(elderId);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMoodDto: UpdateMoodDto) {
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updateMoodDto: Partial<Mood>): Promise<Mood> {
     return this.moodsService.update(id, updateMoodDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string): Promise<void> {
     return this.moodsService.remove(id);
   }
 }

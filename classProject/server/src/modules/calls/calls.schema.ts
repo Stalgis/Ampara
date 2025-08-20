@@ -3,14 +3,6 @@ import { Document, Types } from 'mongoose';
 
 export type CallDocument = Call & Document;
 
-export enum CallStatus {
-  COMPLETED = 'completed',
-  NO_ANSWER = 'no-answer',
-  BUSY = 'busy',
-  FAILED = 'failed',
-  IN_PROGRESS = 'in-progress',
-}
-
 @Schema({ timestamps: true })
 export class Call {
   @Prop({ type: Types.ObjectId, ref: 'ElderUser', required: true })
@@ -19,25 +11,28 @@ export class Call {
   @Prop({ required: true })
   dialedNumber: string;
 
-  @Prop({ required: true })
+  @Prop()
   providerCallSid: string;
 
-  @Prop({ required: true, enum: CallStatus })
-  callStatus: CallStatus;
+  @Prop({ 
+    enum: ['completed', 'no-answer', 'busy', 'failed', 'canceled'], 
+    default: 'completed'
+  })
+  callStatus: string;
 
-  @Prop({ required: true })
-  callDuration: number; // in seconds
+  @Prop({ default: 0 })
+  callDuration: number;
 
   @Prop()
-  recordingUrl?: string;
+  recordingUrl: string;
 
-  @Prop({ required: true })
+  @Prop()
   transcript: string;
 
-  @Prop({ required: true })
+  @Prop()
   gptSummary: string;
 
-  @Prop({ required: true })
+  @Prop()
   moodAnalysis: string;
 
   @Prop({ type: [Types.ObjectId], ref: 'AiInstruction', default: [] })
@@ -48,7 +43,3 @@ export class Call {
 }
 
 export const CallSchema = SchemaFactory.createForClass(Call);
-
-// Indexes for efficient queries
-CallSchema.index({ elderId: 1, calledAt: -1 });
-CallSchema.index({ dialedNumber: 1 });

@@ -3,12 +3,6 @@ import { Document, Types } from 'mongoose';
 
 export type AiInstructionDocument = AiInstruction & Document;
 
-export enum AiInstructionStatus {
-  PENDING = 'PENDING',
-  APPLIED = 'APPLIED',
-  SKIPPED = 'SKIPPED',
-}
-
 @Schema({ timestamps: true })
 export class AiInstruction {
   @Prop({ type: Types.ObjectId, ref: 'ElderUser', required: true })
@@ -20,21 +14,20 @@ export class AiInstruction {
   @Prop({ required: true })
   message: string;
 
-  @Prop({ required: true })
+  @Prop()
   aiResponse: string;
 
-  @Prop({ required: true, enum: AiInstructionStatus })
-  status: AiInstructionStatus;
+  @Prop({
+    enum: ['PENDING', 'APPLIED', 'SKIPPED'],
+    default: 'PENDING',
+  })
+  status: string;
 
   @Prop()
-  appliedAt?: Date;
+  appliedAt: Date;
 
   @Prop({ type: Types.ObjectId, ref: 'Call' })
-  callId?: Types.ObjectId;
+  callId: Types.ObjectId;
 }
 
 export const AiInstructionSchema = SchemaFactory.createForClass(AiInstruction);
-
-// Indexes for efficient queries
-AiInstructionSchema.index({ elderId: 1, status: 1, createdAt: 1 });
-AiInstructionSchema.index({ callId: 1 });

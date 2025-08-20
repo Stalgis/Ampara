@@ -3,48 +3,67 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
+  Put,
   Delete,
 } from '@nestjs/common';
 import { AiInstructionsService } from './ai-instructions.service';
-import { CreateAiInstructionDto } from './dto/create-ai-instruction.dto';
-import { UpdateAiInstructionDto } from './dto/update-ai-instruction.dto';
+import { AiInstruction } from './ai-instructions.schema';
 
 @Controller('ai-instructions')
 export class AiInstructionsController {
   constructor(private readonly aiInstructionsService: AiInstructionsService) {}
 
   @Post()
-  create(@Body() createAiInstructionDto: CreateAiInstructionDto) {
-    return this.aiInstructionsService.create(createAiInstructionDto);
+  async create(
+    @Body() createAiInstructionDto: Partial<AiInstruction>,
+  ): Promise<AiInstruction> {
+    const { elderId, createdBy, message, aiResponse } = createAiInstructionDto;
+    return this.aiInstructionsService.createInstruction(
+      elderId,
+      createdBy,
+      message,
+      aiResponse,
+    );
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<AiInstruction[]> {
     return this.aiInstructionsService.findAll();
   }
 
+  @Get('pending/:elderId')
+  async getPendingInstructions(
+    @Param('elderId') elderId: string,
+  ): Promise<AiInstruction[]> {
+    return this.aiInstructionsService.getPendingInstructions(elderId as any);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<AiInstruction> {
     return this.aiInstructionsService.findOne(id);
   }
 
-  @Get('elder/:elderId')
-  findByElderId(@Param('elderId') elderId: string) {
-    return this.aiInstructionsService.findByElderId(elderId);
+  @Put('apply')
+  async markAsApplied(
+    @Body() applyDto: { instructionIds: string[]; callId: string },
+  ): Promise<void> {
+    return this.aiInstructionsService.markInstructionsAsApplied(
+      applyDto.instructionIds as any[],
+      applyDto.callId as any,
+    );
   }
 
-  @Patch(':id')
-  update(
+  @Put(':id')
+  async update(
     @Param('id') id: string,
-    @Body() updateAiInstructionDto: UpdateAiInstructionDto,
-  ) {
+    @Body() updateAiInstructionDto: Partial<AiInstruction>,
+  ): Promise<AiInstruction> {
     return this.aiInstructionsService.update(id, updateAiInstructionDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string): Promise<void> {
     return this.aiInstructionsService.remove(id);
   }
 }

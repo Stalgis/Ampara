@@ -7,9 +7,8 @@ import { CallsModule } from './modules/calls/calls.module';
 import { MoodsModule } from './modules/moods/moods.module';
 import { AdviceRequestsModule } from './modules/advice-requests/advice-requests.module';
 import { AiInstructionsModule } from './modules/ai-instructions/ai-instructions.module';
-import { AuthModule } from './modules/auth/auth.module';
+import { DatabaseIndexesService } from './database/database-indexes.service';
 import databaseConfig from './config/database.config';
-import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -24,7 +23,6 @@ import { AppController } from './app.controller';
       }),
       inject: [ConfigService],
     }),
-    AuthModule,
     UsersModule,
     ElderUsersModule,
     CallsModule,
@@ -32,6 +30,6 @@ import { AppController } from './app.controller';
     AdviceRequestsModule,
     AiInstructionsModule,
   ],
-  controllers: [AppController],
+  providers: [DatabaseIndexesService],
 })
 export class AppModule {}

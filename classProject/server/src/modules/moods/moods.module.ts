@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MoodsController } from './moods.controller';
 import { MoodsService } from './moods.service';
-import { Mood, MoodSchema } from './mood.schema';
+import { Mood, MoodSchema } from './moods.schema';
 
 @Module({
   imports: [

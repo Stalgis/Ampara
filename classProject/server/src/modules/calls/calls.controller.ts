@@ -1,47 +1,38 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
 import { CallsService } from './calls.service';
-import { CreateCallDto } from './dto/create-call.dto';
-import { UpdateCallDto } from './dto/update-call.dto';
+import { Call } from './calls.schema';
 
 @Controller('calls')
 export class CallsController {
   constructor(private readonly callsService: CallsService) {}
 
   @Post()
-  create(@Body() createCallDto: CreateCallDto) {
+  async create(@Body() createCallDto: Partial<Call>): Promise<Call> {
     return this.callsService.create(createCallDto);
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Call[]> {
     return this.callsService.findAll();
   }
 
+  @Get('elder/:elderId')
+  async findByElder(@Param('elderId') elderId: string): Promise<Call[]> {
+    return this.callsService.findByElder(elderId);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<Call> {
     return this.callsService.findOne(id);
   }
 
-  @Get('elder/:elderId')
-  findByElderId(@Param('elderId') elderId: string) {
-    return this.callsService.findByElderId(elderId);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCallDto: UpdateCallDto) {
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updateCallDto: Partial<Call>): Promise<Call> {
     return this.callsService.update(id, updateCallDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string): Promise<void> {
     return this.callsService.remove(id);
   }
 }
