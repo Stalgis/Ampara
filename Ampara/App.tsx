@@ -7,7 +7,8 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import { StatusBar, View } from "react-native";
+import { View, Alert } from "react-native";
+import { StatusBar } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
@@ -220,28 +221,35 @@ export default function App() {
   }, []);
 
   const signOut = async () => {
-    await AsyncStorage.removeItem("access_token");
-    setIsAuthenticated(false);
+    try {
+      await AsyncStorage.removeItem("access_token");
+    } catch (e) {
+      console.error("Failed to remove token", e);
+    } finally {
+      setUser(null);
+      setIsAuthenticated(false);
+    }
   };
 
-  // <!--   useEffect(() => {
-  //     if (!isAuthenticated) {
-  //       setUser(null);
-  //       return;
-  //     }
-  //     const fetchUser = async () => {
-  //       try {
-  //         const res = await apiFetch("/user/me");
-  //         if (res.ok) {
-  //           const data = await res.json();
-  //           setUser(data);
-  //         }
-  //       } catch (err) {
-  //         console.error("Failed to load user", err);
-  //       }
-  //     };
-  //     fetchUser();
-  //   }, [isAuthenticated]); -->
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setUser(null);
+      return;
+    }
+    const fetchUser = async () => {
+      try {
+        const res = await apiFetch("/user/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+      } catch (err) {
+        console.error("Failed to load user", err);
+        Alert.alert("Network Error", "Unable to load user information.");
+      }
+    };
+    fetchUser();
+  }, [isAuthenticated]);
 
   if (loading) return null;
 
