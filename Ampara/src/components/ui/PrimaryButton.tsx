@@ -36,6 +36,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
           {title}
         </Text>
       )}
+
     </Pressable>
   );
 };
