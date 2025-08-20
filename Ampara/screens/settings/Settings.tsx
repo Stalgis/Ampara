@@ -87,7 +87,7 @@ const Settings: React.FC = () => {
   const scheme = useColorScheme() ?? "light";
   const tokens = designTokens[scheme];
   const navigation = useNavigation<any>();
-  const { setIsAuthenticated } = useAuth();
+  const { signOut } = useAuth();
 
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(scheme === "dark");
@@ -98,7 +98,13 @@ const Settings: React.FC = () => {
       {
         text: "Sign out",
         style: "destructive",
-        onPress: () => setIsAuthenticated(false),
+        onPress: async () => {
+          await signOut();
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Welcome" }],
+          });
+        },
       },
     ]);
   };

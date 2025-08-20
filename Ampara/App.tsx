@@ -212,10 +212,15 @@ export default function App() {
     loadAuth();
   }, []);
 
+  const signOut = async () => {
+    await AsyncStorage.removeItem("access_token");
+    setIsAuthenticated(false);
+  };
+
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, signOut }}>
       <View className="flex-1">
         <NavigationContainer>
           {isAuthenticated ? <MainTabs /> : <AuthStack />}
