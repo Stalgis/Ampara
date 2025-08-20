@@ -20,10 +20,11 @@ import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
 import EmotionalCheckIn from "./screens/dashboard/EmotionalCheckIn";
 import ElderUserProfile from "./screens/elder_profile/elder_profile";
 
-import { AuthContext } from "./controllers/AuthContext";
+import { AuthContext, User } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
 import LogoTitle from "./src/components/ui/LogoTitle";
 import { ThemeProvider, useTheme } from "./controllers/ThemeContext";
+import apiFetch from "./services/api";
 
 // Navegadores
 const Tab = createBottomTabNavigator();
@@ -203,6 +204,7 @@ const MainTabs = () => {
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -217,12 +219,35 @@ export default function App() {
     loadAuth();
   }, []);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setUser(null);
+      return;
+    }
+    const fetchUser = async () => {
+      try {
+        const res = await apiFetch("/user/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+      } catch (err) {
+        console.error("Failed to load user", err);
+      }
+    };
+    fetchUser();
+  }, [isAuthenticated]);
+
   if (loading) return null;
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
       <ThemeProvider>
-        <AppNavigation isAuthenticated={isAuthenticated} />
+        <View className="flex-1">
+          <NavigationContainer>
+            {isAuthenticated ? <MainTabs /> : <AuthStack />}
+          </NavigationContainer>
+        </View>
       </ThemeProvider>
     </AuthContext.Provider>
   );
