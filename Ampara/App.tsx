@@ -224,51 +224,41 @@ export default function App() {
     setIsAuthenticated(false);
   };
 
-<!--   useEffect(() => {
-    if (!isAuthenticated) {
-      setUser(null);
-      return;
-    }
-    const fetchUser = async () => {
-      try {
-        const res = await apiFetch("/user/me");
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
-        }
-      } catch (err) {
-        console.error("Failed to load user", err);
-      }
-    };
-    fetchUser();
-  }, [isAuthenticated]); -->
+  // <!--   useEffect(() => {
+  //     if (!isAuthenticated) {
+  //       setUser(null);
+  //       return;
+  //     }
+  //     const fetchUser = async () => {
+  //       try {
+  //         const res = await apiFetch("/user/me");
+  //         if (res.ok) {
+  //           const data = await res.json();
+  //           setUser(data);
+  //         }
+  //       } catch (err) {
+  //         console.error("Failed to load user", err);
+  //       }
+  //     };
+  //     fetchUser();
+  //   }, [isAuthenticated]); -->
 
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, signOut }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, setIsAuthenticated, user, setUser, signOut }}
+    >
       <View className="flex-1">
         <NavigationContainer>
           {isAuthenticated ? <MainTabs /> : <AuthStack />}
         </NavigationContainer>
       </View>
-<!--     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-      <ThemeProvider>
-        <View className="flex-1">
-          <NavigationContainer>
-            {isAuthenticated ? <MainTabs /> : <AuthStack />}
-          </NavigationContainer>
-        </View>
-      </ThemeProvider> -->
     </AuthContext.Provider>
   );
 }
 
-const AppNavigation = ({
-  isAuthenticated,
-}: {
-  isAuthenticated: boolean;
-}) => {
+const AppNavigation = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   const { colorScheme } = useTheme();
   return (
     <View className="flex-1">

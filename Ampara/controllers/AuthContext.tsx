@@ -17,16 +17,16 @@ export type AuthContextValue = {
    * Clears auth data and navigates user out of the protected area.
    */
   signOut: () => Promise<void>;
-<!--   user: User | null;
-  setUser: (u: User | null) => void; -->
+  user: User | null;
+  setUser: (u: User | null) => void;
 };
 
 export const AuthContext = createContext<AuthContextValue>({
   isAuthenticated: false,
   setIsAuthenticated: () => {},
   signOut: async () => {},
-<!--   user: null,
-  setUser: () => {}, -->
+  user: null,
+  setUser: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
