@@ -9,6 +9,7 @@ import {
   Switch,
   useColorScheme,
   Alert,
+  Linking,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { designTokens } from "../../design-tokens";
@@ -164,7 +165,7 @@ const Settings: React.FC = () => {
             icon={<Feather name="sliders" size={18} color={tokens.subtitle} />}
             label="App Settings"
             tokens={tokens}
-            onPress={() => console.log("app settings")}
+            onPress={() => Linking.openSettings()}
           />
         </Card>
 
@@ -175,30 +176,34 @@ const Settings: React.FC = () => {
         >
           Support
         </Text>
-        <Card tokens={tokens}>
-          <Row
-            icon={
-              <Feather name="help-circle" size={18} color={tokens.subtitle} />
-            }
-            label="Help Center"
-            tokens={tokens}
-            onPress={() => console.log("help center")}
-          />
-          <Row
-            icon={
-              <Feather name="file-text" size={18} color={tokens.subtitle} />
-            }
-            label="Terms & Privacy"
-            tokens={tokens}
-            onPress={() => console.log("terms")}
-          />
-          <Row
-            icon={<Feather name="shield" size={18} color={tokens.subtitle} />}
-            label="Security"
-            tokens={tokens}
-            onPress={() => console.log("security")}
-          />
-        </Card>
+          <Card tokens={tokens}>
+            <Row
+              icon={
+                <Feather name="help-circle" size={18} color={tokens.subtitle} />
+              }
+              label="Help Center"
+              tokens={tokens}
+              onPress={() =>
+                Linking.openURL("https://example.com/help-center")
+              }
+            />
+            <Row
+              icon={
+                <Feather name="file-text" size={18} color={tokens.subtitle} />
+              }
+              label="Terms & Privacy"
+              tokens={tokens}
+              onPress={() =>
+                Linking.openURL("https://example.com/terms-privacy")
+              }
+            />
+            <Row
+              icon={<Feather name="shield" size={18} color={tokens.subtitle} />}
+              label="Security"
+              tokens={tokens}
+              onPress={() => Linking.openURL("https://example.com/security")}
+            />
+          </Card>
 
         {/* Sign out */}
         <Pressable
