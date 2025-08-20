@@ -9,8 +9,9 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView
 } from "react-native";
-
+import DateTimePicker from "@react-native-community/datetimepicker";
 interface AddHealthRecordModalProps {
   visible: boolean;
   onClose: () => void;
@@ -30,6 +31,76 @@ interface AddHealthRecordModalProps {
   };
 }
 
+const formatDateInput = (t: string) => {
+  const d = t.replace(/\D/g, "").slice(0, 8); // keep digits only, yyyymmdd
+  const parts = [d.slice(0, 4), d.slice(4, 6), d.slice(6, 8)].filter(Boolean);
+  return parts.join("-");
+};
+
+export const isValidISODate = (s: string) => {
+  if (!/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(s)) return false;
+  const dt = new Date(s);
+  // ensure JS didn't auto-correct (e.g., 2025-02-30 → Mar 2)
+  return !isNaN(dt.getTime()) && dt.toISOString().slice(0, 10) === s;
+};
+
+const Field = React.memo(function Field({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  multiline = false,
+  keyboardType,
+  maxLength,
+  editable = true,
+  tokens,
+}: {
+  label: string;
+  value: string;
+  onChangeText: (t: string) => void;
+  placeholder?: string;
+  multiline?: boolean;
+  keyboardType?: any;
+  maxLength?: number;
+  editable?: boolean;
+  tokens: {
+    background: string;
+    text: string;
+    subtitle: string;
+    border: string;
+    highlight: string;
+  };
+}) {
+  return (
+    <View style={{ marginBottom: 12 }}>
+      <Text className="text-sm mb-1" style={{ color: tokens.text }}>
+        {label}
+      </Text>
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor={tokens.subtitle}
+        multiline={multiline}
+        keyboardType={keyboardType}
+        maxLength={maxLength}
+        editable={editable}
+        className="rounded-xl px-3 py-2"
+        style={{
+          color: tokens.text,
+          borderWidth: 1,
+          borderColor: tokens.border,
+          backgroundColor: tokens.background,
+          minHeight: multiline ? 88 : undefined,
+          textAlignVertical: multiline ? "top" : "auto",
+        }}
+        blurOnSubmit={false}
+        autoCorrect={false}
+      />
+    </View>
+  );
+});
+
 const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
   visible,
   onClose,
@@ -40,6 +111,15 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
   const [doctor, setDoctor] = useState("");
   const [date, setDate] = useState("");
   const [summary, setSummary] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
+
+  const onPick = (_: any, selected?: Date) => {
+    setShowPicker(false);
+    if (selected) {
+      const iso = selected.toISOString().slice(0, 10); // YYYY-MM-DD
+      setDate(iso);
+    }
+  };
 
   const canSave =
     title.trim() && doctor.trim() && date.trim() && summary.trim();
@@ -59,36 +139,6 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
     onClose();
   };
 
-  const Field = ({
-    label,
-    value,
-    onChangeText,
-    placeholder,
-    multiline = false,
-  }: any) => (
-    <View style={{ marginBottom: 12 }}>
-      <Text className="text-sm mb-1" style={{ color: tokens.text }}>
-        {label}
-      </Text>
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={tokens.subtitle}
-        multiline={multiline}
-        className="rounded-xl px-3 py-2"
-        style={{
-          color: tokens.text,
-          borderWidth: 1,
-          borderColor: tokens.border,
-          backgroundColor: tokens.background,
-          minHeight: multiline ? 88 : undefined,
-          textAlignVertical: multiline ? "top" : "auto",
-        }}
-      />
-    </View>
-  );
-
   return (
     <Modal
       visible={visible}
@@ -96,7 +146,6 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
       transparent
       onRequestClose={onClose}
     >
-      {/* Whole screen moves with the keyboard */}
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -112,12 +161,13 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
           pointerEvents="box-none"
         >
           <View
-            className="items-center justify-center"
-            style={{ flex: 1, padding: 16 }}
+            className="items-center justify-center p-4 my-auto"
+            // style={{ flex: 1, padding: 16 }}
             pointerEvents="box-none"
           >
-            <View
-              className="rounded-2xl w-11/12"
+            
+            <ScrollView
+              className="rounded-2xl w-11/12 h-fit"
               style={{
                 backgroundColor: tokens.background,
                 borderWidth: 1,
@@ -145,27 +195,57 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                 value={title}
                 onChangeText={setTitle}
                 placeholder="e.g., Annual Check-up"
+                tokens={tokens}
               />
+
               <Field
                 label="Doctor"
                 value={doctor}
                 onChangeText={setDoctor}
                 placeholder="e.g., Dr. Smith"
+                tokens={tokens}
               />
-              <Field
-                label="Date"
-                value={date}
-                onChangeText={setDate}
-                placeholder="e.g., 2025-08-18"
-              />
+
+              <Pressable
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setTimeout(() => setShowPicker(true), 0);
+                }}
+                android_ripple={{ color: "#00000022", borderless: false }}
+              >
+                <View pointerEvents="none">
+                  <Field
+                    label="Date"
+                    value={date}
+                    onChangeText={() => {}}
+                    placeholder="YYYY-MM-DD"
+                    editable={false}
+                    tokens={tokens}
+                  />
+                </View>
+              </Pressable>
+
+              {/* 👇 put the picker RIGHT AFTER the date field, before Summary */}
+              {showPicker && (
+                <View style={{ zIndex: 50 }}>
+                  <DateTimePicker
+                    mode="date"
+                    value={date ? new Date(date) : new Date()}
+                    onChange={onPick}
+                    display={Platform.OS === "ios" ? "inline" : "default"}
+                    themeVariant="light" // keeps text visible in dark mode
+                  />
+                </View>
+              )}
+
               <Field
                 label="Summary"
                 value={summary}
                 onChangeText={setSummary}
                 placeholder="Brief notes..."
                 multiline
+                tokens={tokens}
               />
-
               <View className="flex-row gap-3 mt-2">
                 <Pressable
                   onPress={onClose}
@@ -195,7 +275,7 @@ const AddHealthRecordModal: React.FC<AddHealthRecordModalProps> = ({
                   </Text>
                 </Pressable>
               </View>
-            </View>
+            </ScrollView>
           </View>
         </View>
       </KeyboardAvoidingView>

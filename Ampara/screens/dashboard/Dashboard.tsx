@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { MainTabParamList, RootStackParamList, DashboardInnerStackParamList } from "../../navigation/types";
+import { designTokens } from "../../design-tokens";
 import {
   View,
   Text,
@@ -7,57 +12,53 @@ import {
   ScrollView,
   useColorScheme,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
 import colors from "tailwindcss/colors";
-import { designTokens } from "../../design-tokens";
+// import { MainTabParamList, DashboardInnerStackParamList } from "../../navigation/types";
 
-const Dashboard = () => {
+type DashboardNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<DashboardInnerStackParamList, "DashboardHome">,
+  BottomTabNavigationProp<MainTabParamList, "Dashboard">
+>;
+
+const Dashboard = ({ navigation }: { navigation: DashboardNavigationProp }) => {
   const [name] = useState("Martha Johnson");
   const [isMedicationDone, setIsMedicationDone] = useState(false);
   const [isAppointmentDone, setIsAppointmentDone] = useState(false);
-  const navigation = useNavigation<any>();
+  
   const scheme = useColorScheme() ?? "light";
   const tokens = designTokens[scheme];
 
   return (
     <SafeAreaView className="h-full bg-background">
       <ScrollView>
-        <View className="mx-4">
+        <View className="mx-4 mb-4">
           {/* Header Card */}
-          <View className="flex flex-row w-full mt-8 rounded-2xl overflow-hidden bg-background shadow-sm border border-border">
-            {/* Left color strip */}
+          <Pressable className="flex flex-row w-full mt-8 rounded-2xl overflow-hidden bg-background shadow-sm border border-border" onPress={() => navigation.navigate("ElderUserProfile")}>
             <View className="w-1 bg-highlight" />
-            {/* Main card */}
-            <View className="flex-row items-center flex-1 py-4 pr-4 rounded-r-2xl">
+            <View className="flex-row items-center flex-1 py-4 pr-4 rounded-r-2xl" >
               <View className="p-3 rounded-full bg-badge mx-4">
-                <Entypo
-                  name="heart-outlined"
-                  size={22}
-                  color={tokens.highlight}
-                />
+                <Entypo name="heart-outlined" size={22} color={tokens.highlight} />
               </View>
               <View className="flex-1">
                 <Text id="Carer Name" className="font-bold text-lg text-text">
                   {name}
                 </Text>
-                <Text className="text-subtitle">
-                  Last Check-in: Today, 9:30 AM
-                </Text>
+                <Text className="text-subtitle">Last Check-in: Today, 9:30 AM</Text>
               </View>
             </View>
-          </View>
+          </Pressable>
 
           {/* Emotional check-ins */}
           <View className="mt-8 flex-row justify-between items-center">
-            <Text className="font-bold text-xl text-text">
-              Emotional Check-ins
-            </Text>
-            <Pressable className="flex-row items-center">
+            <Text className="font-bold text-xl text-text">Emotional Check-ins</Text>
+            <Pressable
+              className="flex-row items-center"
+              onPress={() => navigation.navigate("EmotionalCheckIns", { name })} >
               <Text className="font-bold text-highlight mr-1">View all</Text>
               <AntDesign name="arrowright" size={14} color={tokens.highlight} />
             </Pressable>
@@ -130,7 +131,7 @@ const Dashboard = () => {
             <Text className="font-bold text-xl text-text">Health Alerts</Text>
             <Pressable
               className="flex-row items-center"
-              onPress={() => navigation.navigate("Health")}
+              onPress={() => navigation.getParent()?.navigate("Health")} // ← cambia de tab
             >
               <Text className="font-bold text-highlight mr-1">View all</Text>
               <AntDesign name="arrowright" size={14} color={tokens.highlight} />
@@ -205,12 +206,10 @@ const Dashboard = () => {
 
           {/* Upcoming Activities */}
           <View className="mt-8 flex-row justify-between items-center">
-            <Text className="font-bold text-xl text-text">
-              Upcoming Activities
-            </Text>
+            <Text className="font-bold text-xl text-text">Upcoming Activities</Text>
             <Pressable
               className="flex-row items-center"
-              onPress={() => navigation.navigate("Calendar")}
+              onPress={() => navigation.getParent()?.navigate("Calendar")} // ← cambia de tab
             >
               <Text className="font-bold text-highlight mr-1">View all</Text>
               <AntDesign name="arrowright" size={14} color={tokens.highlight} />

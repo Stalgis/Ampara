@@ -8,14 +8,18 @@ import Card from "../../src/components/ui/Card";
 import FormInput from "../../src/components/ui/FormInput";
 import PrimaryButton from "../../src/components/ui/PrimaryButton";
 import { Heading, Body } from "../../src/components/ui";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AuthStackParamList } from "../../navigation/types";
 
 // import AsyncStorage from "@react-native-async-storage/async-storage"; // Commented out as per new requirements
 
 // import { AuthContext } from "../../context/AuthContext"; // Corrected import path
 // import apiFetch from "../../services/api"; // Commented out as per new requirements
 
+type AuthNav = NativeStackNavigationProp<AuthStackParamList>;
+
 const LogIn = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<AuthNav>();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

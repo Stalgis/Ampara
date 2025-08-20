@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  NavigationContainer,
-  DarkTheme,
-  DefaultTheme,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,80 +13,167 @@ import Health from "./screens/health/Health";
 import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
 import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
+import EmotionalCheckIn from "./screens/dashboard/EmotionalCheckIn";
+import ElderUserProfile from "./screens/elder_profile/elder_profile";
+
 import { AuthContext } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
 import LogoTitle from "./src/components/ui/LogoTitle";
 
+// Navegadores
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const AuthStackNav = createStackNavigator();
+const DashboardInnerStack = createStackNavigator();
 
+/** Stack interno SOLO para la tab Dashboard */
+function DashboardStackScreen() {
+  return (
+    <DashboardInnerStack.Navigator
+      screenOptions={{
+        headerTitleAlign: "left",
+        headerStyle: { backgroundColor: "#fff" },
+        headerShadowVisible: true,
+      }}
+    >
+      {/* Home de la tab Dashboard (sin header porque la Tab ya lo maneja) */}
+      <DashboardInnerStack.Screen
+        name="DashboardHome"
+        component={Dashboard}
+        options={{ headerShown: false }}
+      />
+      {/* Detalle accesible desde Dashboard */}
+      <DashboardInnerStack.Screen
+        name="EmotionalCheckIns"
+        component={EmotionalCheckIn}
+        options={{headerShown: false}}
+      />
+      <DashboardInnerStack.Screen
+        name="ElderUserProfile"
+        component={ElderUserProfile}
+        options={{headerShown: false}} 
+      />
+    </DashboardInnerStack.Navigator>
+  );
+}
+
+/** Auth Stack (igual, pero con screenOptions estático y títulos por pantalla) */
 const AuthStack = () => (
-  <Stack.Navigator
-    screenOptions={({ route }) => ({
+  <AuthStackNav.Navigator
+    screenOptions={{
       headerTitleAlign: "left",
-      headerTitle: () => <LogoTitle title={route.name} />,
-      headerStyle: { backgroundColor: "#fff" }, // opcional
-      headerShadowVisible: true, // opcional
-    })}
+      headerStyle: { backgroundColor: "#fff" },
+      headerShadowVisible: true,
+    }}
   >
-    <Stack.Screen name="Welcome" component={WelcomeScreen} />
-    <Stack.Screen name="LogIn" component={LogIn} />
-    <Stack.Screen name="SignUp" component={SignUp} />
-    <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-  </Stack.Navigator>
+    <AuthStackNav.Screen
+      name="Welcome"
+      component={WelcomeScreen}
+      options={{ headerTitle: () => <LogoTitle title="Welcome" /> }}
+    />
+    <AuthStackNav.Screen
+      name="LogIn"
+      component={LogIn}
+      options={{ headerTitle: () => <LogoTitle title="Log In" /> }}
+    />
+    <AuthStackNav.Screen
+      name="SignUp"
+      component={SignUp}
+      options={{ headerTitle: () => <LogoTitle title="Sign Up" /> }}
+    />
+    <AuthStackNav.Screen
+      name="ForgotPassword"
+      component={ForgotPassword}
+      options={{ headerTitle: () => <LogoTitle title="Forgot Password" /> }}
+    />
+  </AuthStackNav.Navigator>
 );
 
+/** Tabs principales de la app autenticada */
 const MainTabs = () => {
   const scheme = useColorScheme() ?? "light";
   const tokens = designTokens[scheme];
+
   return (
     <Tab.Navigator
       initialRouteName="Dashboard"
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerTitleAlign: "left",
-        headerTitle: () => (
-          <LogoTitle
-            title={route.name === "Dashboard" ? "Ampara" : route.name}
-          />
-        ),
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName = "";
-          switch (route.name) {
-            case "Dashboard":
-              iconName = focused ? "home" : "home-outline";
-              break;
-            case "Chat":
-              iconName = focused
-                ? "chatbox-ellipses"
-                : "chatbox-ellipses-outline";
-              break;
-            case "Calendar":
-              iconName = focused ? "calendar" : "calendar-outline";
-              break;
-            case "Health":
-              iconName = focused ? "heart" : "heart-outline";
-              break;
-            case "Settings":
-              iconName = focused ? "settings" : "settings-outline";
-              break;
-          }
-          return (
+        tabBarActiveTintColor: tokens.highlight,
+        tabBarInactiveTintColor: tokens.subtitle,
+      }}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={DashboardStackScreen}
+        options={{
+          headerTitle: () => <LogoTitle title="Ampara" />,
+          tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
-              name={iconName as keyof typeof Ionicons.glyphMap}
+              name={(focused ? "home" : "home-outline") as keyof typeof Ionicons.glyphMap}
               size={size}
               color={color}
             />
-          );
-        },
-        tabBarActiveTintColor: tokens.highlight,
-        tabBarInactiveTintColor: tokens.subtitle,
-      })}
-    >
-      <Tab.Screen name="Dashboard" component={Dashboard} />
-      <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="Calendar" component={CalendarScreen} />
-      <Tab.Screen name="Health" component={Health} />
-      <Tab.Screen name="Settings" component={Settings} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          headerTitle: () => <LogoTitle title="Chat" />,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={
+                (focused ? "chatbox-ellipses" : "chatbox-ellipses-outline") as keyof typeof Ionicons.glyphMap
+              }
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{
+          headerTitle: () => <LogoTitle title="Calendar" />,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={(focused ? "calendar" : "calendar-outline") as keyof typeof Ionicons.glyphMap}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Health"
+        component={Health}
+        options={{
+          headerTitle: () => <LogoTitle title="Health" />,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={(focused ? "heart" : "heart-outline") as keyof typeof Ionicons.glyphMap}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          headerTitle: () => <LogoTitle title="Settings" />,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={(focused ? "settings" : "settings-outline") as keyof typeof Ionicons.glyphMap}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
@@ -103,9 +186,7 @@ export default function App() {
     const loadAuth = async () => {
       try {
         const token = await AsyncStorage.getItem("access_token");
-        if (token) {
-          setIsAuthenticated(true);
-        }
+        if (token) setIsAuthenticated(true);
       } finally {
         setLoading(false);
       }
@@ -113,9 +194,7 @@ export default function App() {
     loadAuth();
   }, []);
 
-  if (loading) {
-    return null;
-  }
+  if (loading) return null;
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>

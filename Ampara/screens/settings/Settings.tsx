@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../../controllers/AuthContext";
 import {
   SafeAreaView,
   View,
@@ -84,6 +86,8 @@ const Card = ({
 const Settings: React.FC = () => {
   const scheme = useColorScheme() ?? "light";
   const tokens = designTokens[scheme];
+  const navigation = useNavigation<any>();
+  const { setIsAuthenticated } = useAuth();
 
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(scheme === "dark");
@@ -94,7 +98,7 @@ const Settings: React.FC = () => {
       {
         text: "Sign out",
         style: "destructive",
-        onPress: () => console.log("sign out"),
+        onPress: () => setIsAuthenticated(false),
       },
     ]);
   };

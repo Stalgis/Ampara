@@ -1,5 +1,5 @@
 // components/Medications/Modals/AddMedicationModal.tsx
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import {
   Modal,
   View,
@@ -8,9 +8,17 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
-  TouchableWithoutFeedback,
+  ScrollView,
   Keyboard,
 } from "react-native";
+
+type Tokens = {
+  background: string;
+  text: string;
+  subtitle: string;
+  border: string;
+  highlight: string;
+};
 
 interface Props {
   visible: boolean;
@@ -20,14 +28,46 @@ interface Props {
     dosage: string;
     frequency: string;
   }) => void;
-  tokens: {
-    background: string;
-    text: string;
-    subtitle: string;
-    border: string;
-    highlight: string;
-  };
+  tokens: Tokens;
 }
+
+/** Memoized Field – keeps focus stable and preserves NativeWind classes */
+const Field = memo(function Field({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  tokens,
+}: {
+  label: string;
+  value: string;
+  onChangeText: (t: string) => void;
+  placeholder?: string;
+  tokens: Tokens;
+}) {
+  return (
+    <View className="mb-3">
+      <Text className="text-sm mb-1" style={{ color: tokens.text }}>
+        {label}
+      </Text>
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor={tokens.subtitle}
+        className="rounded-2xl px-3 py-2 border"
+        style={{
+          borderColor: tokens.border,
+          backgroundColor: tokens.background,
+          color: tokens.text,
+        }}
+        blurOnSubmit={false}
+        autoCorrect={false}
+        returnKeyType="done"
+      />
+    </View>
+  );
+});
 
 const AddMedicationModal: React.FC<Props> = ({
   visible,
@@ -57,27 +97,6 @@ const AddMedicationModal: React.FC<Props> = ({
     onClose();
   };
 
-  const Field = ({ label, value, onChangeText, placeholder }: any) => (
-    <View style={{ marginBottom: 12 }}>
-      <Text className="text-sm mb-1" style={{ color: tokens.text }}>
-        {label}
-      </Text>
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={tokens.subtitle}
-        className="rounded-xl px-3 py-2"
-        style={{
-          color: tokens.text,
-          borderWidth: 1,
-          borderColor: tokens.border,
-          backgroundColor: tokens.background,
-        }}
-      />
-    </View>
-  );
-
   return (
     <Modal
       visible={visible}
@@ -86,95 +105,100 @@ const AddMedicationModal: React.FC<Props> = ({
       onRequestClose={onClose}
     >
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.35)" }} />
-        </TouchableWithoutFeedback>
+        {/* Backdrop */}
+        <View className="flex-1 bg-black/40">
+          {/* Tap outside only dismisses keyboard (not the modal) */}
+          <Pressable onPress={Keyboard.dismiss} className="absolute inset-0" />
 
-        <View
-          style={{ position: "absolute", inset: 0 }}
-          pointerEvents="box-none"
-        >
-          <View
-            className="items-center justify-center"
-            style={{ flex: 1, padding: 16 }}
-            pointerEvents="box-none"
-          >
-            <View
-              className="rounded-2xl w-11/12"
-              style={{
-                backgroundColor: tokens.background,
-                borderWidth: 1,
-                borderColor: tokens.border,
-                shadowColor: "#000",
-                shadowOpacity: 0.15,
-                shadowRadius: 12,
-                shadowOffset: { width: 0, height: 8 },
-                elevation: 10,
-                padding: 20,
-              }}
+          {/* Centered content (restores original look) */}
+          <View className="justify-center items-center px-4 flex-1 ">
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ flexGrow: 1 }}
+              showsVerticalScrollIndicator={false}
             >
-              <Text
-                className="text-lg font-bold mb-1"
-                style={{ color: tokens.text }}
+              <View
+                className="my-auto w-80 max-w-md self-center rounded-3xl border p-6 bg-background"
+                style={{
+                  borderColor: tokens.border,
+                  // iOS shadow
+                  shadowColor: "#000",
+                  shadowOpacity: 0.15,
+                  shadowRadius: 12,
+                  shadowOffset: { width: 0, height: 8 },
+                  // Android shadow
+                  elevation: 10,
+                }}
               >
-                Add Medication
-              </Text>
-              <Text className="text-xs mb-4" style={{ color: tokens.subtitle }}>
-                Fill all fields to continue.
-              </Text>
-
-              <Field
-                label="Name"
-                value={name}
-                onChangeText={setName}
-                placeholder="e.g. Metformin"
-              />
-              <Field
-                label="Dosage"
-                value={dosage}
-                onChangeText={setDosage}
-                placeholder="e.g. 500mg"
-              />
-              <Field
-                label="Frequency"
-                value={frequency}
-                onChangeText={setFrequency}
-                placeholder="e.g. Twice daily"
-              />
-
-              <View className="flex-row gap-3 mt-2">
-                <Pressable
-                  onPress={onClose}
-                  className="flex-1 rounded-xl py-3"
-                  style={{ borderWidth: 1, borderColor: tokens.border }}
+                <Text
+                  className="text-lg font-bold mb-1"
+                  style={{ color: tokens.text }}
                 >
-                  <Text
-                    className="text-center font-semibold"
-                    style={{ color: tokens.text }}
-                  >
-                    Cancel
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={save}
-                  disabled={!canSave}
-                  className="flex-1 rounded-xl py-3"
-                  style={{
-                    backgroundColor: canSave ? tokens.highlight : "#E5E7EB",
-                  }}
+                  Add Medication
+                </Text>
+                <Text
+                  className="text-xs mb-4"
+                  style={{ color: tokens.subtitle }}
                 >
-                  <Text
-                    className="text-center font-semibold"
-                    style={{ color: canSave ? "#fff" : "#9CA3AF" }}
+                  Fill all fields to continue.
+                </Text>
+
+                <Field
+                  label="Name"
+                  value={name}
+                  onChangeText={setName}
+                  placeholder="e.g. Metformin"
+                  tokens={tokens}
+                />
+                <Field
+                  label="Dosage"
+                  value={dosage}
+                  onChangeText={setDosage}
+                  placeholder="e.g. 500mg"
+                  tokens={tokens}
+                />
+                <Field
+                  label="Frequency"
+                  value={frequency}
+                  onChangeText={setFrequency}
+                  placeholder="e.g. Twice daily"
+                  tokens={tokens}
+                />
+
+                <View className="flex-row gap-3 mt-4">
+                  <Pressable
+                    onPress={onClose}
+                    className="flex-1 rounded-xl py-3 border"
+                    style={{ borderColor: tokens.border }}
                   >
-                    Add
-                  </Text>
-                </Pressable>
+                    <Text
+                      className="text-center font-semibold"
+                      style={{ color: tokens.text }}
+                    >
+                      Cancel
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={save}
+                    disabled={!canSave}
+                    className="flex-1 rounded-xl py-3"
+                    style={{
+                      backgroundColor: canSave ? tokens.highlight : "#E5E7EB",
+                    }}
+                  >
+                    <Text
+                      className="text-center font-semibold"
+                      style={{ color: canSave ? "#fff" : "#9CA3AF" }}
+                    >
+                      Add
+                    </Text>
+                  </Pressable>
+                </View>
               </View>
-            </View>
+            </ScrollView>
           </View>
         </View>
       </KeyboardAvoidingView>

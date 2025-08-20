@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,10 +9,50 @@ import {
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import CallDetailsModal, { CallItem } from "./Modals/CallDetailsModal";
-import SendSuggestionModal, {
-  SuggestionPayload,
-} from "./Modals/SendSuggestionModal";
+import SendSuggestionModal, { SuggestionPayload } from "./Modals/SendSuggestionModal";
 import { designTokens } from "../../design-tokens";
+
+/**
+ * -----------------------------  API CONTRACT (commented)  -----------------------------
+ * POST /ai-instructions
+ * Body:
+ * {
+ *   elderId: string,
+ *   createdBy: string,
+ *   message: string,         // you can combine intent/topic/details into a single string
+ *   aiResponse?: string
+ * }
+ * Response: AiInstruction
+ * {
+ *   _id: string,
+ *   elderId: string,
+ *   createdBy: string,
+ *   message: string,
+ *   aiResponse?: string,
+ *   createdAt: string,
+ *   updatedAt: string
+ * }
+ *
+ * Example:
+ * // const res = await fetch(`${API_URL}/ai-instructions`, {
+ * //   method: 'POST',
+ * //   headers: { 'Content-Type': 'application/json' },
+ * //   body: JSON.stringify({
+ * //     elderId: 'ELDER_123',
+ * //     createdBy: 'USER_456',
+ * //     message: `Intent: ${payload.type}\nTopic: ${payload.title}\nDetails: ${payload.notes ?? ''}`
+ * //   })
+ * // });
+ * // if (!res.ok) throw new Error(`HTTP ${res.status}`);
+ * // const data = await res.json();
+ * ---------------------------------------------------------------------------------------
+ */
+
+// Mock submit while backend is not connected
+const mockSubmitSuggestion = (payload: SuggestionPayload, delay = 1000, shouldFail = false) =>
+  new Promise<void>((resolve, reject) =>
+    setTimeout(() => (shouldFail ? reject(new Error("Network error")) : resolve()), delay)
+  );
 
 // --- OPTIONAL: if you already created filterCalls util, keep using it ---
 const parseMDYTime = (input: string): Date | null => {
@@ -39,17 +79,8 @@ const daysBetween = (a: Date, b: Date): number => {
   return Math.floor((A - B) / (1000 * 60 * 60 * 24));
 };
 
-const filterCalls = (
-  calls: CallItem[],
-  callFilter: string,
-  now = new Date()
-): CallItem[] => {
-  const limit =
-    callFilter === "Last 7 days"
-      ? 7
-      : callFilter === "Last 30 days"
-        ? 30
-        : Infinity;
+const filterCalls = (calls: CallItem[], callFilter: string, now = new Date()): CallItem[] => {
+  const limit = callFilter === "Last 7 days" ? 7 : callFilter === "Last 30 days" ? 30 : Infinity;
   return calls.filter((c) => {
     const d = parseMDYTime(c.date);
     if (!d) return false;
@@ -66,6 +97,23 @@ const Chat = () => {
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const scheme = useColorScheme() ?? "light";
   const tokens = designTokens[scheme];
+
+  // Transient banner state for suggestion sending (loading/success/error)
+  const [sendState, setSendState] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [bannerVisible, setBannerVisible] = useState(false);
+
+  // Auto-hide the banner a few seconds after success/error/loading
+  useEffect(() => {
+    if (sendState !== "idle") {
+      setBannerVisible(true);
+      const t = setTimeout(() => {
+        setBannerVisible(false);
+        // Return to idle after the banner is gone
+        if (sendState !== "loading") setSendState("idle");
+      }, sendState === "loading" ? 1200 : 1800);
+      return () => clearTimeout(t);
+    }
+  }, [sendState]);
 
   const calls: CallItem[] = [
     {
@@ -88,19 +136,30 @@ const Chat = () => {
     },
   ];
 
-  const filteredCalls = useMemo(
-    () => filterCalls(calls, callFilter),
-    [calls, callFilter]
-  );
+  const filteredCalls = useMemo(() => filterCalls(calls, callFilter), [calls, callFilter]);
 
   const openCall = (call: CallItem) => {
     setSelectedCall(call);
     setModalVisible(true);
   };
 
-  const handleSubmitSuggestion = (payload: SuggestionPayload) => {
-    // TODO: send to backend
-    console.log("Suggestion submitted", payload);
+  // Handler passed to SendSuggestionModal
+  const handleSubmitSuggestion = async (payload: SuggestionPayload) => {
+    try {
+      setSendState("loading");
+      // --- Switch to real POST when backend is ready (see contract at top) ---
+      // await submit to `${API_URL}/ai-instructions` with combined message
+      // const message = `Intent: ${payload.intent}\nTopic: ${payload.topic}\nDetails: ${payload.details}`;
+      // await fetch(...)
+
+      await mockSubmitSuggestion(payload, 1000, /* shouldFail */ false);
+      setSendState("success");
+      setSendModalVisible(false);
+    } catch (e) {
+      setSendState("error");
+      // keep modal open so user can edit/try again if you prefer:
+      // setSendModalVisible(true);
+    }
   };
 
   return (
@@ -116,25 +175,22 @@ const Chat = () => {
           <View className="flex-1">
             <Text className="text-text text-base mb-1">Ampara suggestions</Text>
             <Text className="text-subtitle text-sm mb-2">
-              Today I can mention her friend Mery's birthday, would you like
-              that?
+              Today I can mention her friend Mery's birthday, would you like that?
             </Text>
-            <Pressable className="bg-highlight rounded-lg px-3 py-1 self-start">
-              <Text className="text-white text-sm font-medium">
-                Send Suggestion
-              </Text>
+            <Pressable
+              onPress={() => setSendModalVisible(true)}
+              className="bg-highlight rounded-lg px-3 py-1 self-start"
+            >
+              <Text className="text-white text-sm font-medium">Send Suggestion</Text>
             </Pressable>
           </View>
         </View>
 
         {/* NEW: Personalized suggestion box */}
         <View className="border border-border bg-background rounded-2xl p-4 mt-4">
-          <Text className="text-text text-base font-semibold mb-1">
-            Send personalized suggestion
-          </Text>
+          <Text className="text-text text-base font-semibold mb-1">Send personalized suggestion</Text>
           <Text className="text-subtitle text-sm mb-3">
-            Tell Ampara exactly what you want it to say or remind. Choose the
-            type, topic and add details.
+            Tell Ampara exactly what you want it to say or remind. Choose the type, topic and add details.
           </Text>
           <Pressable
             onPress={() => setSendModalVisible(true)}
@@ -154,11 +210,7 @@ const Chat = () => {
               className="flex-row items-center"
             >
               <Text className="text-primary font-bold mr-1">{callFilter}</Text>
-              <Feather
-                name={showFilterOptions ? "chevron-up" : "chevron-down"}
-                size={20}
-                color={tokens.highlight}
-              />
+              <Feather name={showFilterOptions ? "chevron-up" : "chevron-down"} size={20} color={tokens.highlight} />
             </Pressable>
           </View>
 
@@ -204,39 +256,22 @@ const Chat = () => {
                   }}
                 >
                   <View className="flex-row items-center flex-1">
-                    <View
-                      className="rounded-2xl mr-3 p-3"
-                      style={{ backgroundColor: tokens.highlight }}
-                    >
+                    <View className="rounded-2xl mr-3 p-3" style={{ backgroundColor: tokens.highlight }}>
                       <Feather name="phone" size={22} color="#FFFFFF" />
                     </View>
                     <View className="flex-1">
-                      <Text
-                        className="font-semibold text-base"
-                        style={{ color: tokens.text }}
-                      >
+                      <Text className="font-semibold text-base" style={{ color: tokens.text }}>
                         Call
                       </Text>
-                      <Text
-                        className="text-sm"
-                        numberOfLines={1}
-                        style={{ color: tokens.subtitle }}
-                      >
+                      <Text className="text-sm" numberOfLines={1} style={{ color: tokens.subtitle }}>
                         {call.topic}
                       </Text>
-                      <Text
-                        className="text-xs mt-1"
-                        style={{ color: tokens.subtitle }}
-                      >
+                      <Text className="text-xs mt-1" style={{ color: tokens.subtitle }}>
                         {call.date}
                       </Text>
                     </View>
                   </View>
-                  <Feather
-                    name="chevron-right"
-                    size={20}
-                    color={tokens.subtitle}
-                  />
+                  <Feather name="chevron-right" size={20} color={tokens.subtitle} />
                 </View>
               </Pressable>
             ))}
@@ -271,6 +306,47 @@ const Chat = () => {
           highlight: tokens.highlight,
         }}
       />
+
+      {/* Transient status banner (bottom-center) */}
+      {bannerVisible && (
+        <View className="absolute left-0 right-0 bottom-5 px-4">
+          <View
+            className="self-center rounded-xl px-4 py-2 border"
+            style={{
+              backgroundColor:
+                sendState === "error"
+                  ? "#FEE2E2" // red-100
+                  : sendState === "loading"
+                  ? "#E5E7EB" // gray-200
+                  : tokens.highlight,
+              borderColor:
+                sendState === "error"
+                  ? "#FCA5A5" // red-300
+                  : sendState === "loading"
+                  ? "#D1D5DB" // gray-300
+                  : tokens.highlight,
+            }}
+          >
+            <Text
+              className="text-sm font-semibold"
+              style={{
+                color:
+                  sendState === "error"
+                    ? "#991B1B" // red-800
+                    : sendState === "loading"
+                    ? "#111827" // gray-900
+                    : "#FFFFFF",
+              }}
+            >
+              {sendState === "loading"
+                ? "Sending…"
+                : sendState === "success"
+                ? "Suggestion sent"
+                : "Failed to send — try again"}
+            </Text>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
