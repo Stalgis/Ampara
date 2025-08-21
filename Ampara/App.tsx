@@ -20,6 +20,7 @@ import CalendarScreen from "./screens/calendar/Calendar";
 import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
 import EmotionalCheckIn from "./screens/dashboard/EmotionalCheckIn";
 import ElderUserProfile from "./screens/elder_profile/elder_profile";
+import SettingsNavigator from "./navigation/SettingsNavigator";
 
 import { AuthContext, User } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
@@ -183,7 +184,7 @@ const MainTabs = () => {
       />
       <Tab.Screen
         name="Settings"
-        component={Settings}
+        component={SettingsNavigator} // ⬅️ antes era `Settings`
         options={{
           headerTitle: () => <LogoTitle title="Settings" />,
           tabBarIcon: ({ focused, color, size }) => (
@@ -197,6 +198,7 @@ const MainTabs = () => {
               color={color}
             />
           ),
+          headerShown: false, // opcional si el stack maneja su propio header
         }}
       />
     </Tab.Navigator>

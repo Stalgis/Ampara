@@ -36,41 +36,79 @@ const LogIn = () => {
   const { setIsAuthenticated, setUser } = useAuth();
   const passwordRef = useRef<TextInput>(null);
 
+  // const handleLogin = async () => {
+  //   setError(null);
+  //   setLoading(true);
+  //   try {
+  //     const response = await apiFetch("/auth/login", {
+  //       method: "POST",
+  //       body: JSON.stringify({ email, password }),
+  //     });
+  //     if (!response.ok) {
+  //       const message = await response.text();
+  //       setError(message || "Login failed");
+  //       return;
+  //     }
+  //     const { access_token } = await response.json();
+  //     await AsyncStorage.setItem("access_token", access_token);
+  //     setIsAuthenticated(true);
+  //     try {
+  //       const userRes = await apiFetch("/user/me");
+  //       if (userRes.ok) {
+  //         const userData = await userRes.json();
+  //         setUser(userData);
+  //       }
+  //     } catch (err) {
+  //       Alert.alert(
+  //         "Server Unavailable",
+  //         "Could not fetch user information. Please check the server URL or try again later."
+  //       );
+  //     }
+  //   } catch (e) {
+  //     setError("Server unavailable. Please check the server URL or try again.");
+  //     Alert.alert(
+  //       "Server Unavailable",
+  //       "Unable to reach the server. Please check the server URL or your connection.",
+  //       [{ text: "Retry", onPress: handleLogin }, { text: "OK" }]
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleLogin = async () => {
     setError(null);
     setLoading(true);
     try {
-      const response = await apiFetch("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-      });
-      if (!response.ok) {
-        const message = await response.text();
-        setError(message || "Login failed");
+      // 🧪 Mock: validación mínima en el cliente
+      const trimmedEmail = email.trim();
+      const trimmedPass = password.trim();
+
+      if (!trimmedEmail || !trimmedPass) {
+        setError("Please enter email and password");
         return;
       }
-      const { access_token } = await response.json();
-      await AsyncStorage.setItem("access_token", access_token);
+
+      // 💤 Simulá latencia de red (opcional)
+      await new Promise((r) => setTimeout(r, 400));
+
+      // 🎟️ Token fake y usuario fake
+      const fakeToken = "dev.mock.token";
+      await AsyncStorage.setItem("access_token", fakeToken);
+
+      // Podés adaptar las keys según tu tipo User
+      setUser({
+        _id: "dev-user-id",
+        name: "Developer",
+        email: trimmedEmail,
+        role: "FAMILIAR", // o el rol que uses por defecto
+      } as any);
+
       setIsAuthenticated(true);
-      try {
-        const userRes = await apiFetch("/user/me");
-        if (userRes.ok) {
-          const userData = await userRes.json();
-          setUser(userData);
-        }
-      } catch (err) {
-        Alert.alert(
-          "Server Unavailable",
-          "Could not fetch user information. Please check the server URL or try again later."
-        );
-      }
+      // Si necesitás navegar explícitamente, hacelo acá
+      // navigation.replace("MainTabs"); // ej.
     } catch (e) {
-      setError("Server unavailable. Please check the server URL or try again.");
-      Alert.alert(
-        "Server Unavailable",
-        "Unable to reach the server. Please check the server URL or your connection.",
-        [{ text: "Retry", onPress: handleLogin }, { text: "OK" }]
-      );
+      setError("Mock login failed");
     } finally {
       setLoading(false);
     }

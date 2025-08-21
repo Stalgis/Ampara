@@ -1,5 +1,5 @@
+// screens/settings/Settings.tsx
 import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../controllers/AuthContext";
 import {
   SafeAreaView,
@@ -13,8 +13,11 @@ import {
 import Feather from "@expo/vector-icons/Feather";
 import { designTokens } from "../../design-tokens";
 import { useTheme } from "../../controllers/ThemeContext";
+import { useNavigation } from "@react-navigation/native";
+import type { StackNavigationProp } from "@react-navigation/stack";
+import type { SettingsStackParamList } from "../../navigation/SettingsNavigator";
 
-// Reusable row
+// ---- UI helpers (Row / Card) iguales a los tuyos ----
 const Row = ({
   icon,
   label,
@@ -84,14 +87,17 @@ const Card = ({
   </View>
 );
 
+// ✅ TIPADO CORRECTO PARA ESTE STACK
+type SettingsNav = StackNavigationProp<SettingsStackParamList, "SettingsHome">;
+
 const Settings: React.FC = () => {
   const { colorScheme, setTheme } = useTheme();
   const scheme = colorScheme;
   const tokens = designTokens[scheme];
-  const navigation = useNavigation<any>();
+
   const { signOut, user } = useAuth();
-  //   const { setIsAuthenticated, user } = useAuth();
   const [notifications, setNotifications] = useState(true);
+  const navigation = useNavigation<SettingsNav>();
 
   const onSignOut = () => {
     Alert.alert("Sign out", "Are you sure you want to sign out?", [
@@ -101,19 +107,28 @@ const Settings: React.FC = () => {
         style: "destructive",
         onPress: async () => {
           await signOut();
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Welcome" }],
-          });
         },
       },
     ]);
   };
 
+  const goToProfile = () => {
+    const params = {
+      elderName: user?.name ?? "",
+      dob: user?.dob ?? "",
+      tags: user?.tags ?? [],
+      avatarUrl: user?.avatarUrl,
+    };
+    // Ir al TAB "Dashboard" y a la screen interna "ElderUserProfile"
+    navigation.getParent()?.navigate("Dashboard", {
+      screen: "ElderUserProfile",
+      params,
+    });
+  };
+
   return (
     <SafeAreaView className="bg-background h-full">
       <View className="mx-4 mt-2">
-        {/* Header */}
         <Text className="text-xl font-bold" style={{ color: tokens.text }}>
           More Options
         </Text>
@@ -138,14 +153,7 @@ const Settings: React.FC = () => {
             <Pressable
               className="rounded-lg px-3 py-2"
               style={{ backgroundColor: tokens.highlight }}
-              onPress={() =>
-                navigation.navigate("ElderUserProfile", {
-                  elderName: user?.name ?? "",
-                  dob: user?.dob ?? "",
-                  tags: user?.tags ?? [],
-                  avatarUrl: user?.avatarUrl,
-                })
-              }
+              onPress={goToProfile} // ✅ FIX
             >
               <Text className="text-white font-semibold">View Profile</Text>
             </Pressable>
@@ -159,6 +167,7 @@ const Settings: React.FC = () => {
         >
           Settings
         </Text>
+
         <Card tokens={tokens}>
           <Row
             icon={<Feather name="bell" size={18} color={tokens.subtitle} />}
@@ -168,6 +177,8 @@ const Settings: React.FC = () => {
               <Switch value={notifications} onValueChange={setNotifications} />
             }
           />
+
+          {/* Dark Mode (descomentá cuando lo uses)
           <Row
             icon={<Feather name="moon" size={18} color={tokens.subtitle} />}
             label="Dark Mode"
@@ -175,10 +186,11 @@ const Settings: React.FC = () => {
             right={
               <Switch
                 value={scheme === "dark"}
-                onValueChange={(value) => setTheme(value ? "dark" : "light")}
+                onValueChange={(v) => setTheme(v ? "dark" : "light")}
               />
             }
-          />
+          /> */}
+
           <Row
             icon={<Feather name="sliders" size={18} color={tokens.subtitle} />}
             label="App Settings"
@@ -194,6 +206,7 @@ const Settings: React.FC = () => {
         >
           Support
         </Text>
+
         <Card tokens={tokens}>
           <Row
             icon={
@@ -201,7 +214,9 @@ const Settings: React.FC = () => {
             }
             label="Help Center"
             tokens={tokens}
-            onPress={() => Linking.openURL("https://example.com/help-center")}
+            onPress={() =>
+              navigation.navigate("HelpCenter", { topic: "getting-started" })
+            }
           />
           <Row
             icon={
@@ -209,13 +224,17 @@ const Settings: React.FC = () => {
             }
             label="Terms & Privacy"
             tokens={tokens}
-            onPress={() => Linking.openURL("https://example.com/terms-privacy")}
+            onPress={() =>
+              navigation.navigate("TermsPrivacy", { initialTab: "terms" })
+            }
           />
           <Row
             icon={<Feather name="shield" size={18} color={tokens.subtitle} />}
             label="Security"
             tokens={tokens}
-            onPress={() => Linking.openURL("https://example.com/security")}
+            onPress={() =>
+              navigation.navigate("Security", { highlight: "overview" })
+            }
           />
         </Card>
 
