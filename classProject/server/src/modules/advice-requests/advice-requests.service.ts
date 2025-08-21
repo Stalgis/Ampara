@@ -22,12 +22,21 @@ export class AdviceRequestsService {
     return this.adviceRequestModel.find({ elderId }).populate(['elderId', 'visitorId']).sort({ askedAt: -1 }).exec();
   }
 
-  async findOne(id: string): Promise<AdviceRequest> {
-    return this.adviceRequestModel.findById(id).populate(['elderId', 'visitorId']).exec();
+  async findOne(id: string): Promise<AdviceRequest | null> {
+    return this.adviceRequestModel
+      .findById(id)
+      .populate(['elderId', 'visitorId'])
+      .exec();
   }
 
-  async update(id: string, updateAdviceRequestDto: Partial<AdviceRequest>): Promise<AdviceRequest> {
-    return this.adviceRequestModel.findByIdAndUpdate(id, updateAdviceRequestDto, { new: true }).populate(['elderId', 'visitorId']).exec();
+  async update(
+    id: string,
+    updateAdviceRequestDto: Partial<AdviceRequest>,
+  ): Promise<AdviceRequest | null> {
+    return this.adviceRequestModel
+      .findByIdAndUpdate(id, updateAdviceRequestDto, { new: true })
+      .populate(['elderId', 'visitorId'])
+      .exec();
   }
 
   async remove(id: string): Promise<void> {

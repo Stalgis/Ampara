@@ -22,12 +22,21 @@ export class CallsService {
     return this.callModel.find({ elderId }).populate(['elderId', 'instructions']).sort({ calledAt: -1 }).exec();
   }
 
-  async findOne(id: string): Promise<Call> {
-    return this.callModel.findById(id).populate(['elderId', 'instructions']).exec();
+  async findOne(id: string): Promise<Call | null> {
+    return this.callModel
+      .findById(id)
+      .populate(['elderId', 'instructions'])
+      .exec();
   }
 
-  async update(id: string, updateCallDto: Partial<Call>): Promise<Call> {
-    return this.callModel.findByIdAndUpdate(id, updateCallDto, { new: true }).populate(['elderId', 'instructions']).exec();
+  async update(
+    id: string,
+    updateCallDto: Partial<Call>,
+  ): Promise<Call | null> {
+    return this.callModel
+      .findByIdAndUpdate(id, updateCallDto, { new: true })
+      .populate(['elderId', 'instructions'])
+      .exec();
   }
 
   async remove(id: string): Promise<void> {
