@@ -18,12 +18,18 @@ export class UsersService {
     return this.userModel.find().populate('linkedElders').exec();
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: string): Promise<User | null> {
     return this.userModel.findById(id).populate('linkedElders').exec();
   }
 
-  async update(id: string, updateUserDto: Partial<User>): Promise<User> {
-    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).populate('linkedElders').exec();
+  async update(
+    id: string,
+    updateUserDto: Partial<User>,
+  ): Promise<User | null> {
+    return this.userModel
+      .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .populate('linkedElders')
+      .exec();
   }
 
   async remove(id: string): Promise<void> {

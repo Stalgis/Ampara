@@ -22,12 +22,15 @@ export class MoodsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Mood> {
+  async findOne(@Param('id') id: string): Promise<Mood | null> {
     return this.moodsService.findOne(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateMoodDto: Partial<Mood>): Promise<Mood> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateMoodDto: Partial<Mood>,
+  ): Promise<Mood | null> {
     return this.moodsService.update(id, updateMoodDto);
   }
 

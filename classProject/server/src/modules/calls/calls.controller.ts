@@ -22,12 +22,15 @@ export class CallsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Call> {
+  async findOne(@Param('id') id: string): Promise<Call | null> {
     return this.callsService.findOne(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateCallDto: Partial<Call>): Promise<Call> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateCallDto: Partial<Call>,
+  ): Promise<Call | null> {
     return this.callsService.update(id, updateCallDto);
   }
 
