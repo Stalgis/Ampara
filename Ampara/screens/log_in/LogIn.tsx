@@ -1,13 +1,14 @@
 import {
   View,
   TouchableOpacity,
-  TextInput,
+  Alert,
   Image,
   Text,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
   Keyboard,
+  TextInput,
 } from "react-native";
 import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -33,6 +34,7 @@ const LogIn = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { setIsAuthenticated, setUser } = useAuth();
+  const passwordRef = useRef<TextInput>(null);
 
   const handleLogin = async () => {
     setError(null);
@@ -83,18 +85,18 @@ const LogIn = () => {
       >
         <SafeAreaView className="flex-1 bg-background justify-center items-center p-6">
           <Card className="w-full max-w-md bg-background rounded-xl p-8 border border-border">
-        <View className="items-center mb-4">
-          <Image
-            source={require("../../assets/Ampara_logo.png")}
-            className="w-36 h-36"
-            resizeMode="contain"
-          />
-          <Heading className="text-text">Ampara</Heading>
-        </View>
+            <View className="items-center mb-4">
+              <Image
+                source={require("../../assets/Ampara_logo.png")}
+                className="w-36 h-36"
+                resizeMode="contain"
+              />
+              <Heading className="text-text">Ampara</Heading>
+            </View>
 
-        {error && (
-          <Body className="text-red-500 text-center mb-4">{error}</Body>
-        )}
+            {error && (
+              <Body className="text-red-500 text-center mb-4">{error}</Body>
+            )}
 
             <FormInput
               label="Email"
@@ -136,12 +138,12 @@ const LogIn = () => {
               }
             />
 
-        <PrimaryButton
-          title={loading ? "Loading..." : "Log In"}
-          onPress={handleLogin}
-          disabled={loading}
-          className="mb-4 shadow-md"
-        />
+            <PrimaryButton
+              title={loading ? "Loading..." : "Log In"}
+              onPress={handleLogin}
+              disabled={loading}
+              className="mb-4 shadow-md"
+            />
 
             <TouchableOpacity
               onPress={() => navigation.navigate("ForgotPassword")}

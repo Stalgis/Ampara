@@ -64,101 +64,105 @@ const SignUp = () => {
       await AsyncStorage.setItem("access_token", access_token);
       await AsyncStorage.setItem("user", JSON.stringify(user));
     } catch (e) {
-      setError("Registration failed");
+      setError(`Registration failed: ${e}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background dark:bg-background-dark justify-center items-center p-6">
-      <Card className="w-full max-w-md p-8">
-        <View className="items-center mb-8">
-          <Image
-            source={require("../../assets/Ampara_logo.png")}
-            className="w-32 h-32 mb-2"
-            resizeMode="contain"
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView className="flex-1 bg-background dark:bg-background-dark justify-center items-center p-6">
+        <Card className="w-full max-w-md p-8">
+          <View className="items-center mb-8">
+            <Image
+              source={require("../../assets/Ampara_logo.png")}
+              className="w-32 h-32 mb-2"
+              resizeMode="contain"
+            />
+            <Text className="text-3xl font-bold text-text dark:text-text-dark">
+              Sign Up
+            </Text>
+          </View>
+
+          {error && (
+            <Body className="text-red-500 text-center mb-4">{error}</Body>
+          )}
+
+          <FormInput
+            label="Full Name"
+            value={name}
+            onChangeText={setName}
+            returnKeyType="next"
+            onSubmitEditing={() => emailRef.current?.focus()}
           />
-          <Text className="text-3xl font-bold text-text dark:text-text-dark">Sign Up</Text>
-          <Text className="text-3xl font-bold text-text dark:text-text-dark">Sign Up</Text>
-        </View>
 
-            {error && (
-              <Body className="text-red-500 text-center mb-4">{error}</Body>
-            )}
+          <FormInput
+            ref={emailRef}
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            returnKeyType="next"
+            onSubmitEditing={() => passwordRef.current?.focus()}
+          />
 
-            <FormInput
-              label="Full Name"
-              value={name}
-              onChangeText={setName}
-              returnKeyType="next"
-              onSubmitEditing={() => emailRef.current?.focus()}
-            />
-
-            <FormInput
-              ref={emailRef}
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              returnKeyType="next"
-              onSubmitEditing={() => passwordRef.current?.focus()}
-            />
-
-            <FormInput
-              ref={passwordRef}
-              label="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              returnKeyType="next"
-              onSubmitEditing={() => elderRef.current?.focus()}
-              rightIcon={
-                <TouchableOpacity
-                  onPress={() => setShowPassword((s) => !s)}
-                  accessibilityRole="button"
-                  accessibilityLabel={
-                    showPassword ? "Hide password" : "Show password"
-                  }
-                  hitSlop={8}
-                  className="p-3"
-                >
-                  <Ionicons
-                    name={showPassword ? "eye-off-outline" : "eye-outline"}
-                    size={24}
-                    color="#6B7280"
-                  />
-                </TouchableOpacity>
-              }
-            />
-            <FormInput
-              ref={elderRef}
-              label="Connect to Elder (Name or ID)"
-              value={elder}
-              onChangeText={setElder}
-              returnKeyType="done"
-              onSubmitEditing={() => {
-                Keyboard.dismiss();
-                handleSignUp();
-              }}
-            />
-
-            <PrimaryButton
-              title="Sign Up"
-              onPress={handleSignUp}
-              className="mb-4 shadow-md"
-            />
-
-            <View className="flex-row justify-center mt-6">
-              <Text className="text-subtitle">Already have an account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
-                <Text className="text-accent font-semibold ml-1">Log In</Text>
+          <FormInput
+            ref={passwordRef}
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            returnKeyType="next"
+            onSubmitEditing={() => elderRef.current?.focus()}
+            rightIcon={
+              <TouchableOpacity
+                onPress={() => setShowPassword((s) => !s)}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  showPassword ? "Hide password" : "Show password"
+                }
+                hitSlop={8}
+                className="p-3"
+              >
+                <Ionicons
+                  name={showPassword ? "eye-off-outline" : "eye-outline"}
+                  size={24}
+                  color="#6B7280"
+                />
               </TouchableOpacity>
-            </View>
-          </Card>
-        </SafeAreaView>
-      </ScrollView>
+            }
+          />
+          <FormInput
+            ref={elderRef}
+            label="Connect to Elder (Name or ID)"
+            value={elder}
+            onChangeText={setElder}
+            returnKeyType="done"
+            onSubmitEditing={() => {
+              Keyboard.dismiss();
+              handleSignUp();
+            }}
+          />
+
+          <PrimaryButton
+            title="Sign Up"
+            onPress={handleSignUp}
+            className="mb-4 shadow-md"
+          />
+
+          <View className="flex-row justify-center mt-6">
+            <Text className="text-subtitle">Already have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
+              <Text className="text-accent font-semibold ml-1">Log In</Text>
+            </TouchableOpacity>
+          </View>
+        </Card>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
