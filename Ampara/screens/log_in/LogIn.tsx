@@ -8,6 +8,7 @@ import {
   ScrollView,
   Platform,
   Keyboard,
+  Alert,
 } from "react-native";
 import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -58,14 +59,19 @@ const LogIn = () => {
         }
       } catch (err) {
         Alert.alert(
-          "Network Error",
-          "Could not fetch user information. Please try again later."
+          "Server Unavailable",
+          "Could not fetch user information. Please check the server URL or try again later."
         );
       }
     } catch (e) {
+      setError("Server unavailable. Please check the server URL or try again.");
       Alert.alert(
-        "Network Error",
-        "Unable to connect. Please check your internet connection."
+        "Server Unavailable",
+        "Unable to reach the server. Please check the server URL or your connection.",
+        [
+          { text: "Retry", onPress: handleLogin },
+          { text: "OK" },
+        ]
       );
     } finally {
       setLoading(false);
