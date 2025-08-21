@@ -17,12 +17,15 @@ export class ElderUsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<ElderUser> {
+  async findOne(@Param('id') id: string): Promise<ElderUser | null> {
     return this.elderUsersService.findOne(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateElderUserDto: Partial<ElderUser>): Promise<ElderUser> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateElderUserDto: Partial<ElderUser>,
+  ): Promise<ElderUser | null> {
     return this.elderUsersService.update(id, updateElderUserDto);
   }
 

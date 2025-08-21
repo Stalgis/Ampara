@@ -60,7 +60,7 @@ export class AiInstructionsService {
       .exec();
   }
 
-  async findOne(id: string): Promise<AiInstruction> {
+  async findOne(id: string): Promise<AiInstruction | null> {
     return this.aiInstructionModel
       .findById(id)
       .populate(['elderId', 'createdBy', 'callId'])
@@ -70,7 +70,7 @@ export class AiInstructionsService {
   async update(
     id: string,
     updateAiInstructionDto: Partial<AiInstruction>,
-  ): Promise<AiInstruction> {
+  ): Promise<AiInstruction | null> {
     return this.aiInstructionModel
       .findByIdAndUpdate(id, updateAiInstructionDto, { new: true })
       .populate(['elderId', 'createdBy', 'callId'])

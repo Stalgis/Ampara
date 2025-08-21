@@ -22,12 +22,18 @@ export class MoodsService {
     return this.moodModel.find({ elderId }).populate('elderId').sort({ timestamp: -1 }).exec();
   }
 
-  async findOne(id: string): Promise<Mood> {
+  async findOne(id: string): Promise<Mood | null> {
     return this.moodModel.findById(id).populate('elderId').exec();
   }
 
-  async update(id: string, updateMoodDto: Partial<Mood>): Promise<Mood> {
-    return this.moodModel.findByIdAndUpdate(id, updateMoodDto, { new: true }).populate('elderId').exec();
+  async update(
+    id: string,
+    updateMoodDto: Partial<Mood>,
+  ): Promise<Mood | null> {
+    return this.moodModel
+      .findByIdAndUpdate(id, updateMoodDto, { new: true })
+      .populate('elderId')
+      .exec();
   }
 
   async remove(id: string): Promise<void> {
