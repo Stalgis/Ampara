@@ -7,13 +7,7 @@ import {
   DashboardInnerStackParamList,
 } from "../../navigation/types";
 import { designTokens } from "../../design-tokens";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { View, Text, SafeAreaView, Pressable, ScrollView } from "react-native";
 import { useTheme } from "../../controllers/ThemeContext";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -40,32 +34,57 @@ const Dashboard = () => {
         <View className="mx-4 mb-4">
           {/* Header Card */}
           <Pressable
-            className="flex flex-row w-full mt-8 rounded-2xl overflow-hidden bg-background shadow-sm border border-border"
             onPress={() =>
               navigation.navigate("ElderUserProfile", {
-                elderName: `${name}`,
+                elderName: name,
                 dob: "1941-05-12",
                 tags: ["Diabetes", "Fall Risk"],
                 avatarUrl: "https://…",
               })
             }
+            accessibilityRole="button"
+            accessibilityLabel="Open elder profile"
+            accessibilityHint="Navigates to Martha Johnson’s profile"
+            android_ripple={{
+              color: tokens.highlight + "22",
+              borderless: false,
+            }}
+            hitSlop={8}
+            className="relative mt-8 rounded-2xl overflow-hidden bg-background border border-border py-2"
+            style={({ pressed }) => ({
+              transform: [{ scale: pressed ? 0.98 : 1 }],
+              opacity: pressed ? 0.9 : 1,
+            })}
           >
-            <View className="w-1 bg-highlight" />
-            <View className="flex-row items-center flex-1 py-4 pr-4 rounded-r-2xl">
-              <View className="p-3 rounded-full bg-badge mx-4">
+            {/* decorative left bar */}
+            <View className="absolute left-0 top-0 bottom-0 w-1 bg-highlight" />
+
+            <View className="flex-row items-center p-4">
+              <View className="p-3 rounded-full bg-badge mr-3">
                 <Entypo
                   name="heart-outlined"
                   size={22}
                   color={tokens.highlight}
                 />
               </View>
+
               <View className="flex-1">
-                <Text id="Carer Name" className="font-bold text-lg text-text">
-                  {name}
-                </Text>
+                <Text className="font-bold text-lg text-text">{name}</Text>
                 <Text className="text-subtitle">
                   Last Check-in: Today, 9:30 AM
                 </Text>
+              </View>
+
+              {/* explicit CTA makes affordance obvious */}
+              <View className="flex-row items-center">
+                <Text className="text-highlight font-semibold mr-1">
+                  View profile
+                </Text>
+                <Feather
+                  name="chevron-right"
+                  size={20}
+                  color={tokens.highlight}
+                />
               </View>
             </View>
           </Pressable>

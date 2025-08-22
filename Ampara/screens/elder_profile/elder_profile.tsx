@@ -1,4 +1,3 @@
-// screens/elder_profile/ElderUserProfile.tsx
 import React, { useMemo, useState } from "react";
 import {
   SafeAreaView,
@@ -7,8 +6,6 @@ import {
   Image,
   Pressable,
   ScrollView,
-  Modal,
-  TextInput,
   Alert,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -20,6 +17,10 @@ import {
   DashboardInnerStackParamList,
   MainTabParamList,
 } from "../../navigation/types";
+import AddAllergyModal from "./Modals/AddAllergyModal";
+import AddNoteModal from "./Modals/AddNoteModal";
+import LogMedModal from "./Modals/LogMedModal";
+import Social from "./Social";
 
 // ─────────────────────────────────────────────────────────
 // Types
@@ -209,11 +210,15 @@ export default function ElderUserProfile() {
 
   const risk = useMemo(() => computeRiskStatus(meds, vitals), [meds, vitals]);
 
+  // ── Modals state
+  const [allergyModal, setAllergyModal] = useState(false);
+  const [noteModal, setNoteModal] = useState(false);
+  const [logMedModal, setLogMedModal] = useState(false);
+
   // ── Actions
   const handleStartCall = () =>
     Alert.alert("Start Call", "Choose: Elder / Family / Nurse / Emergency");
-  const handleLogMed = () =>
-    Alert.alert("Log Medication", "Open quick log modal");
+
   const handleAddNote = () => setNoteModal(true);
   const handleMarkTaken = (id: string) =>
     setMeds((prev) =>
@@ -229,56 +234,45 @@ export default function ElderUserProfile() {
     nav.getParent()?.navigate("Health");
   };
 
-  // ── Modals state
-  const [allergyModal, setAllergyModal] = useState(false);
-  const [noteModal, setNoteModal] = useState(false);
-
-  // form for allergy
-  const [algAllergen, setAlgAllergen] = useState("");
-  const [algReaction, setAlgReaction] = useState("");
-  const [algSeverity, setAlgSeverity] = useState<
-    "mild" | "moderate" | "severe" | ""
-  >("");
-
-  const saveAllergy = () => {
-    if (!algAllergen.trim()) {
-      Alert.alert("Allergen required");
-      return;
-    }
+  const saveAllergy = (allergy: {
+    allergen: string;
+    reaction?: string;
+    severity?: "mild" | "moderate" | "severe";
+  }) => {
     setAllergies((prev) => [
       ...prev,
       {
         id: String(Math.random()),
-        allergen: algAllergen.trim(),
-        reaction: algReaction.trim() || undefined,
-        severity: (algSeverity || undefined) as any,
+        ...allergy,
       },
     ]);
     setAllergyModal(false);
-    setAlgAllergen("");
-    setAlgReaction("");
-    setAlgSeverity("");
   };
 
-  // form for note
-  const [noteText, setNoteText] = useState("");
-  const saveNote = () => {
-    if (!noteText.trim()) {
-      Alert.alert("Note is empty");
-      return;
-    }
+  const saveNote = (note: string) => {
     setNotes((prev) => [
       {
         id: String(Math.random()),
         author: "You",
         role,
         timestamp: new Date().toISOString(),
-        text: noteText.trim(),
+        text: note,
       },
       ...prev,
     ]);
     setNoteModal(false);
-    setNoteText("");
+  };
+
+  const saveMed = (med: { name: string; dosage: string; time: string }) => {
+    setMeds((prev) => [
+      ...prev,
+      {
+        id: String(Math.random()),
+        ...med,
+        status: "UPCOMING",
+      },
+    ]);
+    setLogMedModal(false);
   };
 
   const age = useMemo(() => computeAge(elder.dob), [elder.dob]);
@@ -339,7 +333,7 @@ export default function ElderUserProfile() {
               <Text className="text-white font-semibold">Start Call</Text>
             </Pressable>
             <Pressable
-              onPress={handleLogMed}
+              onPress={() => setLogMedModal(true)}
               className="flex-1 rounded-2xl border border-amber-300 py-3 mr-2 items-center"
             >
               <Text className="text-amber-800">Log Med</Text>
@@ -417,12 +411,12 @@ export default function ElderUserProfile() {
         </View>
 
         {/* Content */}
-        <View className="mt-3 space-y-4">
+        <View className="mt-3 space-y-4 gap-3">
           {activeTab === 0 ? (
             <>
               {/* Meds */}
               <SectionCard title="Medications Today">
-                <View className="space-y-3">
+                <View className="space-y-3 gap-1">
                   {meds.map((m) => (
                     <View
                       key={m.id}
@@ -612,38 +606,7 @@ export default function ElderUserProfile() {
               </SectionCard>
             </>
           ) : (
-            <>
-              <SectionCard title="Profile Basics">
-                <View className="space-y-2">
-                  <Text className="text-text dark:text-text-dark">
-                    Preferred name:{" "}
-                    <Text className="font-medium">
-                      {elder.preferredName ?? "—"}
-                    </Text>
-                  </Text>
-                  <Text className="text-text dark:text-text-dark">
-                    Birthday:{" "}
-                    <Text className="font-medium">
-                      {new Date(elder.dob).toLocaleDateString()}
-                    </Text>
-                  </Text>
-                  <View className="flex-row flex-wrap gap-2 mt-1">
-                    {elder.tags.map((t) => (
-                      <Chip key={t} label={t} />
-                    ))}
-                  </View>
-                </View>
-              </SectionCard>
-
-              <SectionCard title="Recent Activity">
-                <Text className="text-text dark:text-text-dark">
-                  Last call:{" "}
-                  <Text className="text-subtitle dark:text-subtitle-dark">
-                    {new Date().toLocaleString()}
-                  </Text>
-                </Text>
-              </SectionCard>
-            </>
+            <Social />
           )}
         </View>
 
@@ -654,98 +617,21 @@ export default function ElderUserProfile() {
         </View>
       </ScrollView>
 
-      {/* ───────── Allergy Modal ───────── */}
-      <Modal
+      <AddAllergyModal
         visible={allergyModal}
-        animationType="slide"
-        onRequestClose={() => setAllergyModal(false)}
-      >
-        <SafeAreaView className="flex-1 bg-background p-4">
-          <Text className="text-xl font-bold mb-3">Add Allergy</Text>
-          <View className="mb-3">
-            <Text className="mb-1">Allergen *</Text>
-            <TextInput
-              value={algAllergen}
-              onChangeText={setAlgAllergen}
-              placeholder="e.g. Penicillin"
-              className="border border-border rounded-xl px-3 py-2"
-            />
-          </View>
-          <View className="mb-3">
-            <Text className="mb-1">Reaction</Text>
-            <TextInput
-              value={algReaction}
-              onChangeText={setAlgReaction}
-              placeholder="e.g. Rash"
-              className="border border-border rounded-xl px-3 py-2"
-            />
-          </View>
-          <View className="mb-3">
-            <Text className="mb-1">Severity</Text>
-            <View className="flex-row">
-              {(["mild", "moderate", "severe"] as const).map((s) => (
-                <Pressable
-                  key={s}
-                  onPress={() => setAlgSeverity(s)}
-                  className={`px-3 py-2 rounded-full border mr-2 ${
-                    algSeverity === s
-                      ? "bg-amber-100 border-amber-300"
-                      : "border-border"
-                  }`}
-                >
-                  <Text className="capitalize">{s}</Text>
-                </Pressable>
-              ))}
-            </View>
-          </View>
-          <View className="flex-row mt-4">
-            <Pressable
-              onPress={saveAllergy}
-              className="flex-1 bg-amber-500 rounded-2xl py-3 mr-2 items-center"
-            >
-              <Text className="text-white font-semibold">Save</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => setAllergyModal(false)}
-              className="flex-1 border border-border rounded-2xl py-3 items-center"
-            >
-              <Text>Cancel</Text>
-            </Pressable>
-          </View>
-        </SafeAreaView>
-      </Modal>
-
-      {/* ───────── Note Modal ───────── */}
-      <Modal
+        onClose={() => setAllergyModal(false)}
+        onSave={saveAllergy}
+      />
+      <AddNoteModal
         visible={noteModal}
-        animationType="slide"
-        onRequestClose={() => setNoteModal(false)}
-      >
-        <SafeAreaView className="flex-1 bg-background p-4">
-          <Text className="text-xl font-bold mb-3">Add Staff Note</Text>
-          <TextInput
-            value={noteText}
-            onChangeText={setNoteText}
-            placeholder="Type your note…"
-            multiline
-            className="min-h-[120px] border border-border rounded-xl px-3 py-2"
-          />
-          <View className="flex-row mt-4">
-            <Pressable
-              onPress={saveNote}
-              className="flex-1 bg-amber-500 rounded-2xl py-3 mr-2 items-center"
-            >
-              <Text className="text-white font-semibold">Save</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => setNoteModal(false)}
-              className="flex-1 border border-border rounded-2xl py-3 items-center"
-            >
-              <Text>Cancel</Text>
-            </Pressable>
-          </View>
-        </SafeAreaView>
-      </Modal>
+        onClose={() => setNoteModal(false)}
+        onSave={saveNote}
+      />
+      <LogMedModal
+        visible={logMedModal}
+        onClose={() => setLogMedModal(false)}
+        onSave={saveMed}
+      />
     </SafeAreaView>
   );
 }
