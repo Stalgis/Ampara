@@ -17,7 +17,13 @@ import Chat from "./screens/chat/Chat";
 import Health from "./screens/health/Health";
 import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
-import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
+import {
+  LogIn,
+  SignUp,
+  ForgotPassword,
+  WelcomeScreen,
+  CreateElderUser,
+} from "./screens/auth";
 import EmotionalCheckIn from "./screens/dashboard/EmotionalCheckIn";
 import ElderUserProfile from "./screens/elder_profile/elder_profile";
 import SettingsNavigator from "./navigation/SettingsNavigator";
@@ -76,7 +82,7 @@ const AuthStack = () => (
     <AuthStackNav.Screen
       name="Welcome"
       component={WelcomeScreen}
-      options={{ headerTitle: () => <LogoTitle title="Welcome" /> }}
+      options={{ headerShown: false }}
     />
     <AuthStackNav.Screen
       name="LogIn"
@@ -91,6 +97,11 @@ const AuthStack = () => (
     <AuthStackNav.Screen
       name="ForgotPassword"
       component={ForgotPassword}
+      options={{ headerShown: false }}
+    />
+    <AuthStackNav.Screen
+      name="CreateElderUser"
+      component={CreateElderUser}
       options={{ headerShown: false }}
     />
   </AuthStackNav.Navigator>
