@@ -6,6 +6,7 @@ import {
   Param,
   Put,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { AiInstructionsService } from './ai-instructions.service';
 import { AiInstruction } from './ai-instructions.schema';
@@ -19,9 +20,16 @@ export class AiInstructionsController {
     @Body() createAiInstructionDto: Partial<AiInstruction>,
   ): Promise<AiInstruction> {
     const { elderId, createdBy, message, aiResponse } = createAiInstructionDto;
+
+    if (!elderId || !createdBy || !message) {
+      throw new BadRequestException(
+        'elderId, createdBy and message are required',
+      );
+    }
+
     return this.aiInstructionsService.createInstruction(
-      elderId,
-      createdBy,
+      elderId as any,
+      createdBy as any,
       message,
       aiResponse,
     );
@@ -40,7 +48,7 @@ export class AiInstructionsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<AiInstruction> {
+  async findOne(@Param('id') id: string): Promise<AiInstruction | null> {
     return this.aiInstructionsService.findOne(id);
   }
 
@@ -58,7 +66,7 @@ export class AiInstructionsController {
   async update(
     @Param('id') id: string,
     @Body() updateAiInstructionDto: Partial<AiInstruction>,
-  ): Promise<AiInstruction> {
+  ): Promise<AiInstruction | null> {
     return this.aiInstructionsService.update(id, updateAiInstructionDto);
   }
 

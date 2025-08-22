@@ -1,41 +1,32 @@
 import React, { useState } from "react";
-import { CompositeNavigationProp } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import {
   MainTabParamList,
-  RootStackParamList,
   DashboardInnerStackParamList,
 } from "../../navigation/types";
 import { designTokens } from "../../design-tokens";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Pressable,
-  ScrollView,
-  useColorScheme,
-} from "react-native";
+import { View, Text, SafeAreaView, Pressable, ScrollView } from "react-native";
+import { useTheme } from "../../controllers/ThemeContext";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
 import colors from "tailwindcss/colors";
-// import { MainTabParamList, DashboardInnerStackParamList } from "../../navigation/types";
 
-type DashboardNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<DashboardInnerStackParamList, "DashboardHome">,
-  BottomTabNavigationProp<MainTabParamList, "Dashboard">
->;
-
-const Dashboard = ({ navigation }: { navigation: DashboardNavigationProp }) => {
+const Dashboard = () => {
+  const navigation =
+    useNavigation<
+      StackNavigationProp<DashboardInnerStackParamList, "DashboardHome">
+    >();
   const [name] = useState("Martha Johnson");
   const [isMedicationDone, setIsMedicationDone] = useState(false);
   const [isAppointmentDone, setIsAppointmentDone] = useState(false);
 
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
 
   return (
     <SafeAreaView className="h-full bg-background">
@@ -43,32 +34,57 @@ const Dashboard = ({ navigation }: { navigation: DashboardNavigationProp }) => {
         <View className="mx-4 mb-4">
           {/* Header Card */}
           <Pressable
-            className="flex flex-row w-full mt-8 rounded-2xl overflow-hidden bg-background shadow-sm border border-border"
             onPress={() =>
               navigation.navigate("ElderUserProfile", {
-                elderName: `${name}`,
+                elderName: name,
                 dob: "1941-05-12",
                 tags: ["Diabetes", "Fall Risk"],
                 avatarUrl: "https://…",
               })
             }
+            accessibilityRole="button"
+            accessibilityLabel="Open elder profile"
+            accessibilityHint="Navigates to Martha Johnson’s profile"
+            android_ripple={{
+              color: tokens.highlight + "22",
+              borderless: false,
+            }}
+            hitSlop={8}
+            className="relative mt-8 rounded-2xl overflow-hidden bg-background border border-border py-2"
+            style={({ pressed }) => ({
+              transform: [{ scale: pressed ? 0.98 : 1 }],
+              opacity: pressed ? 0.9 : 1,
+            })}
           >
-            <View className="w-1 bg-highlight" />
-            <View className="flex-row items-center flex-1 py-4 pr-4 rounded-r-2xl">
-              <View className="p-3 rounded-full bg-badge mx-4">
+            {/* decorative left bar */}
+            <View className="absolute left-0 top-0 bottom-0 w-1 bg-highlight" />
+
+            <View className="flex-row items-center p-4">
+              <View className="p-3 rounded-full bg-badge mr-3">
                 <Entypo
                   name="heart-outlined"
                   size={22}
                   color={tokens.highlight}
                 />
               </View>
+
               <View className="flex-1">
-                <Text id="Carer Name" className="font-bold text-lg text-text">
-                  {name}
-                </Text>
+                <Text className="font-bold text-lg text-text">{name}</Text>
                 <Text className="text-subtitle">
                   Last Check-in: Today, 9:30 AM
                 </Text>
+              </View>
+
+              {/* explicit CTA makes affordance obvious */}
+              <View className="flex-row items-center">
+                <Text className="text-highlight font-semibold mr-1">
+                  View profile
+                </Text>
+                <Feather
+                  name="chevron-right"
+                  size={20}
+                  color={tokens.highlight}
+                />
               </View>
             </View>
           </Pressable>
@@ -154,7 +170,11 @@ const Dashboard = ({ navigation }: { navigation: DashboardNavigationProp }) => {
             <Text className="font-bold text-xl text-text">Health Alerts</Text>
             <Pressable
               className="flex-row items-center"
-              onPress={() => navigation.getParent()?.navigate("Health")} // ← cambia de tab
+              onPress={() =>
+                navigation
+                  .getParent<BottomTabNavigationProp<MainTabParamList>>()
+                  ?.navigate("Health")
+              }
             >
               <Text className="font-bold text-highlight mr-1">View all</Text>
               <AntDesign name="arrowright" size={14} color={tokens.highlight} />
@@ -234,7 +254,11 @@ const Dashboard = ({ navigation }: { navigation: DashboardNavigationProp }) => {
             </Text>
             <Pressable
               className="flex-row items-center"
-              onPress={() => navigation.getParent()?.navigate("Calendar")} // ← cambia de tab
+              onPress={() =>
+                navigation
+                  .getParent<BottomTabNavigationProp<MainTabParamList>>()
+                  ?.navigate("Calendar")
+              }
             >
               <Text className="font-bold text-highlight mr-1">View all</Text>
               <AntDesign name="arrowright" size={14} color={tokens.highlight} />

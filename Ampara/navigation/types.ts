@@ -3,6 +3,14 @@ export type RootStackParamList = {
   EmotionalCheckIns: undefined; // details screen you want to push
 };
 
+// agrega esto a tu archivo de tipos
+export type SettingsStackParamList = {
+  SettingsHome: undefined;
+  HelpCenter: undefined;
+  TermsPrivacy: undefined;
+  Security: undefined;
+};
+
 export type DashboardInnerStackParamList = {
   DashboardHome: undefined;
   EmotionalCheckIns: undefined;

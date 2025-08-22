@@ -1,5 +1,5 @@
+// screens/settings/Settings.tsx
 import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../controllers/AuthContext";
 import {
   SafeAreaView,
@@ -7,13 +7,17 @@ import {
   Text,
   Pressable,
   Switch,
-  useColorScheme,
   Alert,
+  Linking,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { designTokens } from "../../design-tokens";
+import { useTheme } from "../../controllers/ThemeContext";
+import { useNavigation } from "@react-navigation/native";
+import type { StackNavigationProp } from "@react-navigation/stack";
+import type { SettingsStackParamList } from "../../navigation/SettingsNavigator";
 
-// Reusable row
+// ---- UI helpers (Row / Card) iguales a los tuyos ----
 const Row = ({
   icon,
   label,
@@ -83,14 +87,17 @@ const Card = ({
   </View>
 );
 
-const Settings: React.FC = () => {
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
-  const navigation = useNavigation<any>();
-  const { setIsAuthenticated } = useAuth();
+// ✅ TIPADO CORRECTO PARA ESTE STACK
+type SettingsNav = StackNavigationProp<SettingsStackParamList, "SettingsHome">;
 
+const Settings: React.FC = () => {
+  const { colorScheme, setTheme } = useTheme();
+  const scheme = colorScheme;
+  const tokens = designTokens[scheme];
+
+  const { signOut, user } = useAuth();
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(scheme === "dark");
+  const navigation = useNavigation<SettingsNav>();
 
   const onSignOut = () => {
     Alert.alert("Sign out", "Are you sure you want to sign out?", [
@@ -98,15 +105,30 @@ const Settings: React.FC = () => {
       {
         text: "Sign out",
         style: "destructive",
-        onPress: () => setIsAuthenticated(false),
+        onPress: async () => {
+          await signOut();
+        },
       },
     ]);
+  };
+
+  const goToProfile = () => {
+    const params = {
+      elderName: user?.name ?? "",
+      dob: user?.dob ?? "",
+      tags: user?.tags ?? [],
+      avatarUrl: user?.avatarUrl,
+    };
+    // Ir al TAB "Dashboard" y a la screen interna "ElderUserProfile"
+    navigation.getParent()?.navigate("Dashboard", {
+      screen: "ElderUserProfile",
+      params,
+    });
   };
 
   return (
     <SafeAreaView className="bg-background h-full">
       <View className="mx-4 mt-2">
-        {/* Header */}
         <Text className="text-xl font-bold" style={{ color: tokens.text }}>
           More Options
         </Text>
@@ -122,16 +144,16 @@ const Settings: React.FC = () => {
             </View>
             <View className="flex-1">
               <Text className="font-semibold" style={{ color: tokens.text }}>
-                Jane Smith
+                {user?.name ?? ""}
               </Text>
               <Text className="text-xs" style={{ color: tokens.subtitle }}>
-                Caregiver
+                {user?.role ?? ""}
               </Text>
             </View>
             <Pressable
               className="rounded-lg px-3 py-2"
               style={{ backgroundColor: tokens.highlight }}
-              onPress={() => console.log("view profile")}
+              onPress={goToProfile} // ✅ FIX
             >
               <Text className="text-white font-semibold">View Profile</Text>
             </Pressable>
@@ -145,6 +167,7 @@ const Settings: React.FC = () => {
         >
           Settings
         </Text>
+
         <Card tokens={tokens}>
           <Row
             icon={<Feather name="bell" size={18} color={tokens.subtitle} />}
@@ -154,17 +177,25 @@ const Settings: React.FC = () => {
               <Switch value={notifications} onValueChange={setNotifications} />
             }
           />
+
+          {/* Dark Mode (descomentá cuando lo uses)
           <Row
             icon={<Feather name="moon" size={18} color={tokens.subtitle} />}
             label="Dark Mode"
             tokens={tokens}
-            right={<Switch value={darkMode} onValueChange={setDarkMode} />}
-          />
+            right={
+              <Switch
+                value={scheme === "dark"}
+                onValueChange={(v) => setTheme(v ? "dark" : "light")}
+              />
+            }
+          /> */}
+
           <Row
             icon={<Feather name="sliders" size={18} color={tokens.subtitle} />}
             label="App Settings"
             tokens={tokens}
-            onPress={() => console.log("app settings")}
+            onPress={() => Linking.openSettings()}
           />
         </Card>
 
@@ -175,6 +206,7 @@ const Settings: React.FC = () => {
         >
           Support
         </Text>
+
         <Card tokens={tokens}>
           <Row
             icon={
@@ -182,7 +214,9 @@ const Settings: React.FC = () => {
             }
             label="Help Center"
             tokens={tokens}
-            onPress={() => console.log("help center")}
+            onPress={() =>
+              navigation.navigate("HelpCenter", { topic: "getting-started" })
+            }
           />
           <Row
             icon={
@@ -190,13 +224,17 @@ const Settings: React.FC = () => {
             }
             label="Terms & Privacy"
             tokens={tokens}
-            onPress={() => console.log("terms")}
+            onPress={() =>
+              navigation.navigate("TermsPrivacy", { initialTab: "terms" })
+            }
           />
           <Row
             icon={<Feather name="shield" size={18} color={tokens.subtitle} />}
             label="Security"
             tokens={tokens}
-            onPress={() => console.log("security")}
+            onPress={() =>
+              navigation.navigate("Security", { highlight: "overview" })
+            }
           />
         </Card>
 

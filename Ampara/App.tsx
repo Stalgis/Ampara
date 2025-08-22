@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DefaultTheme as NavigationDefaultTheme,
+  DarkTheme as NavigationDarkTheme,
+} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import { View, useColorScheme } from "react-native";
+import { View, Alert } from "react-native";
+import { StatusBar } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
@@ -12,13 +17,22 @@ import Chat from "./screens/chat/Chat";
 import Health from "./screens/health/Health";
 import Settings from "./screens/settings/Settings";
 import CalendarScreen from "./screens/calendar/Calendar";
-import { LogIn, SignUp, ForgotPassword, WelcomeScreen } from "./screens/log_in";
+import {
+  LogIn,
+  SignUp,
+  ForgotPassword,
+  WelcomeScreen,
+  CreateElderUser,
+} from "./screens/auth";
 import EmotionalCheckIn from "./screens/dashboard/EmotionalCheckIn";
 import ElderUserProfile from "./screens/elder_profile/elder_profile";
+import SettingsNavigator from "./navigation/SettingsNavigator";
 
-import { AuthContext } from "./controllers/AuthContext";
+import { AuthContext, User } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
 import LogoTitle from "./src/components/ui/LogoTitle";
+import { ThemeProvider, useTheme } from "./controllers/ThemeContext";
+import apiFetch from "./services/api";
 
 // Navegadores
 const Tab = createBottomTabNavigator();
@@ -68,7 +82,7 @@ const AuthStack = () => (
     <AuthStackNav.Screen
       name="Welcome"
       component={WelcomeScreen}
-      options={{ headerTitle: () => <LogoTitle title="Welcome" /> }}
+      options={{ headerShown: false }}
     />
     <AuthStackNav.Screen
       name="LogIn"
@@ -85,13 +99,18 @@ const AuthStack = () => (
       component={ForgotPassword}
       options={{ headerShown: false }}
     />
+    <AuthStackNav.Screen
+      name="CreateElderUser"
+      component={CreateElderUser}
+      options={{ headerShown: false }}
+    />
   </AuthStackNav.Navigator>
 );
 
 /** Tabs principales de la app autenticada */
 const MainTabs = () => {
-  const scheme = useColorScheme() ?? "light";
-  const tokens = designTokens[scheme];
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
 
   return (
     <Tab.Navigator
@@ -176,7 +195,7 @@ const MainTabs = () => {
       />
       <Tab.Screen
         name="Settings"
-        component={Settings}
+        component={SettingsNavigator} // ⬅️ antes era `Settings`
         options={{
           headerTitle: () => <LogoTitle title="Settings" />,
           tabBarIcon: ({ focused, color, size }) => (
@@ -190,6 +209,7 @@ const MainTabs = () => {
               color={color}
             />
           ),
+          headerShown: false, // opcional si el stack maneja su propio header
         }}
       />
     </Tab.Navigator>
@@ -198,6 +218,7 @@ const MainTabs = () => {
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -212,15 +233,77 @@ export default function App() {
     loadAuth();
   }, []);
 
+  const signOut = async () => {
+    try {
+      await AsyncStorage.removeItem("access_token");
+    } catch (e) {
+      console.error("Failed to remove token", e);
+    } finally {
+      setUser(null);
+      setIsAuthenticated(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setUser(null);
+      return;
+    }
+    const fetchUser = async () => {
+      try {
+        const res = await apiFetch("/user/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+      } catch (err) {
+        console.error("Failed to load user", err);
+        Alert.alert("Network Error", "Unable to load user information.");
+      }
+    };
+    fetchUser();
+  }, [isAuthenticated]);
+
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-      <View className="flex-1">
-        <NavigationContainer>
-          {isAuthenticated ? <MainTabs /> : <AuthStack />}
-        </NavigationContainer>
-      </View>
+    <AuthContext.Provider
+      value={{ isAuthenticated, setIsAuthenticated, user, setUser, signOut }}
+    >
+      <ThemeProvider>
+        <AppShell isAuthenticated={isAuthenticated} />
+      </ThemeProvider>
     </AuthContext.Provider>
   );
 }
+
+const AppShell = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+  const { colorScheme } = useTheme();
+  const tokens = designTokens[colorScheme];
+  const baseTheme =
+    colorScheme === "dark" ? NavigationDarkTheme : NavigationDefaultTheme;
+  const navTheme = {
+    ...baseTheme,
+    colors: {
+      ...baseTheme.colors,
+      primary: tokens.primary,
+      background: tokens.background,
+      card: tokens.background,
+      text: tokens.text,
+      border: tokens.border,
+      notification: tokens.accent,
+    },
+  };
+  return (
+    <>
+      <StatusBar
+        barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+      />
+      <View className="flex-1 bg-background dark:bg-background-dark">
+        <NavigationContainer theme={navTheme}>
+          {isAuthenticated ? <MainTabs /> : <AuthStack />}
+        </NavigationContainer>
+      </View>
+    </>
+  );
+};

@@ -7,7 +7,7 @@ interface EmptyStateProps {
 
 const EmptyState = ({ message }: EmptyStateProps) => (
   <View className="items-center justify-center py-10">
-    <Text className="text-gray-500">{message}</Text>
+    <Text className="text-subtitle dark:text-subtitle-dark">{message}</Text>
   </View>
 );
 

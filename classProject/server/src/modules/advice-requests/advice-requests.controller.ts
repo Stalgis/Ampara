@@ -22,12 +22,15 @@ export class AdviceRequestsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<AdviceRequest> {
+  async findOne(@Param('id') id: string): Promise<AdviceRequest | null> {
     return this.adviceRequestsService.findOne(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateAdviceRequestDto: Partial<AdviceRequest>): Promise<AdviceRequest> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateAdviceRequestDto: Partial<AdviceRequest>,
+  ): Promise<AdviceRequest | null> {
     return this.adviceRequestsService.update(id, updateAdviceRequestDto);
   }
 
