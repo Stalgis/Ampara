@@ -26,7 +26,6 @@ export class AiInstructionsController {
         'elderId, createdBy and message are required',
       );
     }
-
     return this.aiInstructionsService.createInstruction(
       elderId as any,
       createdBy as any,
