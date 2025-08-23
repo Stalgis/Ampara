@@ -94,6 +94,7 @@ const Settings: React.FC = () => {
   const { colorScheme, setTheme } = useTheme();
   const scheme = colorScheme;
   const tokens = designTokens[scheme];
+  const { user, logout } = useAuth();
 
   const { signOut, user } = useAuth();
   const [notifications, setNotifications] = useState(true);
@@ -106,7 +107,16 @@ const Settings: React.FC = () => {
         text: "Sign out",
         style: "destructive",
         onPress: async () => {
+<<<<<<< HEAD
           await signOut();
+=======
+          try {
+            await logout();
+          } catch (error) {
+            console.error('Logout failed:', error);
+            Alert.alert('Error', 'Failed to sign out. Please try again.');
+          }
+>>>>>>> 6593307 (Update frontend configuration and add new authentication components)
         },
       },
     ]);
@@ -144,10 +154,17 @@ const Settings: React.FC = () => {
             </View>
             <View className="flex-1">
               <Text className="font-semibold" style={{ color: tokens.text }}>
+<<<<<<< HEAD
                 {user?.name ?? ""}
               </Text>
               <Text className="text-xs" style={{ color: tokens.subtitle }}>
                 {user?.role ?? ""}
+=======
+                {user?.name || user?.email || 'User'}
+              </Text>
+              <Text className="text-xs" style={{ color: tokens.subtitle }}>
+                {user?.email || 'Authenticated User'}
+>>>>>>> 6593307 (Update frontend configuration and add new authentication components)
               </Text>
             </View>
             <Pressable

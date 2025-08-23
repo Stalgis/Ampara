@@ -4,6 +4,11 @@ export interface Environment {
   apiTimeout: number;
   retryAttempts: number;
   debug: boolean;
+  auth0: {
+    domain: string;
+    clientId: string;
+    audience?: string;
+  };
 }
 
 export interface Environments {
@@ -19,6 +24,11 @@ export const environments: Environments = {
     apiTimeout: 10000, // 10 seconds
     retryAttempts: 3,
     debug: true,
+    auth0: {
+      domain: process.env.EXPO_PUBLIC_AUTH0_DOMAIN || 'your-dev-domain.auth0.com',
+      clientId: process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID || 'your-dev-client-id',
+      audience: process.env.EXPO_PUBLIC_AUTH0_AUDIENCE || 'ampara-api',
+    },
   },
   staging: {
     name: 'staging',
@@ -26,6 +36,11 @@ export const environments: Environments = {
     apiTimeout: 15000, // 15 seconds
     retryAttempts: 2,
     debug: true,
+    auth0: {
+      domain: process.env.EXPO_PUBLIC_AUTH0_DOMAIN || 'your-staging-domain.auth0.com',
+      clientId: process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID || 'your-staging-client-id',
+      audience: process.env.EXPO_PUBLIC_AUTH0_AUDIENCE || 'https://api-staging.yourdomain.com',
+    },
   },
   production: {
     name: 'production',
@@ -33,6 +48,11 @@ export const environments: Environments = {
     apiTimeout: 20000, // 20 seconds
     retryAttempts: 1,
     debug: false,
+    auth0: {
+      domain: process.env.EXPO_PUBLIC_AUTH0_DOMAIN || 'your-prod-domain.auth0.com',
+      clientId: process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID || 'your-prod-client-id',
+      audience: process.env.EXPO_PUBLIC_AUTH0_AUDIENCE || 'https://api.yourdomain.com',
+    },
   },
 };
 
@@ -88,4 +108,8 @@ export function getApiTimeout(): number {
 
 export function getRetryAttempts(): number {
   return getCurrentEnvironment().retryAttempts;
+}
+
+export function getAuth0Config() {
+  return getCurrentEnvironment().auth0;
 }

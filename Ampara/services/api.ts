@@ -42,7 +42,8 @@ class ApiService {
 
   private async getAuthHeaders(): Promise<Record<string, string>> {
     try {
-      const token = await AsyncStorage.getItem('access_token');
+      // Get Auth0 access token from storage
+      const token = await AsyncStorage.getItem('auth0_access_token');
       return token ? { Authorization: `Bearer ${token}` } : {};
     } catch (error) {
       console.warn('Failed to get auth token:', error);
@@ -236,6 +237,28 @@ class ApiService {
 
   getBaseUrl(): string {
     return this.baseUrl;
+  }
+
+  // Auth methods for integration with Auth0 context
+  async setAccessToken(token: string | null) {
+    try {
+      if (token) {
+        await AsyncStorage.setItem('auth0_access_token', token);
+      } else {
+        await AsyncStorage.removeItem('auth0_access_token');
+      }
+    } catch (error) {
+      console.error('Failed to set access token:', error);
+    }
+  }
+
+  async getStoredAccessToken(): Promise<string | null> {
+    try {
+      return await AsyncStorage.getItem('auth0_access_token');
+    } catch (error) {
+      console.error('Failed to get stored access token:', error);
+      return null;
+    }
   }
 }
 

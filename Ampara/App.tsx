@@ -7,8 +7,7 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import { View, Alert } from "react-native";
-import { StatusBar } from "react-native";
+import { View, Alert, StatusBar } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import "./global.css";
 
@@ -28,11 +27,12 @@ import EmotionalCheckIn from "./screens/dashboard/EmotionalCheckIn";
 import ElderUserProfile from "./screens/elder_profile/elder_profile";
 import SettingsNavigator from "./navigation/SettingsNavigator";
 
-import { AuthContext, User } from "./controllers/AuthContext";
+import { AuthContext, User, AuthProvider } from "./controllers/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { designTokens } from "./design-tokens";
 import LogoTitle from "./src/components/ui/LogoTitle";
 import { ThemeProvider, useTheme } from "./controllers/ThemeContext";
-import apiFetch from "./services/api";
+import { apiService } from "./services/api";
 
 // Navegadores
 const Tab = createBottomTabNavigator();
@@ -251,10 +251,9 @@ export default function App() {
     }
     const fetchUser = async () => {
       try {
-        const res = await apiFetch("/user/me");
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
+        const res = await apiService.get("/user/me");
+        if (res.data) {
+          setUser(res.data);
         }
       } catch (err) {
         console.error("Failed to load user", err);
@@ -267,13 +266,15 @@ export default function App() {
   if (loading) return null;
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, user, setUser, signOut }}
-    >
-      <ThemeProvider>
-        <AppShell isAuthenticated={isAuthenticated} />
-      </ThemeProvider>
-    </AuthContext.Provider>
+    <AuthProvider>
+      <AuthContext.Provider
+        value={{ isAuthenticated, setIsAuthenticated, user, setUser, signOut }}
+      >
+        <ThemeProvider>
+          <AppShell isAuthenticated={isAuthenticated} />
+        </ThemeProvider>
+      </AuthContext.Provider>
+    </AuthProvider>
   );
 }
 
