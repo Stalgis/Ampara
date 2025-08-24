@@ -17,6 +17,19 @@ export interface TTSResult {
   duration?: number;
 }
 
+export interface MedicationDetectionResult {
+  medicationName?: string;
+  confidence: number;
+  suggestions: Array<{
+    name: string;
+    confidence: number;
+    dosage?: string;
+    description?: string;
+  }>;
+  barcode?: string;
+  error?: string;
+}
+
 @Injectable()
 export class AiService {
   private readonly logger = new Logger(AiService.name);
@@ -233,5 +246,118 @@ Please respond in JSON format with keys: summary, mood, keyTopics (array), recom
         recommendations: [],
       };
     }
+  }
+
+  async detectMedicationFromImage(
+    imageBuffer: Buffer,
+    options: {
+      barcode?: string;
+      maxSuggestions?: number;
+    } = {},
+  ): Promise<MedicationDetectionResult> {
+    try {
+      const { barcode, maxSuggestions = 3 } = options;
+
+      // Convert buffer to base64 for OpenAI Vision API
+      const base64Image = imageBuffer.toString('base64');
+      const mimeType = this.detectImageMimeType(imageBuffer);
+
+      let prompt = `Analyze this medication image and identify the medication. Look for:
+1. Pill/tablet shape, color, and size
+2. Imprinted text, numbers, or symbols on the medication
+3. Any visible packaging or labels
+4. Brand names or generic names
+
+Please provide:
+- The most likely medication name(s)
+- Confidence level (0-100)
+- Any visible dosage information
+- Brief description of what you see
+
+Format your response as JSON with this structure:
+{
+  "medicationName": "most likely medication name",
+  "confidence": 85,
+  "suggestions": [
+    {
+      "name": "Medication Name",
+      "confidence": 85,
+      "dosage": "10mg",
+      "description": "White round tablet with 'ABC 123' imprint"
+    }
+  ]
+}`;
+
+      if (barcode) {
+        prompt += `\n\nAdditional context: This medication has barcode/NDC: ${barcode}`;
+      }
+
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4-vision-preview',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: prompt },
+              {
+                type: 'image_url',
+                image_url: {
+                  url: `data:${mimeType};base64,${base64Image}`,
+                  detail: 'high'
+                }
+              }
+            ]
+          }
+        ],
+        max_tokens: 500,
+        temperature: 0.3,
+      });
+
+      const content = response.choices[0]?.message?.content;
+      if (!content) {
+        throw new Error('No response from Vision API');
+      }
+
+      // Try to parse JSON response
+      try {
+        const parsed = JSON.parse(content);
+        return {
+          medicationName: parsed.medicationName,
+          confidence: parsed.confidence || 0,
+          suggestions: parsed.suggestions?.slice(0, maxSuggestions) || [],
+          barcode: barcode,
+        };
+      } catch (parseError) {
+        // Fallback: extract information from text response
+        return {
+          medicationName: undefined,
+          confidence: 50,
+          suggestions: [{
+            name: 'Manual Review Required',
+            confidence: 50,
+            description: content.substring(0, 200)
+          }],
+          barcode: barcode,
+        };
+      }
+
+    } catch (error) {
+      this.logger.error('Error detecting medication from image:', error);
+      return {
+        confidence: 0,
+        suggestions: [],
+        error: 'Failed to analyze medication image. Please try manual entry.',
+        barcode: options.barcode,
+      };
+    }
+  }
+
+  private detectImageMimeType(buffer: Buffer): string {
+    // Simple image type detection based on file headers
+    if (buffer[0] === 0xFF && buffer[1] === 0xD8) return 'image/jpeg';
+    if (buffer[0] === 0x89 && buffer[1] === 0x50) return 'image/png';
+    if (buffer[0] === 0x47 && buffer[1] === 0x49) return 'image/gif';
+    if (buffer[0] === 0x52 && buffer[1] === 0x49) return 'image/webp';
+    return 'image/jpeg'; // Default fallback
   }
 }
