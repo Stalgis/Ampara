@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   NavigationContainer,
   DefaultTheme as NavigationDefaultTheme,
@@ -7,8 +7,7 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import { View, Alert, StatusBar } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View, StatusBar, Text } from "react-native";
 import "./global.css";
 
 import Dashboard from "./screens/dashboard/Dashboard";
@@ -21,18 +20,17 @@ import {
   SignUp,
   ForgotPassword,
   WelcomeScreen,
-  CreateElderUser,
 } from "./screens/auth";
 import EmotionalCheckIn from "./screens/dashboard/EmotionalCheckIn";
 import ElderUserProfile from "./screens/elder_profile/elder_profile";
+import CreateElderUser from "./screens/elder_profile/CreateElderUser";
 import SettingsNavigator from "./navigation/SettingsNavigator";
 
-import { AuthContext, User, AuthProvider } from "./controllers/AuthContext";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import { AuthProvider, useAuth } from "./controllers/AuthContext";
 import { designTokens } from "./design-tokens";
 import LogoTitle from "./src/components/ui/LogoTitle";
 import { ThemeProvider, useTheme } from "./controllers/ThemeContext";
-import { apiService } from "./services/api";
+import EmailVerificationScreen from "./screens/auth/EmailVerificationScreen";
 
 // Navegadores
 const Tab = createBottomTabNavigator();
@@ -65,6 +63,15 @@ function DashboardStackScreen() {
         name="ElderUserProfile"
         component={ElderUserProfile}
         options={{ headerShown: false }}
+      />
+      <DashboardInnerStack.Screen
+        name="CreateElderUser"
+        component={CreateElderUser}
+        options={{ 
+          headerShown: true,
+          title: "Add New Elder",
+          headerStyle: { backgroundColor: "#fff" },
+        }}
       />
     </DashboardInnerStack.Navigator>
   );
@@ -217,69 +224,18 @@ const MainTabs = () => {
 };
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadAuth = async () => {
-      try {
-        const token = await AsyncStorage.getItem("access_token");
-        if (token) setIsAuthenticated(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadAuth();
-  }, []);
-
-  const signOut = async () => {
-    try {
-      await AsyncStorage.removeItem("access_token");
-    } catch (e) {
-      console.error("Failed to remove token", e);
-    } finally {
-      setUser(null);
-      setIsAuthenticated(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setUser(null);
-      return;
-    }
-    const fetchUser = async () => {
-      try {
-        const res = await apiService.get("/user/me");
-        if (res.data) {
-          setUser(res.data);
-        }
-      } catch (err) {
-        console.error("Failed to load user", err);
-        Alert.alert("Network Error", "Unable to load user information.");
-      }
-    };
-    fetchUser();
-  }, [isAuthenticated]);
-
-  if (loading) return null;
-
   return (
     <AuthProvider>
-      <AuthContext.Provider
-        value={{ isAuthenticated, setIsAuthenticated, user, setUser, signOut }}
-      >
-        <ThemeProvider>
-          <AppShell isAuthenticated={isAuthenticated} />
-        </ThemeProvider>
-      </AuthContext.Provider>
+      <ThemeProvider>
+        <AppShell />
+      </ThemeProvider>
     </AuthProvider>
   );
 }
 
-const AppShell = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+const AppShell = () => {
   const { colorScheme } = useTheme();
+  const { isAuthenticated, isLoading, emailVerificationRequired, user, markEmailVerified, retryAuth } = useAuth();
   const tokens = designTokens[colorScheme];
   const baseTheme =
     colorScheme === "dark" ? NavigationDarkTheme : NavigationDefaultTheme;
@@ -295,6 +251,25 @@ const AppShell = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
       notification: tokens.accent,
     },
   };
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-background justify-center items-center">
+        <Text className="text-text">Loading...</Text>
+      </View>
+    );
+  }
+
+  if (emailVerificationRequired) {
+    return (
+      <EmailVerificationScreen 
+        userEmail={user?.email} 
+        onVerificationComplete={markEmailVerified}
+        onRetryAuth={retryAuth}
+      />
+    );
+  }
+
   return (
     <>
       <StatusBar

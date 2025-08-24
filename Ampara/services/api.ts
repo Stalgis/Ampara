@@ -227,6 +227,64 @@ class ApiService {
     return this.get(`/voice/call/${callSid}/summary`);
   }
 
+  // Elder Users API methods
+  async getElderUsers() {
+    return this.get('/elder-users');
+  }
+
+  async getElderUser(id: string) {
+    return this.get(`/elder-users/${id}`);
+  }
+
+  async createElderUser(elderUserData: any) {
+    return this.post('/elder-users', elderUserData);
+  }
+
+  async updateElderUser(id: string, elderUserData: any) {
+    return this.put(`/elder-users/${id}`, elderUserData);
+  }
+
+  async deleteElderUser(id: string) {
+    return this.delete(`/elder-users/${id}`);
+  }
+
+  // Users API methods  
+  async getUsers() {
+    return this.get('/users');
+  }
+
+  async getUser(id: string) {
+    return this.get(`/users/${id}`);
+  }
+
+  // Medication detection API methods
+  async detectMedication(imageFile: File | Blob, barcode?: string) {
+    const formData = new FormData();
+    formData.append('image', imageFile, 'medication.jpg');
+    
+    if (barcode) {
+      formData.append('barcode', barcode);
+    }
+
+    // Custom request for file upload
+    const url = `${this.baseUrl}/ai/detect-medication`;
+    const authHeaders = await this.getAuthHeaders();
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        ...authHeaders,
+      },
+    });
+
+    if (!response.ok) {
+      throw new ApiError(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
   // Utility methods
   setBaseUrl(url: string) {
     this.baseUrl = url;
