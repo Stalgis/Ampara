@@ -19,7 +19,9 @@ export type DashboardInnerStackParamList = {
     dob: string;
     tags: string[];
     avatarUrl?: string;
+    elderId: string;
   };
+  CreateElderUser: undefined;
 };
 
 export type MainTabParamList = {

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -7,11 +7,13 @@ import {
   Pressable,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import type { RouteProp } from "@react-navigation/native";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { apiService } from "../../services/api";
 
 import {
   DashboardInnerStackParamList,
@@ -36,6 +38,30 @@ interface Elder {
   dob: string; // ISO
   avatarUrl?: string;
   tags: string[];
+}
+
+// Real elder user data from API
+interface ElderUserData {
+  _id: string;
+  name: string;
+  dateOfBirth: Date;
+  phoneNumbers: Array<{
+    label: string;
+    number: string;
+  }>;
+  emergencyContacts: Array<{
+    name: string;
+    relation: string;
+    phoneNumber: string;
+  }>;
+  medicalInfo: {
+    conditions: string[];
+    medications: string[];
+    allergies: string[];
+  };
+  caregivers: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 interface Medication {
   id: string;
@@ -197,18 +223,73 @@ const Chip = ({ label }: { label: string }) => (
 export default function ElderUserProfile() {
   const route = useRoute<ElderProfileRoute>();
   const nav = useNavigation<BottomTabNavigationProp<MainTabParamList>>(); // ✅ use parent's navigator
-  const { elderName, dob, tags, avatarUrl } = route.params;
+  const { elderName, dob, tags, avatarUrl, elderId } = route.params;
 
-  const elder: Elder = { id: "param", name: elderName, dob, avatarUrl, tags };
+  const [elderData, setElderData] = useState<ElderUserData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const elder: Elder = { id: elderId || "param", name: elderName, dob, avatarUrl, tags };
   const [role] = useState<Role>("NURSE");
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
 
-  const [meds, setMeds] = useState(mockMeds);
-  const [allergies, setAllergies] = useState(mockAllergies);
+  // Initialize with empty arrays until we load real data
+  const [meds, setMeds] = useState<Medication[]>([]);
+  const [allergies, setAllergies] = useState<Allergy[]>([]);
   const [vitals] = useState<Vitals | undefined>(mockVitals);
   const [notes, setNotes] = useState(mockNotes);
 
   const risk = useMemo(() => computeRiskStatus(meds, vitals), [meds, vitals]);
+
+  // ── Load real elder data
+  useEffect(() => {
+    const loadElderData = async () => {
+      if (!elderId) {
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        const response = await apiService.getElderUser(elderId);
+        
+        let data;
+        if (response.data) {
+          data = response.data;
+        } else if (response.success !== false) {
+          data = response;
+        }
+        
+        if (data) {
+          setElderData(data);
+          
+          // Convert medications from API to internal format
+          const medicationsFromAPI = data.medicalInfo.medications.map((med: string, index: number) => ({
+            id: `med-${index}`,
+            time: "08:00", // Default time - would need to be stored properly in real app
+            name: med,
+            dosage: "As prescribed", // Default dosage - would need to be stored properly
+            status: "UPCOMING" as MedStatus,
+          }));
+          
+          // Convert allergies from API to internal format
+          const allergiesFromAPI = data.medicalInfo.allergies.map((allergy: string, index: number) => ({
+            id: `allergy-${index}`,
+            allergen: allergy,
+            reaction: undefined,
+            severity: undefined,
+          }));
+          
+          setMeds(medicationsFromAPI);
+          setAllergies(allergiesFromAPI);
+        }
+      } catch (error) {
+        console.error("Failed to load elder data:", error);
+        Alert.alert("Error", "Failed to load elder information");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadElderData();
+  }, [elderId]);
 
   // ── Modals state
   const [allergyModal, setAllergyModal] = useState(false);
@@ -276,6 +357,15 @@ export default function ElderUserProfile() {
   };
 
   const age = useMemo(() => computeAge(elder.dob), [elder.dob]);
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-background dark:bg-background-dark justify-center items-center">
+        <ActivityIndicator size="large" />
+        <Text className="text-subtitle dark:text-subtitle-dark mt-2">Loading elder profile...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-background dark:bg-background-dark">
@@ -566,6 +656,58 @@ export default function ElderUserProfile() {
                   </Text>
                 )}
               </SectionCard>
+
+              {/* Phone Numbers */}
+              {elderData && elderData.phoneNumbers && elderData.phoneNumbers.length > 0 && (
+                <SectionCard title="Phone Numbers">
+                  <View className="space-y-2">
+                    {elderData.phoneNumbers.map((phone, index) => (
+                      <View key={index} className="flex-row items-center justify-between">
+                        <View>
+                          <Text className="font-medium text-text dark:text-text-dark">
+                            {phone.label || `Phone ${index + 1}`}
+                          </Text>
+                          <Text className="text-text dark:text-text-dark">
+                            {phone.number}
+                          </Text>
+                        </View>
+                        <Pressable
+                          onPress={() => Alert.alert("Call", `Call ${phone.number}?`)}
+                          className="px-3 py-1 rounded-full bg-highlight"
+                        >
+                          <Text className="text-white text-xs font-medium">Call</Text>
+                        </Pressable>
+                      </View>
+                    ))}
+                  </View>
+                </SectionCard>
+              )}
+
+              {/* Emergency Contacts */}
+              {elderData && elderData.emergencyContacts && elderData.emergencyContacts.length > 0 && (
+                <SectionCard title="Emergency Contacts">
+                  <View className="space-y-3">
+                    {elderData.emergencyContacts.map((contact, index) => (
+                      <View key={index} className="flex-row items-center justify-between">
+                        <View className="flex-1">
+                          <Text className="font-medium text-text dark:text-text-dark">
+                            {contact.name}
+                          </Text>
+                          <Text className="text-subtitle dark:text-subtitle-dark text-sm">
+                            {contact.relation} • {contact.phoneNumber}
+                          </Text>
+                        </View>
+                        <Pressable
+                          onPress={() => Alert.alert("Emergency Call", `Call ${contact.name}?`)}
+                          className="px-3 py-1 rounded-full bg-red-500"
+                        >
+                          <Text className="text-white text-xs font-medium">Call</Text>
+                        </Pressable>
+                      </View>
+                    ))}
+                  </View>
+                </SectionCard>
+              )}
 
               {/* Notes (+ modal) */}
               <SectionCard
