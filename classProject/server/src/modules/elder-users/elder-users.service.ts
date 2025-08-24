@@ -15,13 +15,12 @@ export class ElderUsersService {
   }
 
   async findAll(): Promise<ElderUser[]> {
-    return this.elderUserModel.find().populate('caregivers').exec();
+    return this.elderUserModel.find().exec();
   }
 
   async findOne(id: string): Promise<ElderUser | null> {
     return this.elderUserModel
       .findById(id)
-      .populate('caregivers')
       .exec();
   }
 
@@ -31,7 +30,6 @@ export class ElderUsersService {
   ): Promise<ElderUser | null> {
     return this.elderUserModel
       .findByIdAndUpdate(id, updateElderUserDto, { new: true })
-      .populate('caregivers')
       .exec();
   }
 

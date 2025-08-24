@@ -53,8 +53,8 @@ export class ElderUser {
   @Prop({ type: MedicalInfo, default: {} })
   medicalInfo: MedicalInfo;
 
-  @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
-  caregivers: Types.ObjectId[];
+  @Prop({ type: [String], default: [] })
+  caregivers: string[];
 }
 
 export const ElderUserSchema = SchemaFactory.createForClass(ElderUser);
