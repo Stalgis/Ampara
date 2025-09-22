@@ -15,7 +15,7 @@ import Card from "../../src/components/ui/Card";
 import FormInput from "../../src/components/ui/FormInput";
 import PrimaryButton from "../../src/components/ui/PrimaryButton";
 import { useNavigation } from "@react-navigation/native";
-import apiFetch from "../../services/api";
+import { apiService } from "../../services/api";
 
 const toList = (s: string) =>
   s
@@ -61,21 +61,32 @@ export default function CreateElderUser() {
 
     setLoading(true);
     try {
-      const res = await apiFetch("/elder-users", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        const msg = await res.text();
-        Alert.alert("Error", msg || "Could not create elder user.");
-        return;
+      const response: any = await apiService.createElderUser(payload);
+
+      if (
+        response &&
+        typeof response === "object" &&
+        "success" in response &&
+        response.success === false
+      ) {
+        throw new Error(response.message || "Could not create elder user.");
       }
-      await res.json();
-      Alert.alert("Created!", "Elder profile created.", [
+
+      const successMessage =
+        (response &&
+          typeof response === "object" &&
+          "message" in response &&
+          typeof response.message === "string" &&
+          response.message) ||
+        (typeof response === "string" && response) ||
+        "Elder profile created.";
+
+      Alert.alert("Created!", successMessage, [
         { text: "OK", onPress: () => nav.navigate("LogIn") },
       ]);
     } catch (e: any) {
-      Alert.alert("Network error", e?.message ?? "Please try again.");
+      console.error("Failed to create elder user", e);
+      Alert.alert("Error", e?.message ?? "Could not create elder user.");
     } finally {
       setLoading(false);
     }
