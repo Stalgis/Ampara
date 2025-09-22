@@ -14,7 +14,7 @@ import {
 import { useRoute, RouteProp } from "@react-navigation/native";
 import FormInput from "../../src/components/ui/FormInput";
 import PrimaryButton from "../../src/components/ui/PrimaryButton";
-import apiFetch from "../../services/api";
+import { apiService } from "../../services/api";
 
 type MoodItem = {
   _id?: string;
@@ -91,13 +91,40 @@ const EmotionalCheckIns: React.FC = () => {
     if (!elderId) return;
     setLoading(true);
     try {
-      const res = await apiFetch(`/moods/elder/${elderId}`);
-      if (!res.ok) {
-        const msg = await res.text();
-        Alert.alert("Error", msg || "Could not load moods.");
-        return;
+      const response: any = await apiService.get(`/moods/elder/${elderId}`);
+
+      if (
+        response &&
+        typeof response === "object" &&
+        "success" in response &&
+        response.success === false
+      ) {
+        throw new Error(response.message || "Could not load moods.");
       }
-      const list: MoodItem[] = await res.json();
+
+      let list: MoodItem[] | undefined;
+      if (Array.isArray(response)) {
+        list = response;
+      } else if (
+        response &&
+        typeof response === "object" &&
+        "data" in response &&
+        Array.isArray(response.data)
+      ) {
+        list = response.data as MoodItem[];
+      } else if (
+        response &&
+        typeof response === "object" &&
+        "moods" in response &&
+        Array.isArray((response as any).moods)
+      ) {
+        list = (response as any).moods as MoodItem[];
+      }
+
+      if (!list) {
+        throw new Error("Unexpected response format when loading moods.");
+      }
+
       // Orden por fecha desc
       list.sort(
         (a, b) =>
@@ -105,7 +132,11 @@ const EmotionalCheckIns: React.FC = () => {
       );
       setMoods(list);
     } catch (e: any) {
-      Alert.alert("Network error", e?.message ?? "Please try again.");
+      console.error("Failed to load moods", e);
+      Alert.alert(
+        "Error",
+        e?.message ?? "Could not load moods. Please try again later."
+      );
     } finally {
       setLoading(false);
     }
@@ -168,16 +199,32 @@ const EmotionalCheckIns: React.FC = () => {
     };
 
     try {
-      const res = await apiFetch("/moods", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        const msg = await res.text();
-        Alert.alert("Error", msg || "Could not save mood.");
-        return;
+      const response: any = await apiService.post<MoodItem | { data?: MoodItem }>(
+        "/moods",
+        payload
+      );
+
+      if (
+        response &&
+        typeof response === "object" &&
+        "success" in response &&
+        response.success === false
+      ) {
+        throw new Error(response.message || "Could not save mood.");
       }
-      const created: MoodItem = await res.json();
+
+      let created: MoodItem | undefined;
+      if (response && typeof response === "object") {
+        if ("data" in response && response.data) {
+          created = response.data as MoodItem;
+        } else if ("mood" in response || "_id" in response) {
+          created = response as MoodItem;
+        }
+      }
+
+      if (!created) {
+        throw new Error("Unexpected response format when saving mood.");
+      }
       // adjuntar nota solo localmente (para mostrarla)
       created.note = newNote || undefined;
 
@@ -189,7 +236,8 @@ const EmotionalCheckIns: React.FC = () => {
       );
       closeModal();
     } catch (e: any) {
-      Alert.alert("Network error", e?.message ?? "Please try again.");
+      console.error("Failed to save mood", e);
+      Alert.alert("Error", e?.message ?? "Could not save mood.");
     }
   };
 
